@@ -28,7 +28,7 @@ const Contact: React.FC = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-6 mb-10">
-          <a href="mailto:caio@vilquer.dev" className="btn">
+          <a href="mailto:caio@vilquer.dev" className="btn-outline">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 mr-2"

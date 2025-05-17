@@ -39,10 +39,15 @@ const About: React.FC = () => (
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Sou estudante de Engenharia de Computação na Poli-USP e atuo como
-          desenvolvedor backend, com experiência em Java, Kotlin e Spring Boot.
-          Tenho paixão por resolver problemas reais e aprender novas
-          tecnologias.
+          Sou estudante de Engenharia de Computação na Poli-USP e desenvolvedor
+          backend com experiência em Java, Kotlin e Spring Boot, atuando no
+          desenvolvimento de APIs REST, integração com bancos PostgreSQL/MySQL e
+          automação de pipelines CI/CD (GitHub Actions). Também possuo
+          experiência básica em desenvolvimento frontend utilizando React com
+          TypeScript, além de conhecimentos em Python e Análise de Dados. Tenho
+          paixão por criar soluções tecnológicas eficientes, aplicar boas
+          práticas (Clean Code, SOLID, TDD) e estou sempre em busca de novos
+          desafios que estimulem meu aprendizado e crescimento profissional.
         </motion.p>
 
         <motion.div
@@ -52,13 +57,28 @@ const About: React.FC = () => (
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {["Java", "Spring Boot", "Kotlin", "PostgreSQL", "Git", "Docker"].map(
-            (skill, index) => (
-              <span key={index} className="tech-tag">
-                {skill}
-              </span>
-            )
-          )}
+          {[
+            "Java",
+            "Spring Boot",
+            "Kotlin",
+            "PostgreSQL",
+            "Git",
+            "Docker",
+            "Python",
+            "TypeScript",
+            "React",
+            "API REST",
+            "GitHub Actions",
+            "CI/CD",
+            "Clean Code",
+            "SOLID",
+            "Análise de Dados",
+            "Eletrônica",
+          ].map((skill, index) => (
+            <span key={index} className="tech-tag">
+              {skill}
+            </span>
+          ))}
         </motion.div>
       </div>
     </motion.div>
