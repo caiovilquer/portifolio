@@ -1,6 +1,6 @@
 import React from "react";
 import { IconType } from "react-icons";
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { FaGithub, FaExternalLinkAlt, FaClock } from "react-icons/fa";
 
 export interface Project {
   id: number;
@@ -12,6 +12,11 @@ export interface Project {
   };
   githubUrl: string;
   demoUrl?: string;
+  inProgress?: boolean;
+  additionalLinks?: {
+    label: string;
+    url: string;
+  }[];
 }
 
 interface ProjectCardProps {
@@ -22,7 +27,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <div className="p-6">
-        <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-xl font-bold text-white">{project.title}</h3>
+          {project.inProgress && (
+            <span className="flex items-center gap-1 px-2 py-1 bg-amber-600 text-xs font-medium text-white rounded-full">
+              <FaClock size={12} />
+              Em desenvolvimento
+            </span>
+          )}
+        </div>
         <p className="text-gray-300 mb-4">{project.description}</p>
 
         <div className="mb-4">
@@ -44,7 +57,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {project.githubUrl && (
             <a
               href={project.githubUrl}
@@ -67,6 +80,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               <span>Demo</span>
             </a>
           )}
+          {project.additionalLinks &&
+            project.additionalLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors duration-300"
+              >
+                <FaExternalLinkAlt className="text-lg" />
+                <span>{link.label}</span>
+              </a>
+            ))}
         </div>
       </div>
     </div>

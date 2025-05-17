@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
+import FutureProjects from "./pages/FutureProjects";
 import Contact from "./pages/Contact";
 
 const App: React.FC = () => (
@@ -18,6 +19,9 @@ const App: React.FC = () => (
       </section>
       <section id="projects" className="section">
         <Projects />
+      </section>
+      <section id="future-projects" className="section">
+        <FutureProjects />
       </section>
       <section id="contact" className="section">
         <Contact />

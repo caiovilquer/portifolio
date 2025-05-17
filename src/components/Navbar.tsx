@@ -5,6 +5,7 @@ const links: { label: string; href: string }[] = [
   { label: "Home", href: "#home" },
   { label: "Sobre", href: "#about" },
   { label: "Projetos", href: "#projects" },
+  { label: "Projetos Futuros", href: "#future-projects" },
   { label: "Contato", href: "#contact" },
 ];
 
