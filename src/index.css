@@ -1,0 +1,5 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scroll suave já ativado via classe scroll-smooth no <html> */
