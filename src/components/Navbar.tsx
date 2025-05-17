@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const links: { label: string; href: string }[] = [
   { label: "Home", href: "#home" },
@@ -13,6 +14,7 @@ const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [activeLink, setActiveLink] = useState("home");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Handle scroll events to update active link
   useEffect(() => {
@@ -52,10 +54,16 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle mobile menu link clicks
+  const handleMobileMenuLinkClick = (href: string) => {
+    setMobileMenuOpen(false); // Close the menu when a link is clicked
+    setActiveLink(href.substring(1)); // Set active link
+  };
+
   return (
     <nav
       className={`fixed top-0 w-full backdrop-blur-sm z-50 transition-all duration-300 ${
-        isScrolled
+        isScrolled || mobileMenuOpen
           ? "bg-white/90 dark:bg-slate-900/90 shadow-sm"
           : "bg-transparent"
       }`}
@@ -68,6 +76,7 @@ const Navbar: React.FC = () => {
           Caio Vilquer Carvalho
         </a>
         <div className="flex items-center gap-6">
+          {/* Desktop Navigation */}
           <ul className="hidden md:flex space-x-6">
             {links.map((link) => (
               <li key={link.href}>
@@ -82,6 +91,7 @@ const Navbar: React.FC = () => {
               </li>
             ))}
           </ul>
+
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
@@ -111,24 +121,78 @@ const Navbar: React.FC = () => {
               </svg>
             )}
           </button>
-          <button className="md:hidden p-2" aria-label="Menu">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2"
+            aria-label="Menu"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              // X icon when menu is open
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              // Hamburger icon when menu is closed
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
           </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            className="md:hidden bg-white dark:bg-slate-900 shadow-lg"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ul className="flex flex-col py-4">
+              {links.map((link) => (
+                <li key={link.href} className="px-4 py-2">
+                  <a
+                    href={link.href}
+                    className={`block text-lg nav-link ${
+                      activeLink === link.href.substring(1) ? "active" : ""
+                    }`}
+                    onClick={() => handleMobileMenuLinkClick(link.href)}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
