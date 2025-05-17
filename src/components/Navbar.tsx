@@ -11,7 +11,7 @@ const Navbar: React.FC = () => (
   <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm">
     <div className="container mx-auto flex items-center justify-between p-4">
       <a href="#home" className="text-xl font-bold">
-        Seu Nome
+        Caio Vilquer Carvalho
       </a>
       <ul className="flex space-x-6">
         {links.map((link) => (

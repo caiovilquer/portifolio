@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../assets/avatar.jpg";
+import avatar from "../assets/avatar.jpeg";
 
 const About: React.FC = () => (
   <div className="container mx-auto py-20 px-4 flex flex-col md:flex-row items-center gap-8">
