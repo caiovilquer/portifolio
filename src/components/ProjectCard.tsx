@@ -33,21 +33,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
 
-  // Função para lidar com o play/pause do vídeo
-  const handlePlayPause = () => {
-    if (!videoRef.current) return;
-
-    if (videoRef.current.paused) {
-      videoRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch((err) => console.error("Erro ao reproduzir vídeo:", err));
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
   // Manipulador de eventos para o vídeo
   useEffect(() => {
     const videoElement = videoRef.current;
