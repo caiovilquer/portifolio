@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const Home: React.FC = () => (
   <motion.div
-    className="min-h-screen flex flex-col items-center justify-center text-center px-4 fade-in"
+    className="min-h-screen flex flex-col items-center justify-start pt-[20vh] text-center px-4 fade-in"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.6 }}
