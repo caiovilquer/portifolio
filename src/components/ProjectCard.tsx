@@ -17,6 +17,9 @@ export interface Project {
     label: string;
     url: string;
   }[];
+  // Novas propriedades
+  estimatedCompletion?: string;
+  progressPercentage?: number;
 }
 
 interface ProjectCardProps {
@@ -37,6 +40,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           )}
         </div>
         <p className="text-gray-300 mb-4">{project.description}</p>
+
+        {/* Adicionando seção de progresso quando disponível */}
+        {project.estimatedCompletion && (
+          <div className="mb-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-300">Progresso:</span>
+              <span className="text-gray-300">
+                {project.progressPercentage || 0}% •{" "}
+                {project.estimatedCompletion}
+              </span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2.5">
+              <div
+                className="bg-blue-500 h-2.5 rounded-full transition-all duration-700 ease-in-out"
+                style={{ width: `${project.progressPercentage || 0}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
 
         <div className="mb-4">
           <div className="flex flex-wrap gap-2 mb-2">

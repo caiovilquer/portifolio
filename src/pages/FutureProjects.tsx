@@ -24,12 +24,14 @@ const futureProjects: Project[] = [
     githubUrl: "", // URL quando disponível
     demoUrl: "", // URL quando disponível
     inProgress: true,
+    estimatedCompletion: "Fev 2026",
+    progressPercentage: 5,
   },
   {
     id: 2,
     title: "PetCareScheduler",
     description:
-      "Aplicação backend desenvolvida em Kotlin com Spring Boot para agendamento inteligente e gerenciamento de cuidados com pets, incluindo vacinas, medicamentos, troca de ração e serviços de banho/tosa. Conta com uma API RESTful robusta, persistência eficiente usando PostgreSQL e comunicação via notificações por e-mail para avisar sobre eventos importantes aos usuários. Futuras integrações previstas incluem clínicas veterinárias e inteligência artificial para recomendações personalizadas. Protótipo funcional em desenvolvimento com arquitetura limpa e modular.",
+      "Aplicação backend desenvolvida em Kotlin com Spring Boot para agendamento inteligente e gerenciamento de cuidados com pets. Conta com uma API RESTful robusta, persistência eficiente usando PostgreSQL e comunicação via notificações por e-mail para avisar sobre eventos importantes aos usuários. Futuras integrações previstas incluem clínicas veterinárias e inteligência artificial para recomendações personalizadas. Protótipo funcional em desenvolvimento com arquitetura limpa e modular.",
     tech: ["Kotlin", "Spring Boot", "PostgreSQL", "Docker", "API REST"],
     techIcons: {
       Kotlin: SiKotlin,
@@ -41,6 +43,8 @@ const futureProjects: Project[] = [
     githubUrl: "", // URL quando disponível
     demoUrl: "", // URL quando disponível
     inProgress: true,
+    estimatedCompletion: "Jul 2025",
+    progressPercentage: 15,
   },
 ];
 

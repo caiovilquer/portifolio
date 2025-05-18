@@ -162,6 +162,19 @@
       transform: translateY(0);
     }
   }
+
+  .progress-container {
+    @apply w-full bg-gray-700 rounded-full h-2.5 overflow-hidden;
+  }
+  
+  .progress-bar {
+    @apply h-full rounded-full transition-all duration-700 ease-in-out;
+    background-image: linear-gradient(to right, #3b82f6, #60a5fa);
+  }
+  
+  .progress-label {
+    @apply flex justify-between text-sm mb-1 text-gray-300;
+  }
 }
 
 /* Subtle scroll styling */
