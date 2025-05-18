@@ -1,4 +1,4 @@
-name: 📦 Build & Deploy to GitHub Pages
+name: Deploy para GitHub Pages
 
 on:
   push:
@@ -46,4 +46,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          keep_history: false
