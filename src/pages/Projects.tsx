@@ -21,6 +21,11 @@ import { GiConsoleController } from "react-icons/gi";
 import { MdStorage, MdHardware } from "react-icons/md";
 import { VscSnake } from "react-icons/vsc";
 
+// Importar os vídeos MP4
+import gameListDemo from "../assets/mp4/game-list-demo.mp4";
+import minotauroDemo from "../assets/mp4/minotauro-demo.mp4";
+//import cadastroDemo from "../assets/mp4/sistema-cadastro-demo.mp4";
+
 const projects: Project[] = [
   {
     id: 1,
@@ -48,12 +53,13 @@ const projects: Project[] = [
     },
     githubUrl: "https://github.com/caiovilquer/game-list-backend",
     demoUrl: "https://gamelist.vilquer.dev/",
+    demoVideo: gameListDemo,
   },
   {
     id: 2,
     title: "A Fúria do Minotauro",
     description:
-      "Labirinto sensorial interativo baseado na mitologia grega (Teseu e o Minotauro), projetado para aprimorar a coordenação motora fina e concentração, especialmente em usuários com TEA. Utilizando Arduino e Python (Pygame), o sistema detecta colisões por interrupção digital ao toque do anel nas paredes metálicas do labirinto móvel, fornecendo feedback imediato (visual e sonoro). O jogador avança gradualmente em fases com níveis crescentes de dificuldade, recebendo estímulos sensoriais integrados enquanto acompanha Teseu na épica missão de vencer o Minotauro.",
+      "Labirinto sensorial interativo baseado na mitologia grega (Teseu e o Minotauro), projetado para aprimorar a coordenação motora fina e concentração, especialmente em usuários com TEA. Utilizando Arduino e Python (Pygame), o sistema detecta colisões por interrupção digital ao toque do anel nas paredes metálicas do labirinto móvel, fornecendo feedback imediato (visual e sonoro). O jogador avança gradativamente em fases com níveis crescentes de dificuldade, recebendo estímulos sensoriais integrados enquanto acompanha Teseu na épica missão de vencer o Minotauro.",
     tech: [
       "Python",
       "Pygame",
@@ -70,6 +76,7 @@ const projects: Project[] = [
     },
     githubUrl: "https://github.com/caiovilquer/A-furia-do-minotauro",
     demoUrl: "",
+    demoVideo: minotauroDemo,
   },
   {
     id: 3,
@@ -85,6 +92,7 @@ const projects: Project[] = [
     },
     githubUrl: "https://github.com/caiovilquer/Sistema-de-cadastro",
     demoUrl: "",
+    demoVideo: "",
   },
   {
     id: 4,
@@ -100,6 +108,7 @@ const projects: Project[] = [
     },
     githubUrl: "https://github.com/caiovilquer/Geladeira-Peltier",
     demoUrl: "",
+    demoVideo: "",
   },
 ];
 

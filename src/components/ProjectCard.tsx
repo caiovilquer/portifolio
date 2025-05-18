@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { IconType } from "react-icons";
-import { FaGithub, FaExternalLinkAlt, FaClock } from "react-icons/fa";
+import { FaGithub, FaExternalLinkAlt, FaClock, FaPlay } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface Project {
   id: number;
@@ -17,9 +18,9 @@ export interface Project {
     label: string;
     url: string;
   }[];
-  // Novas propriedades
   estimatedCompletion?: string;
   progressPercentage?: number;
+  demoVideo?: string;
 }
 
 interface ProjectCardProps {
@@ -27,6 +28,8 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <div className="p-6">
@@ -39,6 +42,50 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             </span>
           )}
         </div>
+
+        {project.demoVideo && (
+          <div className="mb-4 relative">
+            <button
+              onClick={() => setShowVideo(!showVideo)}
+              className="w-full bg-gray-900 rounded-lg overflow-hidden relative group"
+              aria-label={
+                showVideo ? "Ocultar demonstração" : "Mostrar demonstração"
+              }
+            >
+              {!showVideo ? (
+                <div className="flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors">
+                  <FaPlay className="mr-2" />
+                  <span>Ver demonstração</span>
+                </div>
+              ) : (
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="w-full"
+                  >
+                    <video
+                      src={project.demoVideo}
+                      autoPlay
+                      loop
+                      muted
+                      controls
+                      className="w-full rounded-lg object-cover shadow-md"
+                      aria-label={`Demonstração do projeto ${project.title}`}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-white bg-black bg-opacity-70 px-3 py-1 rounded-full text-xs">
+                        {showVideo ? "Clique para fechar" : "Clique para ver"}
+                      </span>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </button>
+          </div>
+        )}
+
         <p className="text-gray-300 mb-4">{project.description}</p>
 
         {/* Adicionando seção de progresso quando disponível */}

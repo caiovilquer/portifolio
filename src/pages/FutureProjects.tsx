@@ -8,6 +8,10 @@ import { BiLogoPostgresql } from "react-icons/bi";
 import { MdOutlineSensors } from "react-icons/md";
 import { TbApi } from "react-icons/tb";
 
+// Importar os vídeos de protótipo, se existirem
+// import trackShotDemo from "../assets/mp4/trackshot-prototype.mp4";
+// import petCareDemo from "../assets/mp4/petcare-prototype.mp4";
+
 const futureProjects: Project[] = [
   {
     id: 1,
@@ -21,11 +25,12 @@ const futureProjects: Project[] = [
       OpenCV: SiOpencv,
       IMU: MdOutlineSensors,
     },
-    githubUrl: "", // URL quando disponível
-    demoUrl: "", // URL quando disponível
+    githubUrl: "",
+    demoUrl: "",
     inProgress: true,
     estimatedCompletion: "Fev 2026",
     progressPercentage: 5,
+    demoVideo: "",
   },
   {
     id: 2,
@@ -40,11 +45,12 @@ const futureProjects: Project[] = [
       Docker: FaDocker,
       "API REST": TbApi,
     },
-    githubUrl: "", // URL quando disponível
-    demoUrl: "", // URL quando disponível
+    githubUrl: "",
+    demoUrl: "",
     inProgress: true,
     estimatedCompletion: "Jul 2025",
     progressPercentage: 15,
+    demoVideo: "",
   },
 ];
 

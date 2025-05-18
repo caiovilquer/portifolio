@@ -175,6 +175,22 @@
   .progress-label {
     @apply flex justify-between text-sm mb-1 text-gray-300;
   }
+
+  .demo-gif-button {
+    @apply w-full bg-gray-900 rounded-lg overflow-hidden relative cursor-pointer transition-all duration-300;
+  }
+  
+  .demo-gif-button:hover {
+    @apply transform scale-[1.02];
+  }
+  
+  .demo-gif {
+    @apply w-full rounded-lg shadow-md;
+  }
+  
+  .demo-gif-placeholder {
+    @apply flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors;
+  }
 }
 
 /* Subtle scroll styling */
