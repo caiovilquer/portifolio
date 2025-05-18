@@ -24,7 +24,7 @@ import { VscSnake } from "react-icons/vsc";
 // Importar os vídeos MP4
 import gameListDemo from "../assets/mp4/game-list-demo.mp4";
 import minotauroDemo from "../assets/mp4/minotauro-demo.mp4";
-//import cadastroDemo from "../assets/mp4/sistema-cadastro-demo.mp4";
+import cadastroDemo from "../assets/mp4/cadastro-demo.mp4";
 
 const projects: Project[] = [
   {
@@ -92,7 +92,7 @@ const projects: Project[] = [
     },
     githubUrl: "https://github.com/caiovilquer/Sistema-de-cadastro",
     demoUrl: "",
-    demoVideo: "",
+    demoVideo: cadastroDemo,
   },
   {
     id: 4,

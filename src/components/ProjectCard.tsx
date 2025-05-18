@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IconType } from "react-icons";
-import { FaGithub, FaExternalLinkAlt, FaClock, FaPlay } from "react-icons/fa";
+import {
+  FaGithub,
+  FaExternalLinkAlt,
+  FaClock,
+  FaPlay,
+  FaExpand,
+  FaCompress,
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Project {
@@ -29,6 +36,48 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [showVideo, setShowVideo] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleFullScreen = () => {
+    if (!videoRef.current) return;
+
+    if (!document.fullscreenElement) {
+      // Entrar em modo de tela cheia
+      videoRef.current
+        .requestFullscreen()
+        .then(() => {
+          setIsFullScreen(true);
+        })
+        .catch((err) => {
+          console.error(
+            `Erro ao tentar exibir o vídeo em tela cheia: ${err.message}`
+          );
+        });
+    } else {
+      // Sair do modo de tela cheia
+      document
+        .exitFullscreen()
+        .then(() => {
+          setIsFullScreen(false);
+        })
+        .catch((err) => {
+          console.error(`Erro ao sair do modo tela cheia: ${err.message}`);
+        });
+    }
+  };
+
+  // Listener para detectar quando o usuário sai do modo fullscreen usando ESC
+  React.useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
@@ -63,9 +112,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="w-full"
+                    className="w-full relative"
                   >
                     <video
+                      ref={videoRef}
                       src={project.demoVideo}
                       autoPlay
                       loop
@@ -74,11 +124,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                       className="w-full rounded-lg object-cover shadow-md"
                       aria-label={`Demonstração do projeto ${project.title}`}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white bg-black bg-opacity-70 px-3 py-1 rounded-full text-xs">
-                        {showVideo ? "Clique para fechar" : "Clique para ver"}
-                      </span>
-                    </div>
+
+                    {/* Botão de tela cheia posicionado no canto superior direito */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Impede que o clique chegue ao botão pai
+                        toggleFullScreen();
+                      }}
+                      className="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors z-10"
+                      aria-label={
+                        isFullScreen ? "Sair da tela cheia" : "Tela cheia"
+                      }
+                    >
+                      {isFullScreen ? (
+                        <FaCompress size={16} />
+                      ) : (
+                        <FaExpand size={16} />
+                      )}
+                    </button>
                   </motion.div>
                 </AnimatePresence>
               )}

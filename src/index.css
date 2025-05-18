@@ -191,6 +191,25 @@
   .demo-gif-placeholder {
     @apply flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors;
   }
+
+  /* Estilos para vídeos em fullscreen */
+  .video-container {
+    @apply relative;
+  }
+  
+  .fullscreen-btn {
+    @apply absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 
+           text-white rounded-full transition-colors z-10 opacity-70 hover:opacity-100;
+  }
+  
+  /* Ajuste para quando o vídeo estiver em tela cheia */
+  video:fullscreen {
+    @apply w-screen h-screen object-contain bg-black;
+  }
+  
+  video:fullscreen + .fullscreen-btn {
+    @apply absolute top-4 right-4;
+  }
 }
 
 /* Subtle scroll styling */
