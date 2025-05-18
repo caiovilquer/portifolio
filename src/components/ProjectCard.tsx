@@ -1,13 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { IconType } from "react-icons";
-import {
-  FaGithub,
-  FaExternalLinkAlt,
-  FaClock,
-  FaPlay,
-  FaExpand,
-  FaCompress,
-} from "react-icons/fa";
+import { FaGithub, FaExternalLinkAlt, FaClock, FaPlay } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Project {
@@ -36,7 +29,6 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [showVideo, setShowVideo] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -55,86 +47,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       setIsPlaying(false);
     }
   };
-
-  // Função melhorada para entrar/sair do modo tela cheia
-  const toggleFullScreen = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Previne propagação do evento
-
-    if (!videoContainerRef.current) return;
-
-    try {
-      if (!document.fullscreenElement) {
-        // Tenta diferentes APIs de fullscreen para maior compatibilidade
-        const element = videoContainerRef.current;
-
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if ((element as any).webkitRequestFullscreen) {
-          (element as any).webkitRequestFullscreen();
-        } else if ((element as any).mozRequestFullScreen) {
-          (element as any).mozRequestFullScreen();
-        } else if ((element as any).msRequestFullscreen) {
-          (element as any).msRequestFullscreen();
-        }
-      } else {
-        // Tenta diferentes APIs para sair do fullscreen
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-          (document as any).webkitExitFullscreen();
-        } else if ((document as any).mozCancelFullScreen) {
-          (document as any).mozCancelFullScreen();
-        } else if ((document as any).msExitFullscreen) {
-          (document as any).msExitFullscreen();
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao manipular tela cheia:", err);
-    }
-  };
-
-  // Listener para eventos de fullscreen
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      const isInFullScreen = !!(
-        document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement ||
-        (document as any).msFullscreenElement
-      );
-
-      setIsFullScreen(isInFullScreen);
-
-      // Certifica-se que o vídeo continua tocando ao mudar modo
-      if (videoRef.current && isInFullScreen && !videoRef.current.onplaying) {
-        videoRef.current.play().catch((err) => {
-          console.warn("Não foi possível iniciar reprodução automática:", err);
-        });
-      }
-    };
-
-    // Listeners para diferentes navegadores
-    document.addEventListener("fullscreenchange", handleFullScreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
-    document.addEventListener("mozfullscreenchange", handleFullScreenChange);
-    document.addEventListener("MSFullscreenChange", handleFullScreenChange);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullScreenChange);
-      document.removeEventListener(
-        "webkitfullscreenchange",
-        handleFullScreenChange
-      );
-      document.removeEventListener(
-        "mozfullscreenchange",
-        handleFullScreenChange
-      );
-      document.removeEventListener(
-        "MSFullscreenChange",
-        handleFullScreenChange
-      );
-    };
-  }, []);
 
   // Manipulador de eventos para o vídeo
   useEffect(() => {
@@ -204,21 +116,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                       aria-label={`Demonstração do projeto ${project.title}`}
                       onClick={(e) => e.stopPropagation()} // Previne que o clique no vídeo feche o componente
                     />
-
-                    {/* Botão de tela cheia posicionado no canto superior direito */}
-                    <button
-                      onClick={toggleFullScreen}
-                      className="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors z-10"
-                      aria-label={
-                        isFullScreen ? "Sair da tela cheia" : "Tela cheia"
-                      }
-                    >
-                      {isFullScreen ? (
-                        <FaCompress size={16} />
-                      ) : (
-                        <FaExpand size={16} />
-                      )}
-                    </button>
+                    {/* Botão de tela cheia personalizado removido */}
                   </motion.div>
                 </AnimatePresence>
               )}
