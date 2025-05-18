@@ -163,12 +163,29 @@
     }
   }
 
+  /* Previne CSS Layout Shifts - CLS */
+  .video-container {
+    @apply relative;
+    aspect-ratio: 16/9;
+    /* Fallback para navegadores sem suporte a aspect-ratio */
+    height: 0;
+    padding-bottom: 56.25%; /* 9/16 * 100% */
+  }
+  
+  .video-container > * {
+    @apply absolute top-0 left-0 w-full h-full;
+  }
+
   .progress-container {
     @apply w-full bg-gray-700 rounded-full h-2.5 overflow-hidden;
   }
   
   .progress-bar {
-    @apply h-full rounded-full transition-all duration-700 ease-in-out;
+    @apply h-full rounded-full;
+    -webkit-transition: width 0.7s ease-in-out;
+    transition: width 0.7s ease-in-out;
+    background-color: #3b82f6;
+    background-image: -webkit-linear-gradient(left, #3b82f6, #60a5fa);
     background-image: linear-gradient(to right, #3b82f6, #60a5fa);
   }
   
@@ -177,11 +194,15 @@
   }
 
   .demo-gif-button {
-    @apply w-full bg-gray-900 rounded-lg overflow-hidden relative cursor-pointer transition-all duration-300;
+    @apply w-full bg-gray-900 rounded-lg overflow-hidden relative cursor-pointer;
+    /* Transições com prefixos */
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
   }
   
   .demo-gif-button:hover {
-    @apply transform scale-[1.02];
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
   }
   
   .demo-gif {
@@ -189,26 +210,58 @@
   }
   
   .demo-gif-placeholder {
-    @apply flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors;
+    @apply flex items-center justify-center p-4 h-32 text-gray-400;
+    -webkit-transition: color 0.3s ease;
+    transition: color 0.3s ease;
   }
 
-  /* Estilos para vídeos em fullscreen */
-  .video-container {
-    @apply relative;
+  .demo-gif-placeholder:hover {
+    @apply text-blue-400;
   }
-  
-  .fullscreen-btn {
-    @apply absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 
-           text-white rounded-full transition-colors z-10 opacity-70 hover:opacity-100;
-  }
-  
-  /* Ajuste para quando o vídeo estiver em tela cheia */
-  video:fullscreen {
+
+  video:fullscreen,
+  /* Firefox */
+  video:-moz-full-screen,
+  /* WebKit */
+  video:-webkit-full-screen,
+  /* Microsoft */
+  video:-ms-fullscreen {
     @apply w-screen h-screen object-contain bg-black;
   }
+
+  /* Botões para ações em tela cheia */
+  .fullscreen-btn {
+    @apply absolute top-2 right-2 p-2 text-white rounded-full z-10;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-transition: background-color 0.3s, opacity 0.3s;
+    transition: background-color 0.3s, opacity 0.3s;
+    opacity: 0.7;
+  }
+
+  .fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    opacity: 1;
+  }
   
-  video:fullscreen + .fullscreen-btn {
+  /* Ajustes para diversos navegadores quando em fullscreen */
+  video:fullscreen + .fullscreen-btn,
+  video:-moz-full-screen + .fullscreen-btn,
+  video:-webkit-full-screen + .fullscreen-btn,
+  video:-ms-fullscreen + .fullscreen-btn {
     @apply absolute top-4 right-4;
+  }
+
+  /* Previne problemas com Reducão de Movimento */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      -webkit-animation-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      -webkit-animation-iteration-count: 1 !important;
+      animation-iteration-count: 1 !important;
+      -webkit-transition-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
