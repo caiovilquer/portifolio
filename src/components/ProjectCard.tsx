@@ -21,6 +21,7 @@ export interface Project {
   estimatedCompletion?: string;
   progressPercentage?: number;
   demoVideo?: string;
+  demoImage?: string;
 }
 
 interface ProjectCardProps {
@@ -28,7 +29,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-  const [showVideo, setShowVideo] = useState(false);
+  const [showMedia, setShowMedia] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +54,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       videoElement.removeEventListener("pause", handlePause);
       videoElement.removeEventListener("ended", handleEnded);
     };
-  }, [showVideo]);
+  }, [showMedia]);
+
+  const hasMedia = project.demoVideo || project.demoImage;
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
@@ -68,16 +71,28 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           )}
         </div>
 
+        {/* Exibe imagem diretamente se existir e não tiver vídeo */}
+        {project.demoImage && !project.demoVideo && (
+          <div className="mb-4">
+            <img
+              src={project.demoImage}
+              alt={`Demonstração do projeto ${project.title}`}
+              className="w-full rounded-lg shadow-md object-contain"
+            />
+          </div>
+        )}
+
+        {/* Botão de toggle apenas para vídeos */}
         {project.demoVideo && (
           <div className="mb-4 relative">
             <button
-              onClick={() => setShowVideo(!showVideo)}
+              onClick={() => setShowMedia(!showMedia)}
               className="w-full bg-gray-900 rounded-lg overflow-hidden relative group"
               aria-label={
-                showVideo ? "Ocultar demonstração" : "Mostrar demonstração"
+                showMedia ? "Ocultar demonstração" : "Mostrar demonstração"
               }
             >
-              {!showVideo ? (
+              {!showMedia ? (
                 <div className="flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors">
                   <FaPlay className="mr-2" />
                   <span>Ver demonstração</span>
@@ -99,9 +114,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                       preload="metadata"
                       className="w-full rounded-lg object-cover shadow-md"
                       aria-label={`Demonstração do projeto ${project.title}`}
-                      onClick={(e) => e.stopPropagation()} // Previne que o clique no vídeo feche o componente
+                      onClick={(e) => e.stopPropagation()}
                     />
-                    {/* Botão de tela cheia personalizado removido */}
                   </motion.div>
                 </AnimatePresence>
               )}

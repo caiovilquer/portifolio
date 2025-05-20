@@ -9,8 +9,8 @@ import { MdOutlineSensors } from "react-icons/md";
 import { TbApi } from "react-icons/tb";
 
 // Importar os vídeos de protótipo, se existirem
-// import trackShotDemo from "../assets/mp4/trackshot-prototype.mp4";
-// import petCareDemo from "../assets/mp4/petcare-prototype.mp4";
+import trackShotImage from "../assets/images/trackshotcv-image.png";
+import petCareImage from "../assets/images/petcare-image.png";
 
 const futureProjects: Project[] = [
   {
@@ -31,6 +31,7 @@ const futureProjects: Project[] = [
     estimatedCompletion: "Fev 2026",
     progressPercentage: 5,
     demoVideo: "",
+    demoImage: trackShotImage,
   },
   {
     id: 2,
@@ -51,6 +52,7 @@ const futureProjects: Project[] = [
     estimatedCompletion: "Jul 2025",
     progressPercentage: 15,
     demoVideo: "",
+    demoImage: petCareImage,
   },
 ];
 
