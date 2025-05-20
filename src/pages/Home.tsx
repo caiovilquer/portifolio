@@ -68,7 +68,6 @@ const AnimatedTerminal: React.FC = () => {
       "[INFO] Started Application in 2.871 seconds",
     ],
     [
-      [
         "$ java -version",
         'openjdk version "21.0.1" 2023-10-17',
         "OpenJDK Runtime Environment Temurin-21.0.1+12 (build 21.0.1+12)",
@@ -78,7 +77,6 @@ const AnimatedTerminal: React.FC = () => {
         "$ export SPRING_PROFILES_ACTIVE=prod",
         '$ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"',
         "[INFO] Started Application in 1.949 seconds",
-      ],
     ],
   ];
 
