@@ -5,45 +5,45 @@ import avatar from "../assets/avatar.jpeg";
 // Interface para os dados de habilidade
 interface Skill {
   name: string;
-  proficiency: number; // percentual de 0 a 100
+  level: "Básico" | "Intermediário" | "Avançado";
+  subLevel?: number; // Variação de 0-100 dentro do nível principal
 }
 
-// Dados de habilidades categorizados
-const skillCategories = [
+const skillCategories: { name: string; skills: Skill[] }[] = [
   {
     name: "Linguagens de Programação",
     skills: [
-      { name: "Java", proficiency: 85 },
-      { name: "Kotlin", proficiency: 60 },
-      { name: "TypeScript", proficiency: 70 },
-      { name: "Python", proficiency: 80 },
-      { name: "C", proficiency: 50 },
+      { name: "Java", level: "Avançado", subLevel: 85 },
+      { name: "Kotlin", level: "Intermediário", subLevel: 60 },
+      { name: "TypeScript", level: "Intermediário", subLevel: 70 },
+      { name: "Python", level: "Avançado", subLevel: 75 },
+      { name: "C", level: "Básico", subLevel: 25 },
     ],
   },
   {
     name: "Frameworks & Bibliotecas",
     skills: [
-      { name: "Spring Boot", proficiency: 75 },
-      { name: "React", proficiency: 60 },
-      { name: "JUnit", proficiency: 75 },
-      { name: "Hibernate", proficiency: 90 },
+      { name: "Spring", level: "Avançado", subLevel: 90 },
+      { name: "React", level: "Intermediário", subLevel: 55 },
+      { name: "JUnit", level: "Avançado", subLevel: 75 },
+      { name: "Hibernate", level: "Avançado", subLevel: 95 },
     ],
   },
   {
     name: "DevOps & Ferramentas",
     skills: [
-      { name: "Git", proficiency: 90 },
-      { name: "Docker", proficiency: 50 },
-      { name: "CI/CD", proficiency: 75 },
-      { name: "GitHub Actions", proficiency: 80 },
+      { name: "Git", level: "Avançado", subLevel: 90 },
+      { name: "Docker", level: "Básico", subLevel: 30 },
+      { name: "CI/CD", level: "Avançado", subLevel: 80 },
+      { name: "GitHub Actions", level: "Avançado", subLevel: 85 },
     ],
   },
   {
     name: "Banco de Dados",
     skills: [
-      { name: "PostgreSQL", proficiency: 85 },
-      { name: "MySQL", proficiency: 90 },
-      { name: "MongoDB", proficiency: 50 },
+      { name: "PostgreSQL", level: "Avançado", subLevel: 85 },
+      { name: "MySQL", level: "Avançado", subLevel: 90 },
+      { name: "MongoDB", level: "Básico", subLevel: 20 },
     ],
   },
 ];
@@ -52,30 +52,61 @@ const skillCategories = [
 const SkillBar: React.FC<{ skill: Skill; delay: number }> = ({
   skill,
   delay,
-}) => (
-  <div className="mb-3">
-    <div className="flex justify-between mb-1">
-      <span className="text-sm font-medium text-[var(--dark)]">
-        {skill.name}
-      </span>
-      <span className="text-xs font-semibold text-[var(--primary)]">
-        {skill.proficiency}%
-      </span>
+}) => {
+  // Mapear o nível para uma largura percentual da barra
+  const getLevelWidth = (skill: Skill): number => {
+    // Se tiver um subLevel definido, usar ele com limites para cada nível principal
+    if (skill.subLevel !== undefined) {
+      switch (skill.level) {
+        case "Básico":
+          return Math.min(40, Math.max(20, skill.subLevel));
+        case "Intermediário":
+          return Math.min(75, Math.max(50, skill.subLevel));
+        case "Avançado":
+          return Math.min(100, Math.max(75, skill.subLevel));
+        default:
+          return 0;
+      }
+    }
+
+    // Valores padrão por nível se não houver subLevel
+    switch (skill.level) {
+      case "Básico":
+        return 33;
+      case "Intermediário":
+        return 65;
+      case "Avançado":
+        return 100;
+      default:
+        return 0;
+    }
+  };
+
+  return (
+    <div className="mb-3">
+      <div className="flex justify-between mb-1">
+        <span className="text-sm font-medium text-[var(--dark)]">
+          {skill.name}
+        </span>
+        <span className="text-xs font-semibold text-[var(--primary)]">
+          {skill.level}
+        </span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+        <motion.div
+          className="h-2 rounded-full bg-[var(--primary)]"
+          style={{ width: 0 }}
+          animate={{ width: `${getLevelWidth(skill)}%` }}
+          transition={{
+            duration: 1.2,
+            delay: delay,
+            ease: "easeOut",
+          }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-      <motion.div
-        className="h-2 rounded-full bg-[var(--primary)]"
-        style={{ width: 0 }}
-        animate={{ width: `${skill.proficiency}%` }}
-        transition={{
-          duration: 1.2,
-          delay: delay,
-          ease: "easeOut",
-        }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 const About: React.FC = () => (
   <div className="container mx-auto px-4">
