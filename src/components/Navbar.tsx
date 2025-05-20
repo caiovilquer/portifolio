@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
       const sections = document.querySelectorAll("section");
 
       const isNearBottom =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
 
       if (isNearBottom) {
         // If we are close to the end, activate the last section (contact)
@@ -37,7 +37,6 @@ const Navbar: React.FC = () => {
       let current = "";
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
         if (window.scrollY >= sectionTop - 200) {
           current = section.getAttribute("id") || "";
         }
