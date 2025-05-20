@@ -6,7 +6,7 @@ import avatar from "../assets/avatar.jpeg";
 interface Skill {
   name: string;
   level: "Básico" | "Intermediário" | "Avançado";
-  subLevel?: number; // Variação de 0-100 dentro do nível principal
+  subLevel?: number;
 }
 
 const skillCategories: { name: string; skills: Skill[] }[] = [
@@ -14,8 +14,8 @@ const skillCategories: { name: string; skills: Skill[] }[] = [
     name: "Linguagens de Programação",
     skills: [
       { name: "Java", level: "Avançado", subLevel: 85 },
-      { name: "Kotlin", level: "Intermediário", subLevel: 60 },
-      { name: "TypeScript", level: "Intermediário", subLevel: 70 },
+      { name: "Kotlin", level: "Intermediário", subLevel: 75 },
+      { name: "TypeScript", level: "Intermediário", subLevel: 60 },
       { name: "Python", level: "Avançado", subLevel: 75 },
       { name: "C", level: "Básico", subLevel: 25 },
     ],
@@ -48,14 +48,11 @@ const skillCategories: { name: string; skills: Skill[] }[] = [
   },
 ];
 
-// Componente para as barras de proficiência
 const SkillBar: React.FC<{ skill: Skill; delay: number }> = ({
   skill,
   delay,
 }) => {
-  // Mapear o nível para uma largura percentual da barra
   const getLevelWidth = (skill: Skill): number => {
-    // Se tiver um subLevel definido, usar ele com limites para cada nível principal
     if (skill.subLevel !== undefined) {
       switch (skill.level) {
         case "Básico":
@@ -69,7 +66,7 @@ const SkillBar: React.FC<{ skill: Skill; delay: number }> = ({
       }
     }
 
-    // Valores padrão por nível se não houver subLevel
+    // Se não houver subLevel, use o nível padrão
     switch (skill.level) {
       case "Básico":
         return 33;
@@ -180,7 +177,6 @@ const About: React.FC = () => (
       </div>
     </motion.div>
 
-    {/* Nova seção de skills com indicadores de proficiência */}
     <motion.div
       className="mt-16"
       initial={{ opacity: 0, y: 20 }}
