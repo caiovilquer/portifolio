@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import avatar from "../assets/avatar.jpeg";
+import avatar from "../assets/avatar.png";
 
 // Interface para os dados de habilidade
 interface Skill {
@@ -15,7 +15,7 @@ const skillCategories: { name: string; skills: Skill[] }[] = [
     skills: [
       { name: "Java", level: "Avançado", subLevel: 85 },
       { name: "Kotlin", level: "Intermediário", subLevel: 75 },
-      { name: "TypeScript", level: "Intermediário", subLevel: 60 },
+      { name: "TypeScript", level: "Intermediário", subLevel: 75 },
       { name: "Python", level: "Avançado", subLevel: 75 },
       { name: "C", level: "Básico", subLevel: 25 },
     ],
@@ -24,6 +24,7 @@ const skillCategories: { name: string; skills: Skill[] }[] = [
     name: "Frameworks & Bibliotecas",
     skills: [
       { name: "Spring", level: "Avançado", subLevel: 90 },
+      { name: "NestJS", level: "Intermediário", subLevel: 75 },
       { name: "React", level: "Intermediário", subLevel: 55 },
       { name: "JUnit", level: "Avançado", subLevel: 75 },
       { name: "Hibernate", level: "Avançado", subLevel: 95 },
@@ -143,14 +144,16 @@ const About: React.FC = () => (
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           Sou estudante de Engenharia de Computação na Poli-USP e desenvolvedor
-          backend com experiência em Java, Kotlin e Spring Boot, atuando no
-          desenvolvimento de APIs REST, integração com bancos PostgreSQL/MySQL e
-          automação de pipelines CI/CD (GitHub Actions). Também possuo
-          experiência básica em desenvolvimento frontend utilizando React com
-          TypeScript, além de conhecimentos em Python e Análise de Dados. Tenho
-          paixão por criar soluções tecnológicas eficientes, aplicar boas
-          práticas (Clean Code, SOLID, TDD) e estou sempre em busca de novos
-          desafios que estimulem meu aprendizado e crescimento profissional.
+          backend com experiência em Java, Kotlin e Spring Boot, além de
+          conhecimentos em Node com NestJS para desenvolvimento de APIs
+          modernas. Atuo no desenvolvimento de APIs REST, integração com bancos
+          PostgreSQL/MySQL e automação de pipelines CI/CD (GitHub Actions).
+          Também possuo experiência básica em desenvolvimento frontend
+          utilizando React com TypeScript, além de conhecimentos em Python e
+          Análise de Dados. Tenho paixão por criar soluções tecnológicas
+          eficientes, aplicar boas práticas (Clean Code, SOLID, TDD) e estou
+          sempre em busca de novos desafios que estimulem meu aprendizado e
+          crescimento profissional.
         </motion.p>
 
         {/* Substituímos as tags estáticas por uma seção de skills */}

@@ -15,20 +15,62 @@ import {
   SiCss3,
   SiArduino,
   SiC,
+  SiKotlin,
+  SiPostgresql,
+  SiDocker,
 } from "react-icons/si";
 import { TbApi } from "react-icons/tb";
 import { GiConsoleController } from "react-icons/gi";
-import { MdStorage, MdHardware } from "react-icons/md";
+import {
+  MdStorage,
+  MdHardware,
+  MdPets,
+  MdSchedule,
+  MdEmail,
+} from "react-icons/md";
 import { VscSnake } from "react-icons/vsc";
+import { FaShieldAlt } from "react-icons/fa";
 
 // Importar os vídeos MP4
 import gameListDemo from "../assets/mp4/game-list-demo.mp4";
 import minotauroDemo from "../assets/mp4/minotauro-demo.mp4";
 import cadastroDemo from "../assets/mp4/cadastro-demo.mp4";
 
+// Importar imagens dos projetos
+import petcareImage from "../assets/images/petcare-image.png";
+
 const projects: Project[] = [
   {
     id: 1,
+    title: "Pet Care Scheduler",
+    description:
+      "Aplicação backend para organizar e lembrar cuidados recorrentes com pets. Sistema completo desenvolvido em Kotlin/Spring Boot que permite tutores cadastrarem seus animais, planejarem eventos (vacinas, medicamentos, banho/serviços) e receberem lembretes automáticos por e-mail. Implementa arquitetura hexagonal (DDD/ports & adapters), autenticação JWT, agendamentos inteligentes e notificações por e-mail. Inclui funcionalidades de CRUD completo para tutores, pets e eventos, recuperação de senha e sistema de lembretes automatizados com scheduler diário.",
+    tech: [
+      "Kotlin",
+      "Spring Boot",
+      "API REST",
+      "JWT",
+      "PostgreSQL",
+      "Docker",
+      "Email Integration",
+      "Scheduling",
+    ],
+    techIcons: {
+      Kotlin: SiKotlin,
+      "Spring Boot": SiSpringboot,
+      "API REST": TbApi,
+      JWT: FaShieldAlt,
+      PostgreSQL: SiPostgresql,
+      Docker: SiDocker,
+      "Email Integration": MdEmail,
+      Scheduling: MdSchedule,
+    },
+    githubUrl: "https://github.com/caiovilquer/pet-care-schedule",
+    demoUrl: "https://petcare.vilquer.dev/",
+    demoImage: petcareImage,
+  },
+  {
+    id: 2,
     title: "Game Ranking List",
     description:
       "Aplicação fullstack para gerenciamento pessoal de coleções de jogos. O frontend em React proporciona uma interface moderna, intuitiva e responsiva, permitindo aos usuários visualizar, adicionar e organizar jogos com facilidade, utilizando filtros avançados e classificação personalizada. O backend, desenvolvido em Java com Spring Boot, disponibiliza uma API RESTful robusta com autenticação, operações CRUD completas e persistência eficiente em banco de dados relacional. Juntos, criam uma plataforma prática e completa para entusiastas organizarem suas bibliotecas de jogos digitais.",
@@ -56,7 +98,7 @@ const projects: Project[] = [
     demoVideo: gameListDemo,
   },
   {
-    id: 2,
+    id: 3,
     title: "A Fúria do Minotauro",
     description:
       "Labirinto sensorial interativo baseado na mitologia grega (Teseu e o Minotauro), projetado para aprimorar a coordenação motora fina e concentração, especialmente em usuários com TEA. Utilizando Arduino e Python (Pygame), o sistema detecta colisões por interrupção digital ao toque do anel nas paredes metálicas do labirinto móvel, fornecendo feedback imediato (visual e sonoro). O jogador avança gradativamente em fases com níveis crescentes de dificuldade, recebendo estímulos sensoriais integrados enquanto acompanha Teseu na épica missão de vencer o Minotauro.",
@@ -79,7 +121,7 @@ const projects: Project[] = [
     demoVideo: minotauroDemo,
   },
   {
-    id: 3,
+    id: 4,
     title: "Sistema de Cadastro via CLI",
     description:
       "Sistema de cadastro de usuários executado via terminal, desenvolvido em Java. Proporciona uma interface textual simples e intuitiva para cadastro, consulta, edição e exclusão de informações pessoais dos usuários. Os dados são armazenados e gerenciados em arquivos texto (bloco de notas). Inclui também um módulo para criação e gerenciamento de perguntas dinâmicas na interface de cadastro. Projeto educacional que demonstra conceitos básicos de persistência de dados e manipulação de arquivos.",
@@ -95,7 +137,7 @@ const projects: Project[] = [
     demoVideo: cadastroDemo,
   },
   {
-    id: 4,
+    id: 5,
     title: "Geladeira com Peltier",
     description:
       "Mini geladeira inteligente usando pastilha Peltier. O microcontrolador MSP430 é responsável por gerenciar o funcionamento do sistema, controlando a temperatura interna e o acionamento do módulo Peltier conforme necessário. Ademais, é possível selecionar a opção de temporizar o funcionamento da geladeira, isto é setar um horário para ligá-la e/ou desligá-la Projeto de hardware que demonstra a aplicação de efeito termoelétrico para refrigeração em escala reduzida.",
