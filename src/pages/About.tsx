@@ -151,7 +151,7 @@ const About: React.FC = () => (
           Também possuo experiência básica em desenvolvimento frontend
           utilizando React com TypeScript, além de conhecimentos em Python e
           Análise de Dados. Tenho paixão por criar soluções tecnológicas
-          eficientes, aplicar boas práticas (Clean Code, SOLID, TDD) e estou
+          eficientes, aplicar boas práticas (Clean Code, SOLID, DDD) e estou
           sempre em busca de novos desafios que estimulem meu aprendizado e
           crescimento profissional.
         </motion.p>
@@ -167,7 +167,7 @@ const About: React.FC = () => (
           {[
             "Clean Code",
             "SOLID",
-            "TDD",
+            "DDD",
             "RESTful APIs",
             "Análise de Dados",
             "Eletrônica",
