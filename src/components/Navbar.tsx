@@ -1,35 +1,27 @@
-import React, { useContext, useState, useEffect } from "react";
-import { ThemeContext } from "../contexts/ThemeContext";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const links: { label: string; href: string }[] = [
   { label: "Home", href: "#home" },
   { label: "Sobre", href: "#about" },
   { label: "Projetos", href: "#projects" },
-  { label: "Projetos Futuros", href: "#future-projects" },
+  { label: "Futuro", href: "#future-projects" },
   { label: "Contato", href: "#contact" },
 ];
 
 const Navbar: React.FC = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
   const [activeLink, setActiveLink] = useState("home");
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Handle scroll events to update active link
   useEffect(() => {
     const handleScroll = () => {
-      // Update navbar background opacity when scrolled
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
 
-      // Get current section based on scroll position
       const sections = document.querySelectorAll("section");
-
-      const isNearBottom =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+      const isNearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
 
       if (isNearBottom) {
-        // If we are close to the end, activate the last section (contact)
         setActiveLink("contact");
         return;
       }
@@ -37,7 +29,8 @@ const Navbar: React.FC = () => {
       let current = "";
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
-        if (window.scrollY >= sectionTop - 200) {
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= sectionTop - 300 && window.scrollY < sectionTop + sectionHeight - 300) {
           current = section.getAttribute("id") || "";
         }
       });
@@ -53,146 +46,105 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle mobile menu link clicks
   const handleMobileMenuLinkClick = (href: string) => {
-    setMobileMenuOpen(false); // Close the menu when a link is clicked
-    setActiveLink(href.substring(1)); // Set active link
+    setMobileMenuOpen(false);
+    setActiveLink(href.substring(1));
   };
 
   return (
-    <nav
-      className={`fixed top-0 w-full backdrop-blur-sm z-50 transition-all duration-300 ${
-        isScrolled || mobileMenuOpen
-          ? "bg-white/90 dark:bg-slate-900/90 shadow-sm"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="container mx-auto flex items-center justify-between p-4">
-        <a
-          href="#home"
-          className="text-xl font-bold text-[var(--dark)] transition-colors duration-200"
-        >
-          Caio Vilquer Carvalho
-        </a>
-        <div className="flex items-center gap-6">
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
+          ? "py-4 bg-[#0f172a]/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]"
+          : "py-6 bg-transparent"
+          }`}
+      >
+        <div className="container-custom flex items-center justify-between">
+          <a
+            href="#home"
+            className="text-2xl font-bold tracking-tighter"
+          >
+            <span className="text-white">vilquer</span>
+            <span className="text-[var(--primary)]">.dev</span>
+          </a>
+
           {/* Desktop Navigation */}
-          <ul className="hidden md:flex space-x-6">
+          <ul className="hidden md:flex items-center gap-8 bg-[rgba(255,255,255,0.03)] px-6 py-2 rounded-full border border-[rgba(255,255,255,0.05)] backdrop-blur-sm">
             {links.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className={`nav-link ${
-                    activeLink === link.href.substring(1) ? "active" : ""
-                  }`}
+                  className={`text-sm font-medium transition-all duration-300 relative px-2 py-1 ${activeLink === link.href.substring(1)
+                    ? "text-[var(--primary)]"
+                    : "text-slate-400 hover:text-white"
+                    }`}
                 >
                   {link.label}
+                  {activeLink === link.href.substring(1) && (
+                    <motion.span
+                      layoutId="activeTab"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[var(--primary)] rounded-full"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
                 </a>
               </li>
             ))}
           </ul>
 
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-            aria-label="Toggle dark mode"
-          >
-            {theme === "dark" ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
-          </button>
+          <div className="hidden md:block w-[100px] text-right">
+            {/* Placeholder for balance or extra action if needed */}
+          </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
-            aria-label="Menu"
+            className="md:hidden p-2 text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Menu"
           >
-            {mobileMenuOpen ? (
-              // X icon when menu is open
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              // Hamburger icon when menu is closed
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            <div className="w-6 h-5 relative flex flex-col justify-between">
+              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`} />
+              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2.5" : ""}`} />
+            </div>
           </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="md:hidden bg-white dark:bg-slate-900 shadow-lg"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-[var(--bg-primary)] pt-24 px-6 md:hidden"
           >
-            <ul className="flex flex-col py-4">
-              {links.map((link) => (
-                <li key={link.href} className="px-4 py-2">
+            <ul className="flex flex-col gap-6 items-center">
+              {links.map((link, i) => (
+                <motion.li
+                  key={link.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
                   <a
                     href={link.href}
-                    className={`block text-lg nav-link ${
-                      activeLink === link.href.substring(1) ? "active" : ""
-                    }`}
                     onClick={() => handleMobileMenuLinkClick(link.href)}
+                    className={`text-2xl font-medium ${activeLink === link.href.substring(1)
+                      ? "text-[var(--primary)]"
+                      : "text-slate-400"
+                      }`}
                   >
                     {link.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 };
 

@@ -33,55 +33,32 @@ const futureProjects: Project[] = [
     demoVideo: "",
     demoImage: trackShotImage,
   },
-  {
-    id: 2,
-    title: "PetCareScheduler",
-    description:
-      "Aplicação backend desenvolvida em Kotlin com Spring Boot para agendamento inteligente e gerenciamento de cuidados com pets. Conta com uma API RESTful robusta, persistência eficiente usando PostgreSQL e comunicação via notificações por e-mail para avisar sobre eventos importantes aos usuários. Futuras integrações previstas incluem clínicas veterinárias e inteligência artificial para recomendações personalizadas. Protótipo funcional em desenvolvimento com arquitetura limpa e modular.",
-    tech: ["Kotlin", "Spring Boot", "PostgreSQL", "Docker", "API REST"],
-    techIcons: {
-      Kotlin: SiKotlin,
-      "Spring Boot": SiSpringboot,
-      PostgreSQL: BiLogoPostgresql,
-      Docker: FaDocker,
-      "API REST": TbApi,
-    },
-    githubUrl: "",
-    demoUrl: "",
-    inProgress: true,
-    estimatedCompletion: "Jul 2025",
-    progressPercentage: 15,
-    demoVideo: "",
-    demoImage: petCareImage,
-  },
 ];
 
 const FutureProjects: React.FC = () => (
-  <div className="container mx-auto px-4">
+  <div className="container-custom py-20">
     <motion.h2
-      className="section-title"
+      className="heading-2 text-center mb-10"
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      Projetos Futuros
+      Projetos <span className="text-gradient">Futuros</span>
     </motion.h2>
 
     <motion.p
-      className="text-center text-[var(--secondary)] mb-10 max-w-3xl mx-auto"
+      className="text-center text-[var(--text-secondary)] mb-16 max-w-2xl mx-auto text-lg leading-relaxed"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      Aqui estão os projetos que estou atualmente desenvolvendo ou planejando
-      para o futuro próximo. Fique à vontade para entrar em contato se quiser
-      saber mais ou colaborar.
+      Inovações e experimentos em desenvolvimento. Acompanhe o progresso dessas ideias que estão saindo do papel.
     </motion.p>
 
     <motion.div
-      className="project-grid"
+      className="grid grid-cols-1 md:grid-cols-2 gap-8"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
@@ -94,6 +71,7 @@ const FutureProjects: React.FC = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 * index }}
+          className="h-full"
         >
           <ProjectCard project={project} />
         </motion.div>

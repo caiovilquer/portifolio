@@ -34,7 +34,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
 
-  // Manipulador de eventos para o vídeo
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
@@ -43,119 +42,120 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     const handlePause = () => setIsPlaying(false);
     const handleEnded = () => setIsPlaying(false);
 
-    // Adiciona eventos
     videoElement.addEventListener("play", handlePlay);
     videoElement.addEventListener("pause", handlePause);
     videoElement.addEventListener("ended", handleEnded);
 
     return () => {
-      // Remove eventos
       videoElement.removeEventListener("play", handlePlay);
       videoElement.removeEventListener("pause", handlePause);
       videoElement.removeEventListener("ended", handleEnded);
     };
   }, [showMedia]);
 
-  const hasMedia = project.demoVideo || project.demoImage;
-
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-bold text-white">{project.title}</h3>
+    <div className="glass-card overflow-hidden group h-full flex flex-col">
+      <div className="p-8 flex-1 flex flex-col">
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
+            {project.title}
+          </h3>
           {project.inProgress && (
-            <span className="flex items-center gap-1 px-2 py-1 bg-amber-600 text-xs font-medium text-white rounded-full">
+            <span className="flex items-center gap-1 px-3 py-1 bg-amber-500/20 text-amber-300 text-xs font-medium rounded-full border border-amber-500/30">
               <FaClock size={12} />
               Em desenvolvimento
             </span>
           )}
         </div>
 
-        {/* Exibe imagem diretamente se existir e não tiver vídeo */}
-        {project.demoImage && !project.demoVideo && (
-          <div className="mb-4">
-            <img
-              src={project.demoImage}
-              alt={`Demonstração do projeto ${project.title}`}
-              className="w-full rounded-lg shadow-md object-contain"
-            />
+        {/* Media Section */}
+        {(project.demoImage || project.demoVideo) && (
+          <div className="mb-6 rounded-xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)]">
+            {project.demoImage && !project.demoVideo && (
+              <img
+                src={project.demoImage}
+                alt={`Demonstração do projeto ${project.title}`}
+                className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
+              />
+            )}
+
+            {project.demoVideo && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowMedia(!showMedia)}
+                  className="w-full relative group/video"
+                  aria-label={showMedia ? "Ocultar demonstração" : "Mostrar demonstração"}
+                >
+                  {!showMedia ? (
+                    <div className="flex flex-col items-center justify-center h-48 bg-[var(--bg-secondary)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
+                      <div className="w-12 h-12 rounded-full border-2 border-current flex items-center justify-center mb-2 group-hover/video:scale-110 transition-transform">
+                        <FaPlay className="pl-1" />
+                      </div>
+                      <span className="text-sm font-medium">Ver demonstração</span>
+                    </div>
+                  ) : (
+                    <AnimatePresence>
+                      <motion.div
+                        ref={videoContainerRef}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="w-full"
+                      >
+                        <video
+                          ref={videoRef}
+                          src={project.demoVideo}
+                          controls
+                          playsInline
+                          preload="metadata"
+                          className="w-full max-h-64 object-contain bg-black"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Botão de toggle apenas para vídeos */}
-        {project.demoVideo && (
-          <div className="mb-4 relative">
-            <button
-              onClick={() => setShowMedia(!showMedia)}
-              className="w-full bg-gray-900 rounded-lg overflow-hidden relative group"
-              aria-label={
-                showMedia ? "Ocultar demonstração" : "Mostrar demonstração"
-              }
-            >
-              {!showMedia ? (
-                <div className="flex items-center justify-center p-4 h-32 text-gray-400 hover:text-blue-400 transition-colors">
-                  <FaPlay className="mr-2" />
-                  <span>Ver demonstração</span>
-                </div>
-              ) : (
-                <AnimatePresence>
-                  <motion.div
-                    ref={videoContainerRef}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="w-full relative video-container"
-                  >
-                    <video
-                      ref={videoRef}
-                      src={project.demoVideo}
-                      controls
-                      playsInline
-                      preload="metadata"
-                      className="w-full rounded-lg object-cover shadow-md"
-                      aria-label={`Demonstração do projeto ${project.title}`}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              )}
-            </button>
-          </div>
-        )}
+        <p className="text-[var(--text-secondary)] mb-6 leading-relaxed flex-1">
+          {project.description}
+        </p>
 
-        <p className="text-gray-300 mb-4">{project.description}</p>
-
-        {/* Adicionando seção de progresso quando disponível */}
+        {/* Progress Bar */}
         {project.estimatedCompletion && (
-          <div className="mb-4">
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-300">Progresso:</span>
-              <span className="text-gray-300">
-                {project.progressPercentage || 0}% •{" "}
-                {project.estimatedCompletion}
-              </span>
+          <div className="mb-6">
+            <div className="flex justify-between text-xs text-[var(--text-tertiary)] mb-2">
+              <span>Progresso</span>
+              <span>{project.progressPercentage || 0}%</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-[var(--bg-tertiary)] rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-blue-500 h-2.5 rounded-full transition-all duration-700 ease-in-out"
+                className="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] h-full rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${project.progressPercentage || 0}%` }}
-              ></div>
+              />
+            </div>
+            <div className="text-right text-xs text-[var(--text-tertiary)] mt-1">
+              Previsão: {project.estimatedCompletion}
             </div>
           </div>
         )}
 
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-2 mb-2">
+        {/* Tech Tags */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2">
             {project.tech.map((tech) => (
               <span
                 key={tech}
-                className="flex items-center gap-1 px-3 py-1 bg-gray-700 text-sm text-gray-200 rounded-full"
+                className="flex items-center gap-1.5 px-3 py-1 bg-[var(--bg-tertiary)] text-xs text-[var(--text-secondary)] rounded-md border border-[var(--border-color)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors cursor-default"
               >
                 {project.techIcons &&
                   project.techIcons[tech] &&
                   React.createElement(project.techIcons[tech], {
-                    className: "text-gray-300",
-                    size: 16,
+                    className: "text-current opacity-70",
+                    size: 14,
                   })}
                 {tech}
               </span>
@@ -163,16 +163,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        {/* Actions */}
+        <div className="flex flex-wrap gap-4 mt-auto pt-6 border-t border-[var(--border-color)]">
           {project.githubUrl && (
             <a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors duration-300"
+              className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors"
             >
-              <FaGithub className="text-lg" />
-              <span>GitHub</span>
+              <FaGithub size={18} />
+              <span>Código</span>
             </a>
           )}
           {project.demoUrl && (
@@ -180,10 +181,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               href={project.demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-green-400 hover:text-green-300 transition-colors duration-300"
+              className="flex items-center gap-2 text-sm font-medium text-[var(--primary)] hover:text-[var(--accent)] transition-colors"
             >
-              <FaExternalLinkAlt className="text-lg" />
-              <span>Demo</span>
+              <FaExternalLinkAlt size={16} />
+              <span>Live Demo</span>
             </a>
           )}
           {project.additionalLinks &&
@@ -193,9 +194,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors duration-300"
+                className="flex items-center gap-2 text-sm font-medium text-[var(--secondary)] hover:text-white transition-colors"
               >
-                <FaExternalLinkAlt className="text-lg" />
+                <FaExternalLinkAlt size={16} />
                 <span>{link.label}</span>
               </a>
             ))}

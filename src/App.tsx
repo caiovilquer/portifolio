@@ -1,5 +1,4 @@
 import React from "react";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -8,26 +7,26 @@ import FutureProjects from "./pages/FutureProjects";
 import Contact from "./pages/Contact";
 
 const App: React.FC = () => (
-  <ThemeProvider>
+  <>
     <Navbar />
-    <main className="mt-16">
-      <section id="home" className="section">
+    <main>
+      <section id="home" className="section relative z-10">
         <Home />
       </section>
-      <section id="about" className="section">
+      <section id="about" className="section relative z-20 bg-[var(--bg-primary)]">
         <About />
       </section>
-      <section id="projects" className="section">
+      <section id="projects" className="section relative z-20 bg-[var(--bg-primary)]">
         <Projects />
       </section>
-      <section id="future-projects" className="section">
+      <section id="future-projects" className="section relative z-20 bg-[var(--bg-primary)]">
         <FutureProjects />
       </section>
-      <section id="contact" className="section">
+      <section id="contact" className="section relative z-20 bg-[var(--bg-primary)]">
         <Contact />
       </section>
     </main>
-  </ThemeProvider>
+  </>
 );
 
 export default App;

@@ -155,19 +155,19 @@ const projects: Project[] = [
 ];
 
 const Projects: React.FC = () => (
-  <div className="container mx-auto px-4">
+  <div className="container-custom py-20">
     <motion.h2
-      className="section-title"
+      className="heading-2 text-center mb-16"
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      Meus Projetos
+      Meus <span className="text-gradient">Projetos</span>
     </motion.h2>
 
     <motion.div
-      className="project-grid"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
@@ -180,6 +180,7 @@ const Projects: React.FC = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 * index }}
+          className="h-full"
         >
           <ProjectCard project={project} />
         </motion.div>

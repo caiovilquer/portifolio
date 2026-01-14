@@ -1,216 +1,164 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { FaCode, FaLayerGroup, FaTools, FaDatabase, FaBrain } from "react-icons/fa";
 import avatar from "../assets/avatar.png";
 
-// Interface para os dados de habilidade
-interface Skill {
-  name: string;
-  level: "Básico" | "Intermediário" | "Avançado";
-  subLevel?: number;
-}
-
-const skillCategories: { name: string; skills: Skill[] }[] = [
+const techStack = [
   {
-    name: "Linguagens de Programação",
+    category: "Linguagens & Core",
+    icon: <FaCode className="text-[var(--primary)]" />,
+    skills: ["Java", "Kotlin", "TypeScript", "Python", "JavaScript", "C", "SQL"],
+  },
+  {
+    category: "Frameworks & Libs",
+    icon: <FaLayerGroup className="text-[var(--secondary)]" />,
     skills: [
-      { name: "Java", level: "Avançado", subLevel: 85 },
-      { name: "Kotlin", level: "Intermediário", subLevel: 75 },
-      { name: "TypeScript", level: "Intermediário", subLevel: 75 },
-      { name: "Python", level: "Avançado", subLevel: 75 },
-      { name: "C", level: "Básico", subLevel: 25 },
+      "Spring Boot",
+      "NestJS",
+      "React",
+      "Hibernate/JPA",
+      "JUnit",
+      "TailwindCSS"
     ],
   },
   {
-    name: "Frameworks & Bibliotecas",
-    skills: [
-      { name: "Spring", level: "Avançado", subLevel: 90 },
-      { name: "NestJS", level: "Intermediário", subLevel: 75 },
-      { name: "React", level: "Intermediário", subLevel: 55 },
-      { name: "JUnit", level: "Avançado", subLevel: 75 },
-      { name: "Hibernate", level: "Avançado", subLevel: 95 },
-    ],
+    category: "DevOps & Tools",
+    icon: <FaTools className="text-[var(--accent)]" />,
+    skills: ["Git", "Docker", "GitHub Actions", "CI/CD", "Maven", "Gradle", "Linux"],
   },
   {
-    name: "DevOps & Ferramentas",
-    skills: [
-      { name: "Git", level: "Avançado", subLevel: 90 },
-      { name: "Docker", level: "Básico", subLevel: 30 },
-      { name: "CI/CD", level: "Avançado", subLevel: 80 },
-      { name: "GitHub Actions", level: "Avançado", subLevel: 85 },
-    ],
+    category: "Banco de Dados",
+    icon: <FaDatabase className="text-purple-400" />,
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "H2 Database"],
   },
   {
-    name: "Banco de Dados",
+    category: "Arquitetura & Outros",
+    icon: <FaBrain className="text-amber-400" />,
     skills: [
-      { name: "PostgreSQL", level: "Avançado", subLevel: 85 },
-      { name: "MySQL", level: "Avançado", subLevel: 90 },
-      { name: "MongoDB", level: "Básico", subLevel: 20 },
+      "Clean Code",
+      "SOLID",
+      "DDD",
+      "REST API",
+      "Microservices",
+      "TDD",
+      "Design Patterns",
     ],
   },
 ];
 
-const SkillBar: React.FC<{ skill: Skill; delay: number }> = ({
-  skill,
-  delay,
-}) => {
-  const getLevelWidth = (skill: Skill): number => {
-    if (skill.subLevel !== undefined) {
-      switch (skill.level) {
-        case "Básico":
-          return Math.min(40, Math.max(20, skill.subLevel));
-        case "Intermediário":
-          return Math.min(75, Math.max(50, skill.subLevel));
-        case "Avançado":
-          return Math.min(100, Math.max(75, skill.subLevel));
-        default:
-          return 0;
-      }
-    }
-
-    // Se não houver subLevel, use o nível padrão
-    switch (skill.level) {
-      case "Básico":
-        return 33;
-      case "Intermediário":
-        return 65;
-      case "Avançado":
-        return 100;
-      default:
-        return 0;
-    }
-  };
-
-  return (
-    <div className="mb-3">
-      <div className="flex justify-between mb-1">
-        <span className="text-sm font-medium text-[var(--dark)]">
-          {skill.name}
-        </span>
-        <span className="text-xs font-semibold text-[var(--primary)]">
-          {skill.level}
-        </span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-        <motion.div
-          className="h-2 rounded-full bg-[var(--primary)]"
-          style={{ width: 0 }}
-          animate={{ width: `${getLevelWidth(skill)}%` }}
-          transition={{
-            duration: 1.2,
-            delay: delay,
-            ease: "easeOut",
-          }}
-        />
-      </div>
-    </div>
-  );
-};
-
 const About: React.FC = () => (
-  <div className="container mx-auto px-4">
+  <div className="container-custom py-20 relative">
+    {/* Background Decorations */}
+    <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
+    <div className="absolute bottom-20 left-0 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+
     <motion.h2
-      className="section-title"
+      className="heading-2 text-center mb-16"
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      Sobre Mim
+      Sobre <span className="text-gradient">Mim</span>
     </motion.h2>
 
     <motion.div
-      className="flex flex-col md:flex-row items-center gap-8"
+      className="flex flex-col lg:flex-row items-center lg:items-start gap-12 mb-24 max-w-6xl mx-auto"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <motion.img
-        src={avatar}
-        alt="Avatar"
-        className="w-48 h-48 rounded-full object-cover shadow-lg"
+      <motion.div
+        className="relative group flex-shrink-0"
         initial={{ scale: 0.8, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      />
+        transition={{ delay: 0.2 }}
+      >
+        <div className="absolute -inset-1 bg-gradient-to-br from-[var(--primary)] to-[var(--secondary)] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-500"></div>
+        <img
+          src={avatar}
+          alt="Caio Vilquer Carvalho"
+          className="relative w-64 h-64 rounded-full object-cover border-4 border-[var(--bg-primary)] shadow-2xl"
+        />
+      </motion.div>
 
-      <div>
+      <div className="flex-1 space-y-6 text-lg text-[var(--text-secondary)] leading-relaxed text-center lg:text-left">
         <motion.p
-          className="text-[var(--secondary)] leading-relaxed mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Sou estudante de Engenharia de Computação na Poli-USP e desenvolvedor
-          backend com experiência em Java, Kotlin e Spring Boot, além de
-          conhecimentos em Node com NestJS para desenvolvimento de APIs
-          modernas. Atuo no desenvolvimento de APIs REST, integração com bancos
-          PostgreSQL/MySQL e automação de pipelines CI/CD (GitHub Actions).
-          Também possuo experiência básica em desenvolvimento frontend
-          utilizando React com TypeScript, além de conhecimentos em Python e
-          Análise de Dados. Tenho paixão por criar soluções tecnológicas
-          eficientes, aplicar boas práticas (Clean Code, SOLID, DDD) e estou
-          sempre em busca de novos desafios que estimulem meu aprendizado e
-          crescimento profissional.
-        </motion.p>
-
-        {/* Substituímos as tags estáticas por uma seção de skills */}
-        <motion.div
-          className="flex flex-wrap gap-2 mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {[
-            "Clean Code",
-            "SOLID",
-            "DDD",
-            "RESTful APIs",
-            "Análise de Dados",
-            "Eletrônica",
-          ].map((methodology, index) => (
-            <span key={index} className="tech-tag">
-              {methodology}
-            </span>
-          ))}
-        </motion.div>
+          Sou estudante de{" "}
+          <span className="text-[var(--primary)] font-semibold">
+            Engenharia de Computação na Poli-USP
+          </span>{" "}
+          e desenvolvedor backend apaixonado. Minha jornada é marcada pelo
+          domínio de Java, Kotlin e Spring Boot, além de explorar o ecossistema
+          moderno com NestJS e React.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          Com foco em entregar soluções robustas, tenho experiência prática em
+          arquitetura de APIs REST, modelagem de banco de dados (PostgreSQL/MySQL)
+          e automação de CI/CD. Mais do que código, busco excelência através de{" "}
+          <strong className="text-[var(--text-primary)] font-semibold">
+            Clean Code
+          </strong>
+          ,{" "}
+          <strong className="text-[var(--text-primary)] font-semibold">
+            SOLID
+          </strong>{" "}
+          e{" "}
+          <strong className="text-[var(--text-primary)] font-semibold">
+            DDD
+          </strong>
+          .
+        </motion.p>
       </div>
     </motion.div>
 
     <motion.div
-      className="mt-16"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: 0.4 }}
+      transition={{ duration: 0.7 }}
+      className="max-w-7xl mx-auto"
     >
-      <h3 className="text-2xl font-bold mb-8 text-center">
-        Minhas <span className="text-[var(--primary)]">Habilidades</span>
+      <h3 className="text-3xl font-bold mb-12 text-center text-[var(--text-primary)]">
+        Tech <span className="text-gradient">Stack</span>
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {skillCategories.map((category, categoryIndex) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {techStack.map((stack, index) => (
           <motion.div
-            key={category.name}
-            className="card"
+            key={stack.category}
+            className="glass-card p-6 flex flex-col h-full hover:bg-[var(--bg-tertiary)]/30 transition-colors"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 + categoryIndex * 0.1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <h4 className="text-lg font-semibold mb-4 pb-2 border-b border-[var(--border)]">
-              {category.name}
-            </h4>
-            {category.skills.map((skill, index) => (
-              <SkillBar
-                key={skill.name}
-                skill={skill}
-                delay={0.4 + categoryIndex * 0.1 + index * 0.1}
-              />
-            ))}
+            <div className="flex items-center gap-3 mb-6 border-b border-[var(--border-color)] pb-4">
+              <span className="text-2xl">{stack.icon}</span>
+              <h4 className="text-xl font-bold text-[var(--text-primary)]">
+                {stack.category}
+              </h4>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {stack.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1.5 rounded-md bg-[rgba(56,189,248,0.08)] border border-[rgba(56,189,248,0.15)] text-[var(--text-primary)] text-sm hover:bg-[rgba(56,189,248,0.15)] hover:border-[var(--primary)] transition-all cursor-default"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </motion.div>
         ))}
       </div>
