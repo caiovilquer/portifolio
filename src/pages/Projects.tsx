@@ -18,6 +18,11 @@ import {
   SiKotlin,
   SiPostgresql,
   SiDocker,
+  SiNestjs,
+  SiNodedotjs,
+  SiRedis,
+  SiAmazon,
+  SiPrisma,
 } from "react-icons/si";
 import { TbApi } from "react-icons/tb";
 import { GiConsoleController } from "react-icons/gi";
@@ -38,6 +43,7 @@ import cadastroDemo from "../assets/mp4/cadastro-demo.mp4";
 
 // Importar imagens dos projetos
 import petcareImage from "../assets/images/petcare-image.png";
+import poliatletasImage from "../assets/images/poliatletas-image.png";
 
 const projects: Project[] = [
   {
@@ -68,6 +74,35 @@ const projects: Project[] = [
     githubUrl: "https://github.com/caiovilquer/pet-care-schedule",
     demoUrl: "https://petcare.vilquer.dev/",
     demoImage: petcareImage,
+  },
+  {
+    id: 6,
+    title: "Gestão de Equipes e Competições de Atletismo",
+    description:
+      "Aplicação backend/full-stack para gerenciamento de competições e desempenho no atletismo. Sistema desenvolvido com foco em organização, integridade de dados e escalabilidade, permitindo o cadastro e gerenciamento de atletas, provas, resultados e rankings de forma estruturada e automatizada. O backend foi desenvolvido em Node.js/TypeScript com NestJS, seguindo Clean Architecture e padrão Hexagonal (Ports & Adapters), garantindo desacoplamento, testabilidade e fácil manutenção. O sistema implementa modelagem relacional complexa com PostgreSQL e Prisma ORM, incluindo regras de negócio para cálculo dinâmico de rankings, validação de recordes em tempo real e controle de consistência dos dados. Inclui autenticação JWT com controle de acesso baseado em papéis (RBAC), processamento em lote para importação de grandes volumes de resultados via CSV/Excel, integração com AWS S3 para gerenciamento de mídia e estratégias de cache com Redis para otimização de performance. Conta ainda com logs estruturados, pipelines de CI/CD e frontend completo desenvolvido em React, com dashboards analíticos para visualização de dados esportivos.",
+    tech: [
+      "Node.js",
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Redis",
+      "AWS",
+      "React",
+    ],
+    techIcons: {
+      "Node.js": SiNodedotjs,
+      NestJS: SiNestjs,
+      TypeScript: SiTypescript,
+      PostgreSQL: SiPostgresql,
+      Prisma: SiPrisma,
+      Redis: SiRedis,
+      AWS: SiAmazon,
+      React: FaReact,
+    },
+    githubUrl: "",
+    demoUrl: "https://poliatletas.vilquer.dev/",
+    demoImage: poliatletasImage
   },
   {
     id: 2,

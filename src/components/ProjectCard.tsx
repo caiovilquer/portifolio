@@ -75,7 +75,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               <img
                 src={project.demoImage}
                 alt={`Demonstração do projeto ${project.title}`}
-                className="w-full h-40 sm:h-48 object-cover hover:scale-105 transition-transform duration-500"
+                className="w-full aspect-video object-cover hover:scale-105 transition-transform duration-500"
               />
             )}
 
@@ -87,7 +87,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                   aria-label={showMedia ? "Ocultar demonstração" : "Mostrar demonstração"}
                 >
                   {!showMedia ? (
-                    <div className="flex flex-col items-center justify-center h-40 sm:h-48 bg-[var(--bg-secondary)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
+                    <div className="flex flex-col items-center justify-center aspect-video bg-[var(--bg-secondary)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-current flex items-center justify-center mb-2 group-hover/video:scale-110 transition-transform">
                         <FaPlay className="pl-1" />
                       </div>
@@ -108,7 +108,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                           controls
                           playsInline
                           preload="metadata"
-                          className="w-full max-h-48 sm:max-h-64 object-contain bg-black"
+                          className="w-full aspect-video object-contain bg-black"
                           onClick={(e) => e.stopPropagation()}
                         />
                       </motion.div>

@@ -28,7 +28,7 @@ const futureProjects: Project[] = [
     githubUrl: "",
     demoUrl: "",
     inProgress: true,
-    estimatedCompletion: "Fev 2026",
+    estimatedCompletion: "Fev 2027",
     progressPercentage: 5,
     demoVideo: "",
     demoImage: trackShotImage,
