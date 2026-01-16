@@ -79,8 +79,8 @@ const Navbar: React.FC = () => {
         animate="visible"
         variants={navVariants}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${isScrolled
-            ? "py-3 md:py-4 bg-[#0f172a]/90 backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)] shadow-lg"
-            : "py-5 md:py-6 bg-transparent"
+          ? "py-3 md:py-4 bg-[#0f172a]/90 backdrop-blur-xl border-b border-[rgba(255,255,255,0.05)] shadow-lg"
+          : "py-3 md:py-6 bg-transparent"
           }`}
       >
         <div className="container-custom flex items-center justify-between pl-4">
@@ -100,8 +100,8 @@ const Navbar: React.FC = () => {
                 <a
                   href={link.href}
                   className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-full z-10 block ${activeLink === link.href.substring(1)
-                      ? "text-white"
-                      : "text-slate-400 hover:text-white"
+                    ? "text-white"
+                    : "text-slate-400 hover:text-white"
                     }`}
                 >
                   {link.label}
@@ -133,7 +133,7 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button - Fixed Position & Z-Index */}
           <button
-            className="md:hidden relative z-50 p-2 text-white focus:outline-none"
+            className="md:hidden relative z-50 p-2 text-white focus:outline-none flex items-center justify-center"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Fechar Menu" : "Abrir Menu"}
             aria-expanded={mobileMenuOpen}
@@ -212,8 +212,8 @@ const Navbar: React.FC = () => {
                     href={link.href}
                     onClick={() => handleMobileMenuLinkClick(link.href)}
                     className={`block w-full py-3 text-3xl font-bold tracking-tight transition-all duration-300 ${activeLink === link.href.substring(1)
-                        ? "text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] scale-110"
-                        : "text-slate-400 hover:text-white"
+                      ? "text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] scale-110"
+                      : "text-slate-400 hover:text-white"
                       }`}
                   >
                     {link.label}
