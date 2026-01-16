@@ -142,25 +142,25 @@ const AnimatedTerminal: React.FC = () => {
 
     return (
         <motion.div
-            className="w-full max-w-4xl mx-auto shadow-2xl"
+            className="w-full max-w-4xl mx-auto shadow-2xl px-4 sm:px-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
         >
             <div className="bg-[#1e293b] rounded-t-xl p-3 flex items-center border-b border-[rgba(255,255,255,0.05)]">
                 <div className="flex space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/80"></div>
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/80"></div>
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/80"></div>
                 </div>
-                <div className="mx-auto text-slate-400 text-xs font-mono opacity-60">
+                <div className="mx-auto text-slate-400 text-[10px] sm:text-xs font-mono opacity-60 truncate max-w-[150px] sm:max-w-none">
                     caio@portfolio:~
                 </div>
             </div>
-            <div className="bg-[#0f172a]/95 backdrop-blur rounded-b-xl p-6 h-96 overflow-auto font-mono text-sm border-x border-b border-[rgba(255,255,255,0.05)] custom-scrollbar">
-                <div className="whitespace-pre-wrap text-left leading-relaxed">
+            <div className="bg-[#0f172a]/95 backdrop-blur rounded-b-xl p-4 sm:p-6 h-64 sm:h-96 overflow-x-hidden overflow-y-auto font-mono text-xs sm:text-sm border-x border-b border-[rgba(255,255,255,0.05)] custom-scrollbar">
+                <div className="whitespace-pre-wrap text-left leading-relaxed break-words">
                     <span className="text-emerald-400">{displayText}</span>
-                    <span className="inline-block w-2.5 h-5 bg-emerald-400 ml-1 align-middle animate-pulse" />
+                    <span className="inline-block w-2 sm:w-2.5 h-4 sm:h-5 bg-emerald-400 ml-1 align-middle animate-pulse" />
                 </div>
             </div>
         </motion.div>

@@ -35,10 +35,11 @@
   html {
     scroll-behavior: smooth;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
   }
 
   body {
-    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased overflow-x-hidden;
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased overflow-x-hidden w-full relative;
     background-image:
       radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 25%),
       radial-gradient(circle at 85% 30%, rgba(129, 140, 248, 0.08) 0%, transparent 25%);
@@ -47,7 +48,8 @@
 
   /* Modern Scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
+    /* Thinner on mobile/desktop for cleaner look */
   }
 
   ::-webkit-scrollbar-track {
@@ -55,7 +57,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-[var(--bg-tertiary)] rounded-full border-4 border-solid border-[var(--bg-primary)];
+    @apply bg-[var(--bg-tertiary)] rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -67,16 +69,16 @@
 
   /* Container utility */
   .container-custom {
-    @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12;
   }
 
   /* Typography */
   .heading-1 {
-    @apply text-5xl md:text-7xl font-bold tracking-tight leading-tight;
+    @apply text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-tight;
   }
 
   .heading-2 {
-    @apply text-3xl md:text-4xl font-bold mb-8 tracking-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold mb-8 tracking-tight;
   }
 
   .text-gradient {
@@ -89,14 +91,14 @@
   }
 
   .glass-card:hover {
-    @apply transform -translate-y-1 shadow-2xl;
-    border-color: rgba(56, 189, 248, 0.2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 20px rgba(56, 189, 248, 0.1);
+    @apply transform shadow-2xl;
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.1);
   }
 
   /* Buttons */
   .btn-primary {
-    @apply px-8 py-3 rounded-full text-white font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl;
+    @apply px-6 py-3 md:px-8 rounded-full text-white font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:scale-95 text-sm md:text-base;
     background-image: var(--gradient-primary);
     box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.25);
   }
@@ -106,16 +108,16 @@
   }
 
   .btn-outline {
-    @apply px-8 py-3 rounded-full border border-[var(--primary)] text-[var(--primary)] font-semibold backdrop-blur-sm transition-all duration-300;
+    @apply px-6 py-3 md:px-8 rounded-full border border-[var(--primary)] text-[var(--primary)] font-semibold backdrop-blur-sm transition-all duration-300 active:scale-95 text-sm md:text-base;
   }
 
   .btn-outline:hover {
     background-color: rgba(56, 189, 248, 0.1);
   }
 
-  /* Section Styles */
+  /* Section Styles - Fixed for Mobile Viewport Height */
   .section {
-    @apply min-h-screen py-20 flex flex-col justify-center relative;
+    @apply min-h-[100dvh] py-16 md:py-20 flex flex-col justify-center relative w-full overflow-hidden;
   }
 
   /* Animations */
@@ -143,4 +145,9 @@
 
 .mono-font {
   font-family: 'JetBrains Mono', monospace;
+}
+
+/* Utilitário para evitar scroll horizontal em toda app */
+.overflow-x-clip {
+  overflow-x: clip;
 }

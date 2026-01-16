@@ -55,13 +55,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   return (
     <div className="glass-card overflow-hidden group h-full flex flex-col">
-      <div className="p-8 flex-1 flex flex-col">
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
+      <div className="p-5 sm:p-6 md:p-8 flex-1 flex flex-col">
+        <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2 sm:gap-0">
+          <h3 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
             {project.title}
           </h3>
           {project.inProgress && (
-            <span className="flex items-center gap-1 px-3 py-1 bg-amber-500/20 text-amber-300 text-xs font-medium rounded-full border border-amber-500/30">
+            <span className="inline-flex w-fit items-center gap-1 px-3 py-1 bg-amber-500/20 text-amber-300 text-xs font-medium rounded-full border border-amber-500/30">
               <FaClock size={12} />
               Em desenvolvimento
             </span>
@@ -75,7 +75,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               <img
                 src={project.demoImage}
                 alt={`Demonstração do projeto ${project.title}`}
-                className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
+                className="w-full h-40 sm:h-48 object-cover hover:scale-105 transition-transform duration-500"
               />
             )}
 
@@ -87,8 +87,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                   aria-label={showMedia ? "Ocultar demonstração" : "Mostrar demonstração"}
                 >
                   {!showMedia ? (
-                    <div className="flex flex-col items-center justify-center h-48 bg-[var(--bg-secondary)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
-                      <div className="w-12 h-12 rounded-full border-2 border-current flex items-center justify-center mb-2 group-hover/video:scale-110 transition-transform">
+                    <div className="flex flex-col items-center justify-center h-40 sm:h-48 bg-[var(--bg-secondary)] text-[var(--text-tertiary)] hover:text-[var(--primary)] transition-colors">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-current flex items-center justify-center mb-2 group-hover/video:scale-110 transition-transform">
                         <FaPlay className="pl-1" />
                       </div>
                       <span className="text-sm font-medium">Ver demonstração</span>
@@ -108,7 +108,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                           controls
                           playsInline
                           preload="metadata"
-                          className="w-full max-h-64 object-contain bg-black"
+                          className="w-full max-h-48 sm:max-h-64 object-contain bg-black"
                           onClick={(e) => e.stopPropagation()}
                         />
                       </motion.div>
@@ -120,7 +120,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
         )}
 
-        <p className="text-[var(--text-secondary)] mb-6 leading-relaxed flex-1">
+        <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-6 leading-relaxed flex-1">
           {project.description}
         </p>
 
