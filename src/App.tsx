@@ -154,6 +154,7 @@ function ProjectRecord({
 }) {
   return (
     <article
+      id={project.slug}
       className={`project-record project-record--${project.slug} project-record--${index % 2 === 0 ? "forward" : "reverse"}`}
       aria-labelledby={`${project.slug}-title`}
     >
@@ -208,14 +209,17 @@ function ProjectRecord({
           </ul>
         </section>
 
-        <aside className="project-record__evidence">
-          <h4>{project.evidenceLabel}</h4>
+        <section
+          className="project-record__evidence"
+          aria-labelledby={`${project.slug}-evidence`}
+        >
+          <h4 id={`${project.slug}-evidence`}>{project.evidenceLabel}</h4>
           <ul>
             {project.evidence.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </aside>
+        </section>
 
         <footer className="project-record__links">
           {project.links.map((link) => (
@@ -374,10 +378,14 @@ function App() {
               <div className="identity-photo__frame">
                 <img
                   src="/media/caio-original-2752.webp"
+                  srcSet="/media/caio-original-768.webp 768w, /media/caio-original-1440.webp 1440w, /media/caio-original-2048.webp 2048w, /media/caio-original-2752.webp 2752w"
+                  sizes="(min-width: 64rem) 26vw, (min-width: 52rem) 40vw, 100vw"
                   width="2752"
                   height="1536"
                   alt={copy.hero.portraitAlt}
+                  loading="eager"
                   decoding="async"
+                  {...{ fetchpriority: "high" }}
                 />
                 <span className="identity-photo__cross identity-photo__cross--a" aria-hidden="true" />
                 <span className="identity-photo__cross identity-photo__cross--b" aria-hidden="true" />
@@ -394,7 +402,7 @@ function App() {
               ))}
             </dl>
 
-            <aside className="measurement-note">
+            <aside className="measurement-note" aria-label={copy.hero.measurementLabel}>
               <span className="measurement-note__diameter" aria-hidden="true">
                 Ø 2,135
               </span>
@@ -420,6 +428,23 @@ function App() {
               <p>{copy.work.intro}</p>
             </div>
           </header>
+
+          <nav className="project-index" aria-labelledby="project-index-title">
+            <h3 id="project-index-title">{copy.work.indexLabel}</h3>
+            <ul>
+              {copy.work.projects.map((project) => (
+                <li key={project.slug}>
+                  <a href={`#${project.slug}`}>
+                    <ShotPutMark />
+                    <strong>{project.title}</strong>
+                    <span className="project-index__role">{project.role}</span>
+                    <span className="project-index__evidence">{project.evidence[0]}</span>
+                    <span className="project-index__arrow" aria-hidden="true">↓</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           <div className="work-register__cases">
             {copy.work.projects.map((project, index) => (

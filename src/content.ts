@@ -60,6 +60,7 @@ type SiteContent = {
     seeWork: string;
     portraitAlt: string;
     portraitCaption: string;
+    measurementLabel: string;
     measurementNote: string;
     emailLabel: string;
     copyEmail: string;
@@ -174,6 +175,7 @@ export const content: Record<Locale, SiteContent> = {
       seeWork: "Ver trabalho selecionado",
       portraitAlt: "Retrato de Caio Vilquer Carvalho",
       portraitCaption: "Caio Vilquer Carvalho · São Paulo, SP",
+      measurementLabel: "Referência da régua visual",
       measurementNote:
         "Ø 2,135 m: o diâmetro do círculo do arremesso de peso virou a régua visual deste portfólio.",
       emailLabel: "Contato direto",
@@ -186,7 +188,7 @@ export const content: Record<Locale, SiteContent> = {
       heading: "Trabalho selecionado",
       intro:
         "O Poliatletas compara marcas esportivas, o RotinaPet isola os dados de cada família e o Viazio ranqueia destinos mesmo quando uma fonte falha. Nos três, regras de domínio, autorização e falhas de integração aparecem no código e nos testes.",
-      indexLabel: "Caso",
+      indexLabel: "Registro dos casos",
       projects: [
         {
           slug: "poliatletas",
@@ -481,6 +483,7 @@ export const content: Record<Locale, SiteContent> = {
       seeWork: "View selected work",
       portraitAlt: "Portrait of Caio Vilquer Carvalho",
       portraitCaption: "Caio Vilquer Carvalho · São Paulo, Brazil",
+      measurementLabel: "Visual ruler reference",
       measurementNote:
         "Ø 2.135 m: the official shot-put circle diameter became this portfolio's visual ruler.",
       emailLabel: "Direct contact",
@@ -493,7 +496,7 @@ export const content: Record<Locale, SiteContent> = {
       heading: "Selected work",
       intro:
         "Poliatletas compares athletic results, RotinaPet isolates each family's data, and Viazio ranks destinations when an upstream source fails. In all three, domain rules, authorization, and integration failures appear in code and tests.",
-      indexLabel: "Case",
+      indexLabel: "Case register",
       projects: [
         {
           slug: "poliatletas",
