@@ -16,7 +16,7 @@ export type ProjectContent = {
   code: string;
   period: string;
   title: string;
-  role: string;
+  descriptor: string;
   summary: string;
   problemLabel: string;
   problem: string;
@@ -96,7 +96,6 @@ type SiteContent = {
   profile: {
     kicker: string;
     heading: string;
-    intro: string;
     stackLabel: string;
     stack: Array<{ label: string; value: string; proof: string }>;
     methodLabel: string;
@@ -207,7 +206,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "01 / 03",
           period: "08.2025 · atual",
           title: "Poliatletas",
-          role: "Sistema da equipe de atletismo da Poli-USP",
+          descriptor: "Sistema da equipe de atletismo da Poli-USP",
           summary:
             "O Poliatletas reúne atletas, competições, resultados, rankings, recordes e a operação técnica da equipe.",
           problemLabel: "Problema de domínio",
@@ -223,15 +222,10 @@ export const content: Record<Locale, SiteContent> = {
               label: "Papéis e auditoria",
               text: "JWT e RBAC para USER, COACH e ADMIN, importação idempotente e trilha de auditoria nas ações sensíveis.",
             },
-            {
-              label: "API e tipos gerados",
-              text: "API NestJS/Fastify versionada, PostgreSQL e Prisma; frontend React consome tipos gerados do OpenAPI.",
-            },
           ],
           evidenceLabel: "Evidência no produto",
           evidence: [
             "Rankings públicos com filtros e comparação de temporadas",
-            "Importação de resultados em lote sem duplicar histórico",
             "Código de aplicação privado; demonstração pública disponível",
           ],
           stack: "NestJS · Fastify · PostgreSQL · Prisma · React · Redis",
@@ -253,7 +247,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "02 / 03",
           period: "05.2025 · atual",
           title: "RotinaPet",
-          role: "Cuidado compartilhado com assistente de IA e RAG",
+          descriptor: "Cuidado compartilhado com assistente de IA e RAG",
           summary:
             "Agenda, histórico clínico, documentos e colaboração familiar, com IA limitada por autorização e confirmação humana.",
           problemLabel: "Problema de confiança",
@@ -269,15 +263,10 @@ export const content: Record<Locale, SiteContent> = {
               label: "IA propõe, domínio confirma",
               text: "Structured Outputs gera rascunhos versionados; o caso de uso revalida papel, versão, expiração e idempotência antes de escrever.",
             },
-            {
-              label: "Indexação recuperável",
-              text: "Outbox transacional, lotes de embeddings, retry, dead letter e troca atômica mantêm fonte e índice consistentes.",
-            },
           ],
           evidenceLabel: "Quality gates versionados",
           evidence: [
-            "Recall@5 mínimo de 95%",
-            "Precisão de citações mínima de 98%",
+            "Recall@5 mínimo de 95% e precisão de citações mínima de 98%",
             "Abstenção sem evidência mínima de 95%",
           ],
           stack:
@@ -307,7 +296,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "03 / 03",
           period: "03.2026 · 07.2026",
           title: "Viazio",
-          role: "Motor explicável de recomendação de viagens",
+          descriptor: "Motor explicável de recomendação de viagens",
           summary:
             "Cruza calendário, clima, custo relativo, distância e contexto local sem esconder incerteza atrás de uma nota única.",
           problemLabel: "Problema de decisão",
@@ -323,16 +312,11 @@ export const content: Record<Locale, SiteContent> = {
               label: "Isolamento por provedor",
               text: "Retry, circuit breaker e bulkhead independentes evitam que a Wikipédia derrube clima, câmbio ou feriados.",
             },
-            {
-              label: "PostgreSQL na leitura",
-              text: "Leituras usam PostgreSQL, orçamento síncrono de 2 segundos e refresh em background para não prender a resposta em upstream lento.",
-            },
           ],
           evidenceLabel: "Evidência no repositório",
           evidence: [
             "Mais de 250 testes backend sem dependência de rede",
             "Cinco fontes externas com degradação explícita",
-            "Java 21 com virtual threads por candidato",
           ],
           stack:
             "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
@@ -374,13 +358,11 @@ export const content: Record<Locale, SiteContent> = {
         "A captura real é tratada em 240 fps; estados detectado, predito e interpolado permanecem auditáveis nos relatórios.",
       imageAlt:
         "Dois frames reais do TrackShot com a pose sobre o atleta; no segundo, o implemento e sua trajetória aparecem destacados em amarelo",
-      repository: "Código privado · em desenvolvimento",
+      repository: "Código privado",
     },
     profile: {
       kicker: "Onde usei cada tecnologia",
       heading: "Perfil técnico",
-      intro:
-        "Prefiro explicar onde usei uma tecnologia e qual problema ela resolveu.",
       stackLabel: "Tecnologia e projeto",
       stack: [
         {
@@ -520,7 +502,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "01 / 03",
           period: "08.2025 · present",
           title: "Poliatletas",
-          role: "The athletics management system at Poli-USP",
+          descriptor: "The athletics management system at Poli-USP",
           summary:
             "Poliatletas brings athletes, meets, results, rankings, records, and the team's technical operations into one system.",
           problemLabel: "Domain problem",
@@ -536,15 +518,10 @@ export const content: Record<Locale, SiteContent> = {
               label: "Roles and audit records",
               text: "JWT and RBAC for USER, COACH, and ADMIN, idempotent imports, and audit records for sensitive changes.",
             },
-            {
-              label: "API and generated types",
-              text: "A versioned NestJS/Fastify API backed by PostgreSQL and Prisma; React consumes types generated from OpenAPI.",
-            },
           ],
           evidenceLabel: "Product evidence",
           evidence: [
             "Public rankings with filters and season comparison",
-            "Batch result import without duplicating history",
             "Application code is private; the public product is available",
           ],
           stack: "NestJS · Fastify · PostgreSQL · Prisma · React · Redis",
@@ -566,7 +543,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "02 / 03",
           period: "05.2025 · present",
           title: "RotinaPet",
-          role: "Shared pet care with an AI and RAG assistant",
+          descriptor: "Shared pet care with an AI and RAG assistant",
           summary:
             "Schedules, clinical history, documents, and family collaboration, with AI constrained by authorization and human confirmation.",
           problemLabel: "Trust problem",
@@ -582,15 +559,10 @@ export const content: Record<Locale, SiteContent> = {
               label: "AI proposes, domain confirms",
               text: "Structured Outputs creates versioned drafts; the use case revalidates role, version, expiry, and idempotency before writing.",
             },
-            {
-              label: "Recoverable indexing",
-              text: "A transactional outbox, batched embeddings, retries, dead letters, and atomic publication keep source and index consistent.",
-            },
           ],
           evidenceLabel: "Versioned quality gates",
           evidence: [
-            "Recall@5 at or above 95%",
-            "Citation precision at or above 98%",
+            "Recall@5 at or above 95% and citation precision at or above 98%",
             "Unsupported-answer abstention at or above 95%",
           ],
           stack:
@@ -620,7 +592,7 @@ export const content: Record<Locale, SiteContent> = {
           code: "03 / 03",
           period: "03.2026 · 07.2026",
           title: "Viazio",
-          role: "Explainable travel recommendation engine",
+          descriptor: "Explainable travel recommendation engine",
           summary:
             "It combines calendars, weather, relative cost, distance, and local context without hiding uncertainty behind one opaque score.",
           problemLabel: "Decision problem",
@@ -636,16 +608,11 @@ export const content: Record<Locale, SiteContent> = {
               label: "Provider isolation",
               text: "Independent retries, circuit breakers, and bulkheads prevent Wikipedia failures from taking down weather, currency, or holidays.",
             },
-            {
-              label: "PostgreSQL on the read path",
-              text: "Reads use PostgreSQL, a two-second synchronous budget, and background refreshes instead of waiting on a slow upstream.",
-            },
           ],
           evidenceLabel: "Repository evidence",
           evidence: [
             "More than 250 backend tests without network access",
             "Five upstream sources with explicit degradation",
-            "Java 21 virtual threads for candidate evaluation",
           ],
           stack:
             "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
@@ -687,13 +654,11 @@ export const content: Record<Locale, SiteContent> = {
         "Real capture time is handled at 240 fps; detected, predicted, and interpolated states remain auditable in the reports.",
       imageAlt:
         "Two real TrackShot frames with pose tracking over the athlete; the second highlights the implement and its trajectory in yellow",
-      repository: "Private code · in progress",
+      repository: "Private code",
     },
     profile: {
       kicker: "Where I used each technology",
       heading: "Technical profile",
-      intro:
-        "I prefer to explain where I used a technology and what problem it solved.",
       stackLabel: "Technology and project",
       stack: [
         {

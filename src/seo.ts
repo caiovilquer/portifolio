@@ -173,16 +173,14 @@ function projectJsonLd(
   const project = getProjectPageData(route.locale, route.slug);
   const repository = project.links.find((link) => link.href.includes("github.com"))?.href;
   const live = project.links.find((link) => !link.href.includes("github.com"))?.href;
-  const softwareType = route.slug === "trackshot" || route.slug === "poliatletas"
-    ? "SoftwareApplication"
-    : "SoftwareSourceCode";
 
   const work: Record<string, unknown> = {
-    "@type": softwareType,
+    "@type": "SoftwareApplication",
     "@id": `${canonical}#project`,
     name: project.title,
     description: project.summary,
-    url: canonical,
+    url: live ?? canonical,
+    mainEntityOfPage: canonical,
     inLanguage: route.locale === "pt" ? "pt-BR" : "en",
     author: { "@id": PERSON_ID },
     creator: { "@id": PERSON_ID },
@@ -193,10 +191,6 @@ function projectJsonLd(
     sameAs: project.links.map((link) => link.href),
   };
   if (repository) work.codeRepository = repository;
-  if (live && softwareType === "SoftwareApplication") work.installUrl = live;
-  if (softwareType === "SoftwareSourceCode") {
-    work.programmingLanguage = project.stack.split(" · ").slice(0, 3);
-  }
 
   return {
     "@context": "https://schema.org",
@@ -207,7 +201,7 @@ function projectJsonLd(
         "@type": "WebPage",
         "@id": `${canonical}#webpage`,
         url: canonical,
-        name: `${project.title} · ${project.role} · Caio Vilquer`,
+        name: `${project.title} · ${project.descriptor} · Caio Vilquer`,
         description: project.summary,
         inLanguage: route.locale === "pt" ? "pt-BR" : "en",
         dateModified: SITE_UPDATED,
@@ -254,7 +248,7 @@ export function getSeoData(route: SiteRoute): SeoData {
 
   const project = getProjectPageData(locale, route.slug);
   return {
-    title: `${project.title} · ${project.role} · Caio Vilquer`,
+    title: `${project.title} · ${project.descriptor} · Caio Vilquer`,
     description: PROJECT_DESCRIPTIONS[locale][route.slug],
     canonical,
     locale: locale === "pt" ? "pt_BR" : "en_US",

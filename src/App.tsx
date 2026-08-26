@@ -165,7 +165,7 @@ function ProjectRecord({
         </div>
         <div className="project-record__title-block">
           <h3 id={`${project.slug}-title`}>{project.title}</h3>
-          <p className="project-record__role">{project.role}</p>
+          <p className="project-record__role">{project.descriptor}</p>
         </div>
         <p className="project-record__summary">{project.summary}</p>
       </header>
@@ -467,7 +467,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                   <a href={`#${project.slug}`}>
                     <ShotPutMark />
                     <strong>{project.title}</strong>
-                    <span className="project-index__role">{project.role}</span>
+                    <span className="project-index__role">{project.descriptor}</span>
                     <span className="project-index__evidence">{project.evidence[0]}</span>
                     <span className="project-index__arrow" aria-hidden="true">↓</span>
                   </a>
@@ -548,7 +548,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <p className="section-kicker">{copy.profile.kicker}</p>
             <div>
               <h2 id="profile-title">{copy.profile.heading}</h2>
-              <p>{copy.profile.intro}</p>
             </div>
           </header>
 
@@ -668,14 +667,13 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         back: "Voltar ao portfólio",
         register: "Ficha do projeto",
         period: "Período",
-        role: "Função",
+        contribution: "Minha atuação",
         stack: "Tecnologia",
         status: "Estado",
-        publicStatus: project.privateCode ?? "Código e produto públicos",
         sources: "Produto e código",
         related: "Outros estudos",
         contact: "Contato",
-        contactHeading: "Disponível para posições júnior e estágio.",
+        contactHeading: "Posso começar agora.",
         nav: "Navegação do projeto",
         sectionMarks: ["CÍRCULO", "SETOR", "MARCA", "SÚMULA"],
       }
@@ -683,14 +681,13 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         back: "Back to portfolio",
         register: "Project record",
         period: "Period",
-        role: "Role",
+        contribution: "My contribution",
         stack: "Technology",
         status: "Status",
-        publicStatus: project.privateCode ?? "Public code and product",
         sources: "Product and code",
         related: "Other case studies",
         contact: "Contact",
-        contactHeading: "Available for junior roles and internships.",
+        contactHeading: "I can start now.",
         nav: "Project navigation",
         sectionMarks: ["RING", "SECTOR", "MARK", "SHEET"],
       };
@@ -766,7 +763,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
               <span>{project.code}</span>
             </div>
             <div className="project-dossier__title">
-              <p>{project.role}</p>
+              <p>{project.descriptor}</p>
               <h1>{project.title}</h1>
               <p>{project.summary}</p>
             </div>
@@ -778,8 +775,8 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
               <dd>{project.period}</dd>
             </div>
             <div>
-              <dt>{labels.role}</dt>
-              <dd>{project.role}</dd>
+              <dt>{labels.contribution}</dt>
+              <dd>{project.contribution}</dd>
             </div>
             <div>
               <dt>{labels.stack}</dt>
@@ -787,7 +784,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
             </div>
             <div>
               <dt>{labels.status}</dt>
-              <dd>{labels.publicStatus}</dd>
+              <dd>{project.status}</dd>
             </div>
           </dl>
 
@@ -802,7 +799,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
               decoding="async"
               {...{ fetchpriority: "high" }}
             />
-            <figcaption>{project.stack}</figcaption>
+            <figcaption>{project.imageCaption}</figcaption>
           </figure>
 
           <div className="project-dossier__body">
@@ -883,14 +880,14 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           <nav className="project-dossier__related" aria-labelledby="related-projects">
             <h2 id="related-projects">{labels.related}</h2>
             <ul>
-              {(["poliatletas", "rotinapet", "viazio", "trackshot"] as ProjectSlug[]).map(
-                (relatedSlug) => {
+              {(["poliatletas", "rotinapet", "viazio", "trackshot"] as ProjectSlug[])
+                .filter((relatedSlug) => relatedSlug !== slug)
+                .map((relatedSlug) => {
                   const related = getProjectPageData(locale, relatedSlug);
                   return (
                     <li key={relatedSlug}>
                       <a
                         href={projectPath(locale, relatedSlug)}
-                        aria-current={relatedSlug === slug ? "page" : undefined}
                       >
                         <ShotPutMark />
                         <span>{related.title}</span>
@@ -898,8 +895,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
                       </a>
                     </li>
                   );
-                },
-              )}
+                })}
             </ul>
           </nav>
         </article>
