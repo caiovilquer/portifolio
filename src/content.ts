@@ -102,7 +102,6 @@ type SiteContent = {
     methodLabel: string;
     method: Array<{ number: string; title: string; text: string }>;
     otherLabel: string;
-    otherIntro: string;
     other: Array<{
       title: string;
       type: string;
@@ -424,8 +423,6 @@ export const content: Record<Locale, SiteContent> = {
         },
       ],
       otherLabel: "Outros trabalhos",
-      otherIntro:
-        "O CasaConta tem testes de regras de domínio em .NET; o Marca mantém dados de saúde e treino localmente com Tauri, Rust e SQLite.",
       other: [
         {
           title: "CasaConta",
@@ -739,8 +736,6 @@ export const content: Record<Locale, SiteContent> = {
         },
       ],
       otherLabel: "Other work",
-      otherIntro:
-        "CasaConta has .NET tests for domain rules; Marca keeps health and training data local with Tauri, Rust, and SQLite.",
       other: [
         {
           title: "CasaConta",

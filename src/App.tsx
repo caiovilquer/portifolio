@@ -587,7 +587,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <section className="other-work" aria-labelledby="other-work-title">
             <div className="other-work__heading">
               <h3 id="other-work-title">{copy.profile.otherLabel}</h3>
-              <p>{copy.profile.otherIntro}</p>
             </div>
             <div className="other-work__list">
               {copy.profile.other.map((item) => (

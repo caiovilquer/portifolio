@@ -1497,18 +1497,11 @@ main:focus {
 }
 
 .other-work__heading {
-  display: grid;
-  grid-template-columns: minmax(9rem, 0.28fr) 1fr;
-  gap: var(--espaco-5);
+  display: block;
 }
 
 .other-work__heading h3 {
   color: var(--lapis-vermelho);
-}
-
-.other-work__heading p {
-  max-width: 40rem;
-  color: var(--tinta-suave);
 }
 
 .other-work__list {
