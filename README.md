@@ -6,11 +6,13 @@ Portfólio de Caio Vilquer Carvalho, estudante de Engenharia de Computação na 
 
 A identidade combina ficha de inspeção, relatório técnico e régua de medição. O diâmetro oficial do círculo do arremesso de peso, 2,135 m, aparece como assinatura visual sem transformar o site em uma página temática de esporte.
 
-- Português e inglês, selecionados por `?lang=en` e persistidos no navegador.
+- Português em `/` e inglês em `/en/`, com URLs canônicas e `hreflang` recíproco.
 - Currículos backend e full stack disponíveis em `public/cv`.
 - Conteúdo visível por padrão, movimento progressivo e fallback para `prefers-reduced-motion`.
 - Layout verificado entre 320 e 1440 px.
-- Metadados Open Graph, JSON-LD, cartão social e fallback sem JavaScript.
+- HTML pré-renderizado em todas as rotas, Open Graph, JSON-LD e cartão social.
+- Estudos completos de Poliatletas, RotinaPet, Viazio e TrackShot em rotas próprias nos dois idiomas.
+- `sitemap.xml`, `robots.txt`, `llms.txt`, `llms-full.txt` e submissão por IndexNow gerados no build.
 
 ## Assinatura
 
@@ -48,15 +50,22 @@ python3 -c "import cairosvg; cairosvg.svg2png(url='public/favicon.svg', write_to
 ```bash
 npm install
 npm run dev
-npm run build
-npx tsc --noEmit
+npm run check
 ```
 
-O conteúdo bilíngue fica em `src/content.ts`; a composição está em `src/App.tsx` e o sistema visual em `src/index.css`.
+O conteúdo bilíngue fica em `src/content.ts`; a composição está em `src/App.tsx`, as rotas em `src/routes.ts`, os dados estruturados em `src/seo.ts` e o sistema visual em `src/index.css`.
+
+O build gera as páginas abaixo como HTML indexável, sem depender da execução do React para entregar título, resumo ou links:
+
+- `/` e `/en/`
+- `/projetos/{projeto}/` e `/en/projects/{project}/`
+- quatro currículos em PDF, dois por idioma
+
+Depois do build, `npm run seo:audit` verifica títulos e descrições únicos, canonicals, `hreflang`, H1, JSON-LD, imagens, links internos, sitemap, regras dos crawlers e arquivos para LLMs.
 
 ## Publicação
 
-O domínio customizado é definido em `public/CNAME`. O comando abaixo gera o build e publica `dist` pelo GitHub Pages:
+O domínio customizado é definido em `public/CNAME`. O comando abaixo gera o build, publica `dist` pelo GitHub Pages e envia as URLs do sitemap ao IndexNow:
 
 ```bash
 npm run deploy

@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { content, type Locale, type ProjectContent } from "./content";
+import { getProjectPageData } from "./projectPages";
+import {
+  alternateRoute,
+  homePath,
+  projectPath,
+  routePath,
+  type ProjectSlug,
+  type SiteRoute,
+} from "./routes";
 
 const EMAIL = "caio@vilquer.dev";
 const CV_FILES: Record<Locale, { backend: string; fullStack: string }> = {
@@ -14,19 +23,6 @@ const CV_FILES: Record<Locale, { backend: string; fullStack: string }> = {
 };
 
 type CopyState = "idle" | "copied" | "failed";
-
-type ViewTransitionDocument = Document & {
-  startViewTransition?: (update: () => void) => void;
-};
-
-function initialLocale(): Locale {
-  const parameter = new URLSearchParams(window.location.search).get("lang");
-  if (parameter === "en") return "en";
-  if (parameter === "pt") return "pt";
-
-  const stored = window.localStorage.getItem("portfolio-language");
-  return stored === "en" ? "en" : "pt";
-}
 
 async function copyToClipboard(value: string): Promise<boolean> {
   if (navigator.clipboard && window.isSecureContext) {
@@ -148,10 +144,14 @@ function ShotPutMark() {
 function ProjectRecord({
   project,
   index,
+  locale,
 }: {
   project: ProjectContent;
   index: number;
+  locale: Locale;
 }) {
+  const detailLabel = locale === "pt" ? "Abrir estudo completo" : "Open full case study";
+
   return (
     <article
       id={project.slug}
@@ -222,6 +222,13 @@ function ProjectRecord({
         </section>
 
         <footer className="project-record__links">
+          <a
+            className="project-link project-link--case"
+            href={projectPath(locale, project.slug as ProjectSlug)}
+          >
+            <span>{detailLabel}</span>
+            <span aria-hidden="true">→</span>
+          </a>
           {project.links.map((link) => (
             <ExternalLink
               key={link.href}
@@ -244,43 +251,9 @@ function ProjectRecord({
   );
 }
 
-function App() {
-  const [locale, setLocale] = useState<Locale>(initialLocale);
+function PortfolioHome({ locale }: { locale: Locale }) {
   const copy = content[locale];
   const cvFiles = CV_FILES[locale];
-
-  useEffect(() => {
-    document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
-    document.title = copy.meta.title;
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute("content", copy.meta.description);
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.setAttribute("content", copy.meta.title);
-    document
-      .querySelector('meta[property="og:description"]')
-      ?.setAttribute("content", copy.meta.description);
-    window.localStorage.setItem("portfolio-language", locale);
-
-    const url = new URL(window.location.href);
-    if (locale === "en") url.searchParams.set("lang", "en");
-    else url.searchParams.delete("lang");
-    window.history.replaceState({}, "", url);
-  }, [copy.meta.description, copy.meta.title, locale]);
-
-  const chooseLocale = (nextLocale: Locale) => {
-    if (nextLocale === locale) return;
-    const documentWithTransition = document as ViewTransitionDocument;
-    if (
-      documentWithTransition.startViewTransition &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      documentWithTransition.startViewTransition(() => setLocale(nextLocale));
-    } else {
-      setLocale(nextLocale);
-    }
-  };
 
   return (
     <>
@@ -298,7 +271,7 @@ function App() {
 
       <header className="site-header">
         <div className="site-header__inner">
-          <a className="wordmark" href="#inicio" aria-label={copy.brandLabel}>
+          <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
               <img
                 className="wordmark__logo wordmark__logo--full"
@@ -330,22 +303,24 @@ function App() {
             </ul>
           </nav>
 
-          <div className="language-switch" aria-label={copy.language.label} role="group">
-            <button
-              type="button"
-              aria-pressed={locale === "pt"}
-              onClick={() => chooseLocale("pt")}
+          <nav className="language-switch" aria-label={copy.language.label}>
+            <a
+              href={homePath("pt")}
+              lang="pt-BR"
+              hrefLang="pt-BR"
+              aria-current={locale === "pt" ? "page" : undefined}
             >
               {copy.language.portuguese}
-            </button>
-            <button
-              type="button"
-              aria-pressed={locale === "en"}
-              onClick={() => chooseLocale("en")}
+            </a>
+            <a
+              href={homePath("en")}
+              lang="en"
+              hrefLang="en"
+              aria-current={locale === "en" ? "page" : undefined}
             >
               {copy.language.english}
-            </button>
-          </div>
+            </a>
+          </nav>
         </div>
       </header>
 
@@ -448,7 +423,12 @@ function App() {
 
           <div className="work-register__cases">
             {copy.work.projects.map((project, index) => (
-              <ProjectRecord key={project.slug} project={project} index={index} />
+              <ProjectRecord
+                key={project.slug}
+                project={project}
+                index={index}
+                locale={locale}
+              />
             ))}
           </div>
         </section>
@@ -483,6 +463,13 @@ function App() {
               <span className="private-note private-note--dark">
                 {copy.research.repository}
               </span>
+              <a
+                className="project-link project-link--on-dark"
+                href={projectPath(locale, "trackshot")}
+              >
+                <span>{locale === "pt" ? "Abrir estudo completo" : "Open full case study"}</span>
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
 
             <figure className="research-sheet__figure">
@@ -615,6 +602,299 @@ function App() {
       </footer>
     </>
   );
+}
+
+function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }> }) {
+  const { locale, slug } = route;
+  const copy = content[locale];
+  const project = getProjectPageData(locale, slug);
+  const cvFiles = CV_FILES[locale];
+  const labels = locale === "pt"
+    ? {
+        back: "Voltar ao portfólio",
+        register: "Ficha do projeto",
+        period: "Período",
+        role: "Função",
+        stack: "Tecnologia",
+        status: "Estado",
+        publicStatus: project.privateCode ?? "Código e produto públicos",
+        sources: "Produto e código",
+        related: "Outros estudos",
+        contact: "Contato",
+        contactHeading: "Disponível para estágio e posições júnior.",
+        nav: "Navegação do projeto",
+        sectionMarks: ["CÍRCULO", "SETOR", "MARCA", "SÚMULA"],
+      }
+    : {
+        back: "Back to portfolio",
+        register: "Project record",
+        period: "Period",
+        role: "Role",
+        stack: "Technology",
+        status: "Status",
+        publicStatus: project.privateCode ?? "Public code and product",
+        sources: "Product and code",
+        related: "Other case studies",
+        contact: "Contact",
+        contactHeading: "Available for internships and junior roles.",
+        nav: "Project navigation",
+        sectionMarks: ["RING", "SECTOR", "MARK", "SHEET"],
+      };
+  const ptRoute = alternateRoute(route, "pt");
+  const enRoute = alternateRoute(route, "en");
+
+  return (
+    <>
+      <a className="skip-link" href="#conteudo">
+        {copy.skip}
+      </a>
+
+      <div className="page-measure" aria-hidden="true">
+        <span>0,000</span>
+        <span>0,534</span>
+        <span>1,068</span>
+        <span>1,601</span>
+        <span>2,135 m</span>
+      </div>
+
+      <header className="site-header dossier-site-header">
+        <div className="site-header__inner">
+          <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
+            <span className="wordmark__art" aria-hidden="true">
+              <img
+                className="wordmark__logo wordmark__logo--full"
+                src="/media/caio-vilquer-logo.svg"
+                width="275"
+                height="76"
+                alt=""
+              />
+              <img
+                className="wordmark__logo wordmark__logo--compact"
+                src="/media/caio-vilquer-mark.svg"
+                width="76"
+                height="76"
+                alt=""
+              />
+            </span>
+          </a>
+
+          <nav className="site-nav dossier-site-nav" aria-label={labels.nav}>
+            <a href={`${homePath(locale)}#trabalho`}>← {labels.back}</a>
+          </nav>
+
+          <nav className="language-switch" aria-label={copy.language.label}>
+            <a
+              href={routePath(ptRoute)}
+              lang="pt-BR"
+              hrefLang="pt-BR"
+              aria-current={locale === "pt" ? "page" : undefined}
+            >
+              PT
+            </a>
+            <a
+              href={routePath(enRoute)}
+              lang="en"
+              hrefLang="en"
+              aria-current={locale === "en" ? "page" : undefined}
+            >
+              EN
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <main id="conteudo" tabIndex={-1}>
+        <article className={`project-dossier project-record--${slug}`}>
+          <header className="project-dossier__masthead">
+            <div className="project-dossier__register">
+              <ShotPutMark />
+              <p>{labels.register}</p>
+              <span>{project.code}</span>
+            </div>
+            <div className="project-dossier__title">
+              <p>{project.role}</p>
+              <h1>{project.title}</h1>
+              <p>{project.summary}</p>
+            </div>
+          </header>
+
+          <dl className="project-dossier__specs">
+            <div>
+              <dt>{labels.period}</dt>
+              <dd>{project.period}</dd>
+            </div>
+            <div>
+              <dt>{labels.role}</dt>
+              <dd>{project.role}</dd>
+            </div>
+            <div>
+              <dt>{labels.stack}</dt>
+              <dd>{project.stack}</dd>
+            </div>
+            <div>
+              <dt>{labels.status}</dt>
+              <dd>{labels.publicStatus}</dd>
+            </div>
+          </dl>
+
+          <figure className="project-dossier__media project-record__media">
+            <img
+              src={project.image.src}
+              srcSet={project.image.srcSet}
+              sizes="(min-width: 64rem) 66vw, 100vw"
+              width={project.image.width}
+              height={project.image.height}
+              alt={project.image.alt}
+              decoding="async"
+              {...{ fetchpriority: "high" }}
+            />
+            <figcaption>{project.stack}</figcaption>
+          </figure>
+
+          <div className="project-dossier__body">
+            <aside
+              className="project-dossier__margin"
+              aria-label={copy.hero.measurementLabel}
+            >
+              <span>Ø 2,135 m</span>
+              <p>{copy.hero.measurementNote}</p>
+            </aside>
+
+            <div className="project-dossier__analysis">
+              <section aria-labelledby="dossier-problem">
+                <p className="section-kicker">{labels.sectionMarks[0]}</p>
+                <div>
+                  <h2 id="dossier-problem">{project.problemLabel}</h2>
+                  <p>{project.problem}</p>
+                </div>
+              </section>
+
+              <section aria-labelledby="dossier-decisions">
+                <p className="section-kicker">{labels.sectionMarks[1]}</p>
+                <div>
+                  <h2 id="dossier-decisions">{project.decisionsLabel}</h2>
+                  <ol className="project-dossier__decisions">
+                    {project.decisions.map((decision) => (
+                      <li key={decision.label}>
+                        <ShotPutMark />
+                        <div>
+                          <h3>{decision.label}</h3>
+                          <p>{decision.text}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </section>
+
+              <section aria-labelledby="dossier-evidence">
+                <p className="section-kicker">{labels.sectionMarks[2]}</p>
+                <div>
+                  <h2 id="dossier-evidence">{project.evidenceLabel}</h2>
+                  <ul className="project-dossier__evidence">
+                    {project.evidence.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+
+              <section aria-labelledby="dossier-links">
+                <p className="section-kicker">{labels.sectionMarks[3]}</p>
+                <div>
+                  <h2 id="dossier-links">{labels.sources}</h2>
+                  <div className="project-record__links">
+                    {project.links.map((link) => (
+                      <ExternalLink
+                        key={link.href}
+                        href={link.href}
+                        className={
+                          link.kind === "primary"
+                            ? "project-link project-link--primary"
+                            : "project-link"
+                        }
+                      >
+                        {link.label}
+                      </ExternalLink>
+                    ))}
+                    {project.privateCode ? (
+                      <span className="project-record__private">{project.privateCode}</span>
+                    ) : null}
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <nav className="project-dossier__related" aria-labelledby="related-projects">
+            <h2 id="related-projects">{labels.related}</h2>
+            <ul>
+              {(["poliatletas", "rotinapet", "viazio", "trackshot"] as ProjectSlug[]).map(
+                (relatedSlug) => {
+                  const related = getProjectPageData(locale, relatedSlug);
+                  return (
+                    <li key={relatedSlug}>
+                      <a
+                        href={projectPath(locale, relatedSlug)}
+                        aria-current={relatedSlug === slug ? "page" : undefined}
+                      >
+                        <ShotPutMark />
+                        <span>{related.title}</span>
+                        <span aria-hidden="true">→</span>
+                      </a>
+                    </li>
+                  );
+                },
+              )}
+            </ul>
+          </nav>
+        </article>
+      </main>
+
+      <footer className="contact-sheet project-contact-sheet">
+        <div className="contact-sheet__top">
+          <p className="section-kicker">{labels.contact}</p>
+          <h2>{labels.contactHeading}</h2>
+          <p>{copy.contact.text}</p>
+        </div>
+
+        <EmailCopy
+          copyLabel={copy.contact.copy}
+          copiedLabel={copy.hero.copiedEmail}
+          failedLabel={copy.hero.copyFailed}
+          compact
+        />
+
+        <nav className="contact-sheet__links" aria-label={labels.contact}>
+          <ExternalLink href="https://www.linkedin.com/in/caio-vilquer/">
+            {copy.contact.linkedin}
+          </ExternalLink>
+          <ExternalLink href="https://github.com/caiovilquer">
+            {copy.contact.github}
+          </ExternalLink>
+          <a href={cvFiles.backend} download>
+            <span>{copy.contact.cvBackend}</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+          <a href={cvFiles.fullStack} download>
+            <span>{copy.contact.cvFullStack}</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+        </nav>
+
+        <div className="contact-sheet__foot">
+          <p>{copy.contact.location}</p>
+          <p>© {new Date().getFullYear()} · {copy.contact.legal}</p>
+        </div>
+      </footer>
+    </>
+  );
+}
+
+function App({ route }: { route: SiteRoute }) {
+  return route.kind === "project"
+    ? <ProjectPage route={route} />
+    : <PortfolioHome locale={route.locale} />;
 }
 
 export default App;

@@ -9,10 +9,17 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:ssr && npm run prerender",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir .ssr",
+    "prerender": "node scripts/prerender.mjs",
+    "check": "npm run build && npm run seo:audit && tsc --noEmit",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "postdeploy": "npm run seo:submit",
+    "seo:audit": "node scripts/audit-seo.mjs",
+    "seo:submit": "node scripts/submit-indexnow.mjs"
   },
   "dependencies": {
     "react": "^18.2.0",
