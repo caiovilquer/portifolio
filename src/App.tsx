@@ -1,32 +1,595 @@
-import React from "react";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Projects from "./pages/Projects";
-import FutureProjects from "./pages/FutureProjects";
-import Contact from "./pages/Contact";
+import { useEffect, useRef, useState } from "react";
+import { content, type Locale, type ProjectContent } from "./content";
 
-const App: React.FC = () => (
-  <>
-    <Navbar />
-    <main>
-      <section id="home" className="section relative z-10">
-        <Home />
-      </section>
-      <section id="about" className="section relative z-20 bg-[var(--bg-primary)]">
-        <About />
-      </section>
-      <section id="projects" className="section relative z-20 bg-[var(--bg-primary)]">
-        <Projects />
-      </section>
-      <section id="future-projects" className="section relative z-20 bg-[var(--bg-primary)]">
-        <FutureProjects />
-      </section>
-      <section id="contact" className="section relative z-20 bg-[var(--bg-primary)]">
-        <Contact />
-      </section>
-    </main>
-  </>
-);
+const EMAIL = "caio@vilquer.dev";
+const CV_FILES: Record<Locale, { backend: string; fullStack: string }> = {
+  pt: {
+    backend: "/cv/caio-vilquer-backend.pdf",
+    fullStack: "/cv/caio-vilquer-full-stack.pdf",
+  },
+  en: {
+    backend: "/cv/caio-vilquer-backend-en.pdf",
+    fullStack: "/cv/caio-vilquer-full-stack-en.pdf",
+  },
+};
+
+type CopyState = "idle" | "copied" | "failed";
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => void;
+};
+
+function initialLocale(): Locale {
+  const parameter = new URLSearchParams(window.location.search).get("lang");
+  if (parameter === "en") return "en";
+  if (parameter === "pt") return "pt";
+
+  const stored = window.localStorage.getItem("portfolio-language");
+  return stored === "en" ? "en" : "pt";
+}
+
+async function copyToClipboard(value: string): Promise<boolean> {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await Promise.race([
+        navigator.clipboard.writeText(value),
+        new Promise<never>((_, reject) =>
+          window.setTimeout(() => reject(new Error("clipboard-timeout")), 800),
+        ),
+      ]);
+      return true;
+    } catch {
+      // Browsers can expose the Clipboard API while denying or stalling writes.
+    }
+  }
+
+  try {
+    const field = document.createElement("textarea");
+    field.value = value;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand("copy");
+    field.remove();
+    return copied;
+  } catch {
+    return false;
+  }
+}
+
+function EmailCopy({
+  copyLabel,
+  copiedLabel,
+  failedLabel,
+  compact = false,
+}: {
+  copyLabel: string;
+  copiedLabel: string;
+  failedLabel: string;
+  compact?: boolean;
+}) {
+  const [state, setState] = useState<CopyState>("idle");
+  const timeout = useRef<number | undefined>(undefined);
+
+  useEffect(
+    () => () => {
+      if (timeout.current) window.clearTimeout(timeout.current);
+    },
+    [],
+  );
+
+  const handleCopy = async () => {
+    const copied = await copyToClipboard(EMAIL);
+    setState(copied ? "copied" : "failed");
+    if (timeout.current) window.clearTimeout(timeout.current);
+    timeout.current = window.setTimeout(() => setState("idle"), 5000);
+  };
+
+  const buttonLabel = state === "copied" ? copiedLabel : copyLabel;
+
+  return (
+    <div className={`email-copy${compact ? " email-copy--compact" : ""}`}>
+      <a className="email-copy__address" href={`mailto:${EMAIL}`}>
+        {EMAIL}
+      </a>
+      <button
+        className="email-copy__button"
+        type="button"
+        onClick={handleCopy}
+        data-state={state}
+      >
+        {buttonLabel}
+      </button>
+      <span className="email-copy__feedback" aria-live="polite" role="status">
+        {state === "failed" ? failedLabel : ""}
+      </span>
+    </div>
+  );
+}
+
+function ExternalLink({
+  href,
+  children,
+  className = "",
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <a
+      className={className}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span>{children}</span>
+      <span aria-hidden="true">↗</span>
+    </a>
+  );
+}
+
+function ShotPutMark() {
+  return (
+    <span className="project-record__shot-mark" aria-hidden="true">
+      <svg viewBox="0 0 64 44" focusable="false">
+        <circle className="project-record__shot-circle" cx="17" cy="27" r="11.5" />
+        <path className="project-record__toe-board" d="M24.5 18.5 Q31 27 24.5 35.5" />
+        <path className="project-record__shot-path" d="M25 21.5 Q36 11.5 50 7.5" />
+        <circle className="project-record__shot" cx="53" cy="7" r="4" />
+        <path className="project-record__impact-ticks" d="M53 0.5V2.5M60 7H62" />
+      </svg>
+    </span>
+  );
+}
+
+function ProjectRecord({
+  project,
+  index,
+}: {
+  project: ProjectContent;
+  index: number;
+}) {
+  return (
+    <article
+      className={`project-record project-record--${project.slug} project-record--${index % 2 === 0 ? "forward" : "reverse"}`}
+      aria-labelledby={`${project.slug}-title`}
+    >
+      <header className="project-record__header">
+        <div className="project-record__register" aria-hidden="true">
+          <span>{project.code}</span>
+          <span>{project.period}</span>
+        </div>
+        <div className="project-record__title-block">
+          <h3 id={`${project.slug}-title`}>{project.title}</h3>
+          <p className="project-record__role">{project.role}</p>
+        </div>
+        <p className="project-record__summary">{project.summary}</p>
+      </header>
+
+      <figure className="project-record__media">
+        <img
+          src={project.image.src}
+          srcSet={project.image.srcSet}
+          sizes="(min-width: 72rem) 48vw, (min-width: 48rem) 88vw, 100vw"
+          width={project.image.width}
+          height={project.image.height}
+          alt={project.image.alt}
+          loading="lazy"
+          decoding="async"
+          style={{ objectPosition: project.image.position }}
+        />
+        <figcaption>{project.stack}</figcaption>
+      </figure>
+
+      <div className="project-record__analysis">
+        <section className="project-record__problem" aria-labelledby={`${project.slug}-problem`}>
+          <h4 id={`${project.slug}-problem`}>{project.problemLabel}</h4>
+          <p>{project.problem}</p>
+        </section>
+
+        <section
+          className="project-record__decisions"
+          aria-labelledby={`${project.slug}-decisions`}
+        >
+          <h4 id={`${project.slug}-decisions`}>{project.decisionsLabel}</h4>
+          <ul>
+            {project.decisions.map((decision) => (
+              <li key={decision.label}>
+                <ShotPutMark />
+                <div>
+                  <strong>{decision.label}</strong>
+                  <p>{decision.text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <aside className="project-record__evidence">
+          <h4>{project.evidenceLabel}</h4>
+          <ul>
+            {project.evidence.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </aside>
+
+        <footer className="project-record__links">
+          {project.links.map((link) => (
+            <ExternalLink
+              key={link.href}
+              href={link.href}
+              className={
+                link.kind === "primary"
+                  ? "project-link project-link--primary"
+                  : "project-link"
+              }
+            >
+              {link.label}
+            </ExternalLink>
+          ))}
+          {project.privateCode ? (
+            <span className="project-record__private">{project.privateCode}</span>
+          ) : null}
+        </footer>
+      </div>
+    </article>
+  );
+}
+
+function App() {
+  const [locale, setLocale] = useState<Locale>(initialLocale);
+  const copy = content[locale];
+  const cvFiles = CV_FILES[locale];
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
+    document.title = copy.meta.title;
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", copy.meta.description);
+    document
+      .querySelector('meta[property="og:title"]')
+      ?.setAttribute("content", copy.meta.title);
+    document
+      .querySelector('meta[property="og:description"]')
+      ?.setAttribute("content", copy.meta.description);
+    window.localStorage.setItem("portfolio-language", locale);
+
+    const url = new URL(window.location.href);
+    if (locale === "en") url.searchParams.set("lang", "en");
+    else url.searchParams.delete("lang");
+    window.history.replaceState({}, "", url);
+  }, [copy.meta.description, copy.meta.title, locale]);
+
+  const chooseLocale = (nextLocale: Locale) => {
+    if (nextLocale === locale) return;
+    const documentWithTransition = document as ViewTransitionDocument;
+    if (
+      documentWithTransition.startViewTransition &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      documentWithTransition.startViewTransition(() => setLocale(nextLocale));
+    } else {
+      setLocale(nextLocale);
+    }
+  };
+
+  return (
+    <>
+      <a className="skip-link" href="#conteudo">
+        {copy.skip}
+      </a>
+
+      <div className="page-measure" aria-hidden="true">
+        <span>0,000</span>
+        <span>0,534</span>
+        <span>1,068</span>
+        <span>1,601</span>
+        <span>2,135 m</span>
+      </div>
+
+      <header className="site-header">
+        <div className="site-header__inner">
+          <a className="wordmark" href="#inicio" aria-label={copy.brandLabel}>
+            <span className="wordmark__art" aria-hidden="true">
+              <img
+                className="wordmark__logo wordmark__logo--full"
+                src="/media/caio-vilquer-logo.svg"
+                width="275"
+                height="76"
+                alt=""
+              />
+              <img
+                className="wordmark__logo wordmark__logo--compact"
+                src="/media/caio-vilquer-mark.svg"
+                width="76"
+                height="76"
+                alt=""
+              />
+            </span>
+          </a>
+
+          <nav
+            className="site-nav"
+            aria-label={locale === "pt" ? "Principal" : "Primary"}
+          >
+            <ul>
+              {copy.nav.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="language-switch" aria-label={copy.language.label} role="group">
+            <button
+              type="button"
+              aria-pressed={locale === "pt"}
+              onClick={() => chooseLocale("pt")}
+            >
+              {copy.language.portuguese}
+            </button>
+            <button
+              type="button"
+              aria-pressed={locale === "en"}
+              onClick={() => chooseLocale("en")}
+            >
+              {copy.language.english}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main id="conteudo" tabIndex={-1}>
+        <section className="cover-sheet" id="inicio" aria-labelledby="hero-title">
+          <div className="cover-sheet__grid">
+            <div className="cover-sheet__intro">
+              <p className="status-line">
+                <span aria-hidden="true" />
+                {copy.hero.availability}
+              </p>
+              <h1 id="hero-title">{copy.hero.heading}</h1>
+              <p className="cover-sheet__summary">{copy.hero.summary}</p>
+
+              <div className="cover-sheet__actions">
+                <a className="action action--primary" href={cvFiles.backend} download>
+                  <span>{copy.hero.cvBackend}</span>
+                  <span aria-hidden="true">↓</span>
+                </a>
+                <a className="action action--text" href={cvFiles.fullStack} download>
+                  {copy.hero.cvFullStack}
+                </a>
+                <a className="action action--text" href="#trabalho">
+                  {copy.hero.seeWork}
+                </a>
+              </div>
+            </div>
+
+            <figure className="identity-photo">
+              <div className="identity-photo__frame">
+                <img
+                  src="/media/caio-original-2752.jpeg"
+                  width="2752"
+                  height="1536"
+                  alt={copy.hero.portraitAlt}
+                  decoding="async"
+                />
+                <span className="identity-photo__cross identity-photo__cross--a" aria-hidden="true" />
+                <span className="identity-photo__cross identity-photo__cross--b" aria-hidden="true" />
+              </div>
+              <figcaption>{copy.hero.portraitCaption}</figcaption>
+            </figure>
+
+            <dl className="spec-table">
+              {copy.hero.specs.map((spec) => (
+                <div key={spec.label}>
+                  <dt>{spec.label}</dt>
+                  <dd>{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <aside className="measurement-note">
+              <span className="measurement-note__diameter" aria-hidden="true">
+                Ø 2,135
+              </span>
+              <p>{copy.hero.measurementNote}</p>
+            </aside>
+
+            <div className="cover-sheet__contact">
+              <p>{copy.hero.emailLabel}</p>
+              <EmailCopy
+                copyLabel={copy.hero.copyEmail}
+                copiedLabel={copy.hero.copiedEmail}
+                failedLabel={copy.hero.copyFailed}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="work-register" id="trabalho" aria-labelledby="work-title">
+          <header className="section-heading section-heading--wide">
+            <p className="section-kicker">{copy.work.kicker}</p>
+            <div>
+              <h2 id="work-title">{copy.work.heading}</h2>
+              <p>{copy.work.intro}</p>
+            </div>
+          </header>
+
+          <div className="work-register__cases">
+            {copy.work.projects.map((project, index) => (
+              <ProjectRecord key={project.slug} project={project} index={index} />
+            ))}
+          </div>
+        </section>
+
+        <section className="research-sheet" id="pesquisa" aria-labelledby="research-title">
+          <div className="research-sheet__header">
+            <div>
+              <p className="section-kicker">{copy.research.kicker}</p>
+              <h2 id="research-title">{copy.research.heading}</h2>
+            </div>
+            <p className="research-sheet__status">{copy.research.status}</p>
+          </div>
+
+          <div className="research-sheet__body">
+            <div className="research-sheet__copy">
+              <p className="research-sheet__lead">{copy.research.summary}</p>
+
+              <section aria-labelledby="research-current">
+                <h3 id="research-current">{copy.research.currentLabel}</h3>
+                <ul>
+                  {copy.research.current.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section aria-labelledby="research-next">
+                <h3 id="research-next">{copy.research.nextLabel}</h3>
+                <p>{copy.research.next}</p>
+              </section>
+
+              <span className="private-note private-note--dark">
+                {copy.research.repository}
+              </span>
+            </div>
+
+            <figure className="research-sheet__figure">
+              <img
+                src="/media/trackshot-sequence-1440.webp"
+                srcSet="/media/trackshot-sequence-720.webp 720w, /media/trackshot-sequence-1440.webp 1440w"
+                sizes="(min-width: 64rem) 55vw, 100vw"
+                width="1440"
+                height="840"
+                alt={copy.research.imageAlt}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>{copy.research.evidence}</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section className="profile-sheet" id="perfil" aria-labelledby="profile-title">
+          <header className="section-heading">
+            <p className="section-kicker">{copy.profile.kicker}</p>
+            <div>
+              <h2 id="profile-title">{copy.profile.heading}</h2>
+              <p>{copy.profile.intro}</p>
+            </div>
+          </header>
+
+          <div className="profile-sheet__body">
+            <section className="experience-map" aria-labelledby="experience-title">
+              <h3 id="experience-title">{copy.profile.stackLabel}</h3>
+              <dl>
+                {copy.profile.stack.map((item) => (
+                  <div key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      <strong>{item.value}</strong>
+                      <span>{item.proof}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+
+            <section className="working-method" aria-labelledby="method-title">
+              <h3 id="method-title">{copy.profile.methodLabel}</h3>
+              <ol>
+                {copy.profile.method.map((item) => (
+                  <li key={item.number}>
+                    <span aria-hidden="true">{item.number}</span>
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p>{item.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </div>
+
+          <section className="other-work" aria-labelledby="other-work-title">
+            <div className="other-work__heading">
+              <h3 id="other-work-title">{copy.profile.otherLabel}</h3>
+              <p>{copy.profile.otherIntro}</p>
+            </div>
+            <div className="other-work__list">
+              {copy.profile.other.map((item) => (
+                <article key={item.title}>
+                  <div>
+                    <p>{item.type}</p>
+                    <h4>{item.title}</h4>
+                  </div>
+                  <p>{item.description}</p>
+                  <p className="other-work__stack">{item.stack}</p>
+                  {item.href ? (
+                    <ExternalLink className="project-link" href={item.href}>
+                      {item.linkLabel}
+                    </ExternalLink>
+                  ) : (
+                    <span className="project-record__private other-work__private">
+                      {item.linkLabel}
+                    </span>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer className="contact-sheet" id="contato">
+        <div className="contact-sheet__top">
+          <p className="section-kicker">{copy.contact.kicker}</p>
+          <h2>{copy.contact.heading}</h2>
+          <p>{copy.contact.text}</p>
+        </div>
+
+        <EmailCopy
+          copyLabel={copy.contact.copy}
+          copiedLabel={copy.hero.copiedEmail}
+          failedLabel={copy.hero.copyFailed}
+          compact
+        />
+
+        <nav
+          className="contact-sheet__links"
+          aria-label={locale === "pt" ? "Links de contato" : "Contact links"}
+        >
+          <ExternalLink href="https://www.linkedin.com/in/caio-vilquer/">
+            {copy.contact.linkedin}
+          </ExternalLink>
+          <ExternalLink href="https://github.com/caiovilquer">
+            {copy.contact.github}
+          </ExternalLink>
+          <a href={cvFiles.backend} download>
+            <span>{copy.contact.cvBackend}</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+          <a href={cvFiles.fullStack} download>
+            <span>{copy.contact.cvFullStack}</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+        </nav>
+
+        <div className="contact-sheet__foot">
+          <p>{copy.contact.location}</p>
+          <p>
+            © {new Date().getFullYear()} · {copy.contact.legal}
+          </p>
+        </div>
+      </footer>
+    </>
+  );
+}
 
 export default App;
