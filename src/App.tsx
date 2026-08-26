@@ -116,13 +116,15 @@ function ExternalLink({
 }) {
   return (
     <a
-      className={className}
+      className={`motion-link motion-link--external ${className}`.trim()}
       href={href}
       target="_blank"
       rel="noopener noreferrer"
     >
       <span>{children}</span>
-      <span aria-hidden="true">↗</span>
+      <span className="link-direction link-direction--external" aria-hidden="true">
+        ↗
+      </span>
     </a>
   );
 }
@@ -227,7 +229,9 @@ function ProjectRecord({
             href={projectPath(locale, project.slug as ProjectSlug)}
           >
             <span>{detailLabel}</span>
-            <span aria-hidden="true">→</span>
+            <span className="link-direction link-direction--forward" aria-hidden="true">
+              →
+            </span>
           </a>
           {project.links.map((link) => (
             <ExternalLink
@@ -375,7 +379,9 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               <div className="cover-sheet__actions">
                 <a className="action action--primary" href={cvFiles.backend} download>
                   <span>{copy.hero.cvBackend}</span>
-                  <span aria-hidden="true">↓</span>
+                  <span className="link-direction link-direction--download" aria-hidden="true">
+                    ↓
+                  </span>
                 </a>
                 <a
                   className="action action--text action--fullstack"
@@ -386,7 +392,10 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 </a>
                 <a className="action action--text action--work" href="#trabalho">
                   <span>{copy.hero.seeWork}</span>
-                  <span className="action__direction" aria-hidden="true">
+                  <span
+                    className="action__direction link-direction link-direction--down-right"
+                    aria-hidden="true"
+                  >
                     ↘
                   </span>
                 </a>
@@ -469,7 +478,12 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                     <strong>{project.title}</strong>
                     <span className="project-index__role">{project.descriptor}</span>
                     <span className="project-index__evidence">{project.evidence[0]}</span>
-                    <span className="project-index__arrow" aria-hidden="true">↓</span>
+                    <span
+                      className="project-index__arrow link-direction link-direction--download"
+                      aria-hidden="true"
+                    >
+                      ↓
+                    </span>
                   </a>
                 </li>
               ))}
@@ -523,7 +537,9 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 href={projectPath(locale, "trackshot")}
               >
                 <span>{locale === "pt" ? "Abrir estudo completo" : "Open full case study"}</span>
-                <span aria-hidden="true">→</span>
+                <span className="link-direction link-direction--forward" aria-hidden="true">
+                  →
+                </span>
               </a>
             </div>
 
@@ -638,11 +654,15 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           </ExternalLink>
           <a href={cvFiles.backend} download>
             <span>{copy.contact.cvBackend}</span>
-            <span aria-hidden="true">↓</span>
+            <span className="link-direction link-direction--download" aria-hidden="true">
+              ↓
+            </span>
           </a>
           <a href={cvFiles.fullStack} download>
             <span>{copy.contact.cvFullStack}</span>
-            <span aria-hidden="true">↓</span>
+            <span className="link-direction link-direction--download" aria-hidden="true">
+              ↓
+            </span>
           </a>
         </nav>
 
@@ -822,7 +842,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
 
               {project.visualEvidence ? (
                 <section
-                  className="project-dossier__visual-evidence"
+                  className={`project-dossier__visual-evidence project-dossier__visual-evidence--${slug}`}
                   aria-labelledby="dossier-visual-evidence"
                 >
                   <p className="section-kicker">{project.visualEvidence.mark}</p>
@@ -937,7 +957,12 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
                       >
                         <ShotPutMark />
                         <span>{related.title}</span>
-                        <span aria-hidden="true">→</span>
+                        <span
+                          className="link-direction link-direction--forward"
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
                       </a>
                     </li>
                   );
@@ -970,11 +995,15 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           </ExternalLink>
           <a href={cvFiles.backend} download>
             <span>{copy.contact.cvBackend}</span>
-            <span aria-hidden="true">↓</span>
+            <span className="link-direction link-direction--download" aria-hidden="true">
+              ↓
+            </span>
           </a>
           <a href={cvFiles.fullStack} download>
             <span>{copy.contact.cvFullStack}</span>
-            <span aria-hidden="true">↓</span>
+            <span className="link-direction link-direction--download" aria-hidden="true">
+              ↓
+            </span>
           </a>
         </nav>
 

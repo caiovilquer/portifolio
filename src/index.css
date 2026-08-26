@@ -52,6 +52,8 @@
 
   --duracao-micro: 120ms;
   --duracao-interface: 240ms;
+  --duracao-tela: 420ms;
+  --curva-saida: cubic-bezier(0.4, 0, 1, 1);
   --curva-entrada: cubic-bezier(0, 0, 0.2, 1);
   --curva-interface: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -65,6 +67,31 @@
   text-rendering: optimizeLegibility;
   background: var(--papel-inspecao);
   color: var(--tinta-carbono);
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: var(--duracao-interface) var(--curva-saida) both page-exit;
+}
+
+::view-transition-new(root) {
+  animation: var(--duracao-tela) var(--curva-entrada) both page-enter;
+}
+
+::view-transition-group(portfolio-wordmark),
+::view-transition-group(poliatletas-media),
+::view-transition-group(rotinapet-media),
+::view-transition-group(viazio-media),
+::view-transition-group(trackshot-media),
+::view-transition-group(poliatletas-title),
+::view-transition-group(rotinapet-title),
+::view-transition-group(viazio-title),
+::view-transition-group(trackshot-title) {
+  animation-duration: var(--duracao-tela);
+  animation-timing-function: var(--curva-entrada);
 }
 
 * {
@@ -221,6 +248,7 @@ main:focus {
   align-items: center;
   text-decoration: none;
   touch-action: manipulation;
+  view-transition-name: portfolio-wordmark;
 }
 
 .wordmark__art {
@@ -444,6 +472,8 @@ main:focus {
   position: absolute;
   width: 1.4rem;
   aspect-ratio: 1;
+  transform: rotate(0deg) scale(1);
+  transform-origin: center;
 }
 
 .identity-photo__cross::before,
@@ -489,8 +519,20 @@ main:focus {
 }
 
 .spec-table {
+  position: relative;
   grid-column: 1 / span 8;
-  border-block-start: 2px solid var(--tinta-carbono);
+}
+
+.spec-table::before,
+.measurement-note::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 2px;
+  background: var(--tinta-carbono);
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .spec-table > div {
@@ -517,9 +559,13 @@ main:focus {
 }
 
 .measurement-note {
+  position: relative;
   grid-column: 9 / -1;
   padding-block-start: var(--espaco-3);
-  border-block-start: 2px solid var(--lapis-vermelho);
+}
+
+.measurement-note::before {
+  background: var(--lapis-vermelho);
 }
 
 .measurement-note__diameter {
@@ -587,7 +633,8 @@ main:focus {
   cursor: pointer;
   transition:
     background-color var(--duracao-micro) var(--curva-interface),
-    color var(--duracao-micro) var(--curva-interface);
+    color var(--duracao-micro) var(--curva-interface),
+    transform var(--duracao-micro) var(--curva-interface);
 }
 
 .email-copy__button[data-state="copied"] {
@@ -617,11 +664,26 @@ main:focus {
 }
 
 .section-heading {
+  position: relative;
   width: min(100%, 72rem);
   display: grid;
   grid-template-columns: minmax(9rem, 0.28fr) 1fr;
   gap: var(--espaco-5);
   align-items: start;
+}
+
+.section-heading::after,
+.research-sheet__header::after,
+.contact-sheet__top::after {
+  content: "";
+  position: absolute;
+  inset-block-end: calc(var(--espaco-4) * -1);
+  inset-inline-start: 0;
+  width: clamp(4.5rem, 8vw, 8rem);
+  height: 3px;
+  background: var(--lapis-vermelho);
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .section-heading--wide {
@@ -789,6 +851,46 @@ main:focus {
   min-width: 0;
 }
 
+.project-record--poliatletas .project-record__media {
+  view-transition-name: poliatletas-media;
+}
+
+.project-record--rotinapet .project-record__media {
+  view-transition-name: rotinapet-media;
+}
+
+.project-record--viazio .project-record__media {
+  view-transition-name: viazio-media;
+}
+
+.project-record--trackshot .project-record__media {
+  view-transition-name: trackshot-media;
+}
+
+.research-sheet__figure {
+  view-transition-name: trackshot-media;
+}
+
+.project-record--poliatletas :is(.project-record__title-block h3, .project-dossier__title h1) {
+  view-transition-name: poliatletas-title;
+}
+
+.project-record--rotinapet :is(.project-record__title-block h3, .project-dossier__title h1) {
+  view-transition-name: rotinapet-title;
+}
+
+.project-record--viazio :is(.project-record__title-block h3, .project-dossier__title h1) {
+  view-transition-name: viazio-title;
+}
+
+.project-record--trackshot :is(.project-record__title-block h3, .project-dossier__title h1) {
+  view-transition-name: trackshot-title;
+}
+
+.research-sheet #research-title {
+  view-transition-name: trackshot-title;
+}
+
 .project-record--reverse .project-record__media {
   grid-column: 7 / -1;
 }
@@ -922,7 +1024,22 @@ main:focus {
   fill: var(--tinta-carbono);
   stroke: var(--papel-inspecao);
   stroke-width: 1.5;
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-box: fill-box;
+  transform-origin: center;
   vector-effect: non-scaling-stroke;
+}
+
+.project-record__shot-path {
+  opacity: 0.58;
+  transition: opacity var(--duracao-micro) var(--curva-interface);
+}
+
+.link-direction {
+  display: inline-block;
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--duracao-micro) var(--curva-entrada);
 }
 
 .project-record__impact-ticks {
@@ -1040,11 +1157,24 @@ main:focus {
 }
 
 .project-dossier__masthead {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(10rem, 0.28fr) minmax(0, 1fr);
   gap: clamp(var(--espaco-5), 6vw, var(--espaco-8));
   padding-block-end: var(--espaco-6);
   border-block-end: 5px solid var(--tinta-carbono);
+}
+
+.project-dossier__masthead::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -5px;
+  inset-inline-start: 0;
+  width: 8rem;
+  height: 5px;
+  background: var(--lapis-vermelho);
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .project-dossier__register {
@@ -1172,11 +1302,24 @@ main:focus {
 }
 
 .project-dossier__analysis > section {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(4rem, 0.2fr) minmax(0, 1fr);
   gap: var(--espaco-5);
   padding-block: clamp(2.5rem, 5vw, 5rem);
   border-block-end: 1px solid var(--linha-regua-estrutural);
+}
+
+.project-dossier__analysis > section::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-start: 0;
+  width: 5rem;
+  height: 2px;
+  background: var(--lapis-vermelho);
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .project-dossier__analysis h2,
@@ -1375,6 +1518,7 @@ main:focus {
 }
 
 .research-sheet__header {
+  position: relative;
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -1621,6 +1765,7 @@ main:focus {
 }
 
 .contact-sheet__top {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(9rem, 0.28fr) 1fr;
   gap: var(--espaco-5);
@@ -1749,8 +1894,94 @@ main:focus {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .status-line__dot {
+    animation: var(--duracao-tela) var(--curva-entrada) 80ms both status-register;
+  }
+
+  .identity-photo__cross--a {
+    animation: var(--duracao-tela) var(--curva-entrada) 80ms both cross-register-a;
+  }
+
+  .identity-photo__cross--b {
+    animation: var(--duracao-tela) var(--curva-entrada) 140ms both cross-register-b;
+  }
+
+  .spec-table::before,
+  .measurement-note::before,
+  .project-dossier__masthead::after {
+    animation: var(--duracao-tela) var(--curva-entrada) 100ms both measure-sweep;
+  }
+
+  .project-dossier__register .project-record__shot {
+    animation: var(--duracao-tela) var(--curva-entrada) 100ms both shot-flight;
+  }
+
+  .email-copy__button[data-state="copied"] {
+    animation: var(--duracao-interface) var(--curva-entrada) both stamp-confirmed;
+  }
+
+  .email-copy__button[data-state="failed"] {
+    animation: var(--duracao-interface) var(--curva-interface) both stamp-failed;
+  }
+
+  a:focus-visible .project-record__shot {
+    animation: var(--duracao-tela) var(--curva-entrada) both shot-flight;
+  }
+
+  a:focus-visible .project-record__shot-path {
+    opacity: 1;
+  }
+
+  a:focus-visible .link-direction--external {
+    transform: translate3d(0.18rem, -0.18rem, 0);
+  }
+
+  a:focus-visible .link-direction--forward {
+    transform: translate3d(0.25rem, 0, 0);
+  }
+
+  a:focus-visible .link-direction--download {
+    transform: translate3d(0, 0.2rem, 0);
+  }
+
+  a:focus-visible .link-direction--down-right {
+    transform: translate3d(0.18rem, 0.18rem, 0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  a:hover .project-record__shot {
+    animation: var(--duracao-tela) var(--curva-entrada) both shot-flight;
+  }
+
+  a:hover .project-record__shot-path {
+    opacity: 1;
+  }
+
+  a:hover .link-direction--external {
+    transform: translate3d(0.18rem, -0.18rem, 0);
+  }
+
+  a:hover .link-direction--forward {
+    transform: translate3d(0.25rem, 0, 0);
+  }
+
+  a:hover .link-direction--download {
+    transform: translate3d(0, 0.2rem, 0);
+  }
+
+  a:hover .link-direction--down-right {
+    transform: translate3d(0.18rem, 0.18rem, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .project-record::before {
+    .project-record::before,
+    .section-heading::after,
+    .research-sheet__header::after,
+    .contact-sheet__top::after,
+    .project-dossier__analysis > section::before {
       animation: var(--duracao-interface) linear both measure-sweep;
       animation-timeline: view();
       animation-range: entry 5% cover 28%;
@@ -1771,6 +2002,108 @@ main:focus {
 
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes status-register {
+  from {
+    opacity: 0.35;
+    transform: scale(0.68);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cross-register-a {
+  from {
+    opacity: 0;
+    transform: translate3d(0.45rem, 0.45rem, 0) rotate(-45deg) scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes cross-register-b {
+  from {
+    opacity: 0;
+    transform: translate3d(-0.45rem, -0.45rem, 0) rotate(45deg) scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes shot-flight {
+  0% {
+    opacity: 0.2;
+    transform: translate3d(-1.15rem, 0.82rem, 0) scale(0.72);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translate3d(-0.42rem, 0.2rem, 0) scale(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes stamp-confirmed {
+  0% {
+    transform: rotate(-1.5deg) scale(1.08);
+  }
+
+  70% {
+    transform: rotate(0.35deg) scale(0.98);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes stamp-failed {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  35% {
+    transform: translate3d(-0.25rem, 0, 0);
+  }
+
+  70% {
+    transform: translate3d(0.25rem, 0, 0);
+  }
+}
+
+@keyframes page-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
@@ -2562,6 +2895,87 @@ main:focus {
   }
 }
 
+@media (min-width: 64.01rem) and (prefers-reduced-motion: no-preference) {
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame-sequence {
+    display: block;
+    padding-block-end: clamp(4rem, 18svh, 9rem);
+    border: 0;
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame {
+    position: sticky;
+    inset-block-start: clamp(5.75rem, 10svh, 7.5rem);
+    margin-block-end: clamp(5rem, 16svh, 9rem);
+    border: 2px solid var(--tinta-carbono);
+    background: var(--papel-elevado);
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame:nth-child(1) {
+    z-index: calc(var(--z-base) + 1);
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame:nth-child(2) {
+    z-index: calc(var(--z-base) + 2);
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame:nth-child(3) {
+    z-index: calc(var(--z-base) + 3);
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame:nth-child(4) {
+    z-index: calc(var(--z-base) + 4);
+    margin-block-end: 0;
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame figure {
+    height: min(62svh, 38rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(16rem, 0.55fr);
+    background: var(--papel-elevado);
+    transform: translate3d(0, 0, 0) scale(1);
+    transform-origin: center bottom;
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame-image {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame figcaption {
+    min-height: 0;
+    padding: clamp(var(--espaco-4), 3vw, var(--espaco-6));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-inline-start: 1px solid var(--linha-regua-estrutural);
+    background: var(--papel-elevado);
+  }
+
+  .project-dossier__visual-evidence--trackshot .project-dossier__frame figcaption > p:last-child {
+    font-size: clamp(0.94rem, 0.88rem + 0.2vw, 1.05rem);
+  }
+
+  @supports (animation-timeline: view()) {
+    .project-dossier__visual-evidence--trackshot .project-dossier__frame figure {
+      animation: frame-register linear both;
+      animation-timeline: view();
+      animation-range: entry 8% entry 68%;
+    }
+  }
+}
+
+@keyframes frame-register {
+  from {
+    opacity: 0.62;
+    transform: translate3d(0, 0.75rem, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -2579,6 +2993,13 @@ main:focus {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+
+  .wordmark,
+  .project-record__media,
+  .project-record__title-block h3,
+  .project-dossier__title h1 {
+    view-transition-name: none !important;
   }
 }
 
