@@ -141,7 +141,7 @@ const sharedImages = {
 export const content: Record<Locale, SiteContent> = {
   pt: {
     meta: {
-      title: "Caio Vilquer | Backend, dados e sistemas de produto",
+      title: "Caio Vilquer · Backend em Java, Kotlin e TypeScript · Poli-USP",
       description:
         "Estudante de Engenharia de Computação na Poli-USP. Projetos em Java, Kotlin, Spring Boot, NestJS, PostgreSQL, RAG, React e Angular.",
     },
@@ -448,7 +448,7 @@ export const content: Record<Locale, SiteContent> = {
   },
   en: {
     meta: {
-      title: "Caio Vilquer | Backend, data, and product systems",
+      title: "Caio Vilquer · Backend in Java, Kotlin and TypeScript · Poli-USP",
       description:
         "Computer Engineering student at Poli-USP. Projects in Java, Kotlin, Spring Boot, NestJS, PostgreSQL, RAG, React, and Angular.",
     },
