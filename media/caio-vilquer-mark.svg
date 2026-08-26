@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 76" role="img" aria-labelledby="mark-title">
+  <title id="mark-title">Caio Vilquer</title>
+
+  <!-- marca isolada, mesma geometria do lockup completo -->
+  <g fill="none" stroke-linecap="square">
+    <circle cx="38" cy="38" r="27" stroke="#172a36" stroke-width="4"/>
+    <path d="M53 7 23 69" stroke="#b7432b" stroke-width="4"/>
+    <path d="M38 2v8M38 66v8M2 38h8M66 38h8" stroke="#7b817a" stroke-width="2"/>
+    <path d="M49 5 57 9M19 67 27 71" stroke="#b7432b" stroke-width="2"/>
+  </g>
+</svg>

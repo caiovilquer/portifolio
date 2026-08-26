@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 275 76" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Caio Vilquer</title>
+  <desc id="logo-desc">Assinatura geométrica: o símbolo de diâmetro desenhado como círculo de projeto com marcas de centro, ao lado do nome em duas linhas fechadas por uma linha de cota.</desc>
+
+  <!--
+    Sistema de três pesos, um trabalho para cada:
+      4  estrutura .. círculo e diagonal, o objeto medido
+      3  letra ...... as duas linhas do nome, mesma altura de caixa (22)
+      2  detalhe .... marcas de centro, terminais da diagonal e linha de cota
+    Redondas (C, O, Q) partem do mesmo raio 11.
+    O e Q compartilham o eixo vertical x=171.
+    As duas linhas terminam em x=270.
+    Terminais da diagonal são perpendiculares a ela, como cota de desenho técnico.
+  -->
+
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+
+    <!-- marca: o símbolo de diâmetro como círculo de projeto -->
+    <g aria-hidden="true">
+      <circle cx="38" cy="38" r="27" stroke="#172a36" stroke-width="4"/>
+      <path d="M53 7 23 69" stroke="#b7432b" stroke-width="4"/>
+      <path d="M38 2v8M38 66v8M2 38h8M66 38h8" stroke="#7b817a" stroke-width="2"/>
+      <path d="M49 5 57 9M19 67 27 71" stroke="#b7432b" stroke-width="2"/>
+    </g>
+
+    <!-- CAIO ... altura de caixa 22, base y=32 -->
+    <g stroke="#172a36" stroke-width="3" aria-hidden="true">
+      <path d="M113 15A11 11 0 1 0 113 27"/>
+      <path d="M122 32 132 10 142 32M126 24h12"/>
+      <path d="M150 10v22"/>
+      <circle cx="171" cy="21" r="11"/>
+    </g>
+
+    <!-- linha de cota: fecha a linha curta na medida da linha longa -->
+    <path d="M192 32h78M192 26v12M270 26v12" stroke="#b7432b" stroke-width="2" aria-hidden="true"/>
+
+    <!-- VILQUER ... altura de caixa 22, base y=66 -->
+    <g stroke="#172a36" stroke-width="3" aria-hidden="true">
+      <path d="M93 44 103 66 113 44"/>
+      <path d="M124 44v22"/>
+      <path d="M136 44v22h16"/>
+      <circle cx="171" cy="55" r="11"/>
+      <path d="M175 59 184 68"/>
+      <path d="M193 44v11a9 9 0 0 0 18 0V44"/>
+      <path d="M222 44v22h17M222 44h17M222 55h14"/>
+      <path d="M249 66V44h11a6 6 0 0 1 0 12h-11M260 56l10 10"/>
+    </g>
+
+  </g>
+</svg>
