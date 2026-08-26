@@ -820,6 +820,52 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
                 </div>
               </section>
 
+              {project.visualEvidence ? (
+                <section
+                  className="project-dossier__visual-evidence"
+                  aria-labelledby="dossier-visual-evidence"
+                >
+                  <p className="section-kicker">{project.visualEvidence.mark}</p>
+                  <div>
+                    <h2 id="dossier-visual-evidence">
+                      {project.visualEvidence.title}
+                    </h2>
+                    <p>{project.visualEvidence.intro}</p>
+                    <ol className="project-dossier__frame-sequence">
+                      {project.visualEvidence.frames.map((frame) => (
+                        <li
+                          key={frame.frame}
+                          className="project-dossier__frame"
+                        >
+                          <figure>
+                            <div className="project-dossier__frame-image">
+                              <img
+                                src={frame.src}
+                                srcSet={frame.srcSet}
+                                sizes="(min-width: 80rem) 19vw, (min-width: 48rem) 38vw, 100vw"
+                                width={frame.width}
+                                height={frame.height}
+                                alt={frame.alt}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              <span>{frame.frame}</span>
+                            </div>
+                            <figcaption>
+                              <p>
+                                <strong>{frame.stage}</strong>
+                                <span>{frame.time}</span>
+                              </p>
+                              <p>{frame.caption}</p>
+                            </figcaption>
+                          </figure>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </section>
+              ) : null}
+
               <section aria-labelledby="dossier-decisions">
                 <p className="section-kicker">{labels.sectionMarks[1]}</p>
                 <div>

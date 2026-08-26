@@ -19,6 +19,22 @@ export type ProjectPageData = {
   stack: string;
   image: ProjectContent["image"];
   imageCaption: string;
+  visualEvidence?: {
+    mark: string;
+    title: string;
+    intro: string;
+    frames: Array<{
+      frame: string;
+      time: string;
+      stage: string;
+      caption: string;
+      src: string;
+      srcSet: string;
+      width: number;
+      height: number;
+      alt: string;
+    }>;
+  };
   links: ProjectLink[];
   privateCode?: string;
 };
@@ -333,6 +349,66 @@ const trackShot: Record<Locale, ProjectPageData> = {
     },
     imageCaption:
       "Dois frames do pipeline: pose do atleta, trajetória do implemento e estados usados para auditar a liberação.",
+    visualEvidence: {
+      mark: "QUADRO A QUADRO",
+      title: "A liberação vista de lado",
+      intro:
+        "Os quatro recortes vêm da mesma tomada lateral. O frame 418 é o instante que o pipeline marcou como liberação, aos 1,742 s do vídeo original gravado a 240 fps.",
+      frames: [
+        {
+          frame: "F. 370",
+          time: "1,542 s",
+          stage: "Preparação",
+          caption:
+            "O peso permanece junto ao pescoço enquanto a pose registra a base aberta e o tronco inclinado.",
+          src: "/media/trackshot-lateral-frame-370-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-370-540.webp 540w, /media/trackshot-lateral-frame-370-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Caio Vilquer visto de lado preparando o arremesso, com pose estimada e o peso junto ao pescoço",
+        },
+        {
+          frame: "F. 400",
+          time: "1,667 s",
+          stage: "Condução",
+          caption:
+            "O braço livre abre na direção do setor; o peso ainda acompanha a mão, sem rastro de voo.",
+          src: "/media/trackshot-lateral-frame-400-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-400-540.webp 540w, /media/trackshot-lateral-frame-400-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Caio Vilquer visto de lado conduzindo o peso, com o braço livre aberto e a pose estimada sobre o corpo",
+        },
+        {
+          frame: "F. 418",
+          time: "1,742 s",
+          stage: "Liberação",
+          caption:
+            "A moldura vermelha identifica o quadro classificado pelo pipeline como o instante de liberação.",
+          src: "/media/trackshot-lateral-frame-418-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-418-540.webp 540w, /media/trackshot-lateral-frame-418-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Caio Vilquer visto de lado no frame de liberação detectado pelo TrackShot, destacado por uma moldura vermelha",
+        },
+        {
+          frame: "F. 450",
+          time: "1,875 s",
+          stage: "Voo",
+          caption:
+            "O círculo amarelo já se separou da mão, e o rastro permite conferir o início da trajetória.",
+          src: "/media/trackshot-lateral-frame-450-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-450-540.webp 540w, /media/trackshot-lateral-frame-450-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Caio Vilquer visto de lado após a liberação, com o peso em voo marcado por círculo e rastro amarelos",
+        },
+      ],
+    },
     links: [],
     privateCode: "Código privado",
   },
@@ -387,6 +463,66 @@ const trackShot: Record<Locale, ProjectPageData> = {
     },
     imageCaption:
       "Two pipeline frames showing athlete pose, implement trajectory, and the states used to audit release.",
+    visualEvidence: {
+      mark: "FRAME BY FRAME",
+      title: "Release from the side",
+      intro:
+        "All four frames come from the same side-view recording. Frame 418 is the instant the pipeline marked as release, at 1.742 s in the original 240 fps video.",
+      frames: [
+        {
+          frame: "F. 370",
+          time: "1.542 s",
+          stage: "Set-up",
+          caption:
+            "The shot remains against the neck while pose records the wide base and tilted torso.",
+          src: "/media/trackshot-lateral-frame-370-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-370-540.webp 540w, /media/trackshot-lateral-frame-370-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Side view of Caio Vilquer setting up the throw with estimated pose and the shot against his neck",
+        },
+        {
+          frame: "F. 400",
+          time: "1.667 s",
+          stage: "Delivery",
+          caption:
+            "The free arm opens toward the sector while the shot still follows the hand, with no flight trail yet.",
+          src: "/media/trackshot-lateral-frame-400-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-400-540.webp 540w, /media/trackshot-lateral-frame-400-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Side view of Caio Vilquer delivering the shot with his free arm open and estimated pose over his body",
+        },
+        {
+          frame: "F. 418",
+          time: "1.742 s",
+          stage: "Release",
+          caption:
+            "The red border identifies the frame classified by the pipeline as the instant of release.",
+          src: "/media/trackshot-lateral-frame-418-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-418-540.webp 540w, /media/trackshot-lateral-frame-418-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Side view of Caio Vilquer in the release frame detected by TrackShot, highlighted by a red border",
+        },
+        {
+          frame: "F. 450",
+          time: "1.875 s",
+          stage: "Flight",
+          caption:
+            "The yellow circle has separated from the hand, and the trail makes the opening segment of the trajectory visible.",
+          src: "/media/trackshot-lateral-frame-450-1080.webp",
+          srcSet:
+            "/media/trackshot-lateral-frame-450-540.webp 540w, /media/trackshot-lateral-frame-450-1080.webp 1080w",
+          width: 1080,
+          height: 1350,
+          alt: "Side view of Caio Vilquer after release with the shot in flight marked by a yellow circle and trail",
+        },
+      ],
+    },
     links: [],
     privateCode: "Private code",
   },
