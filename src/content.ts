@@ -166,7 +166,7 @@ export const content: Record<Locale, SiteContent> = {
       english: "EN",
     },
     hero: {
-      availability: "Disponível agora para estágio",
+      availability: "Foco · posição júnior",
       heading: "Escrevo sistemas em que as regras de negócio ficam visíveis no código e nos testes.",
       mobileHeading: "Backend com regras de negócio visíveis no código e nos testes.",
       summary:
@@ -178,7 +178,7 @@ export const content: Record<Locale, SiteContent> = {
       identityStack: "Java / Kotlin / TypeScript",
       mobileLocation: "SP",
       specs: [
-        { label: "Busca", value: "Estágio ou posição júnior" },
+        { label: "Busca", value: "Posição júnior ou estágio" },
         { label: "Foco", value: "Backend, com atuação full stack" },
         { label: "Modelo", value: "Remoto ou híbrido em São Paulo" },
         { label: "Formação", value: "Poli-USP, conclusão em 12/2029" },
@@ -447,10 +447,10 @@ export const content: Record<Locale, SiteContent> = {
       ],
     },
     contact: {
-      kicker: "Estágio · júnior · São Paulo",
+      kicker: "Júnior · estágio · São Paulo",
       heading: "Estou disponível para começar agora.",
       text:
-        "Procuro estágio e também considero posições júnior em backend ou full stack. Em São Paulo, busco vagas remotas ou híbridas.",
+        "Procuro uma posição júnior como desenvolvedor backend ou full stack. Também considero estágios. Em São Paulo, busco vagas remotas ou híbridas.",
       email: "caio@vilquer.dev",
       copy: "Copiar e-mail",
       linkedin: "LinkedIn",
@@ -481,7 +481,7 @@ export const content: Record<Locale, SiteContent> = {
       english: "EN",
     },
     hero: {
-      availability: "Available now for internships",
+      availability: "Focus · junior role",
       heading: "I build systems where business rules stay visible in code and tests.",
       mobileHeading: "Backend systems with business rules visible in code and tests.",
       summary:
@@ -493,7 +493,7 @@ export const content: Record<Locale, SiteContent> = {
       identityStack: "Java / Kotlin / TypeScript",
       mobileLocation: "SP",
       specs: [
-        { label: "Seeking", value: "Internship or junior position" },
+        { label: "Seeking", value: "Junior position or internship" },
         { label: "Focus", value: "Backend, with full-stack experience" },
         { label: "Model", value: "Remote or hybrid in São Paulo" },
         { label: "Degree", value: "Poli-USP, expected 12/2029" },
@@ -762,10 +762,10 @@ export const content: Record<Locale, SiteContent> = {
       ],
     },
     contact: {
-      kicker: "Internships · junior roles · São Paulo",
+      kicker: "Junior roles · internships · São Paulo",
       heading: "I am available to start now.",
       text:
-        "I am looking for an internship and also consider junior backend or full-stack roles. I am available for remote work or a hybrid role in São Paulo.",
+        "I am looking for a junior backend or full-stack role. I also consider internships. I am available for remote work or a hybrid role in São Paulo.",
       email: "caio@vilquer.dev",
       copy: "Copy email",
       linkedin: "LinkedIn",

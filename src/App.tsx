@@ -676,7 +676,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         sources: "Produto e código",
         related: "Outros estudos",
         contact: "Contato",
-        contactHeading: "Disponível para estágio e posições júnior.",
+        contactHeading: "Disponível para posições júnior e estágio.",
         nav: "Navegação do projeto",
         sectionMarks: ["CÍRCULO", "SETOR", "MARCA", "SÚMULA"],
       }
@@ -691,7 +691,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         sources: "Product and code",
         related: "Other case studies",
         contact: "Contact",
-        contactHeading: "Available for internships and junior roles.",
+        contactHeading: "Available for junior roles and internships.",
         nav: "Project navigation",
         sectionMarks: ["RING", "SECTOR", "MARK", "SHEET"],
       };

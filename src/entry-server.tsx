@@ -14,7 +14,7 @@ export function renderRoute(route: SiteRoute): string {
 export function buildLlmsText(): string {
   return `# Caio Vilquer Carvalho
 
-> Backend developer and Computer Engineering student at Poli-USP, based in São Paulo, Brazil. Available for internships and junior roles.
+> Backend developer and Computer Engineering student at Poli-USP, based in São Paulo, Brazil. Seeking junior roles and internships.
 
 Canonical profile: ${SITE_ORIGIN}/
 English profile: ${SITE_ORIGIN}/en/
