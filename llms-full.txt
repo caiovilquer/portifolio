@@ -7,122 +7,143 @@ Last updated: 2026-08-26
 
 Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
 
-Availability: Busca: Posição júnior ou estágio; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
+Disponibilidade: Busca: Posição júnior ou estágio; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
 
-## Poliatletas
+## Trabalhos selecionados
+
+### Poliatletas
 
 URL: https://vilquer.dev/projetos/poliatletas/
-Role: Sistema da equipe de atletismo da Poli-USP
-Period: 08.2025 · atual
-Stack: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
+Tipo: Sistema da equipe de atletismo da Poli-USP
+Atuação de Caio: Modelagem do domínio esportivo, backend NestJS, contratos da API e integração com o frontend React.
+Período: 08.2025 · atual
+Estado: Em produção e em evolução
+Tecnologia: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
 
-O Poliatletas reúne atletas, competições, resultados, rankings, recordes e a operação técnica da equipe.
+Construí o Poliatletas para reunir a operação da equipe em um modelo que entende modalidades, marcas, elegibilidade e histórico. O backend atende tanto as páginas públicas de atletas e rankings quanto os fluxos de treinadores para resultados, competições e treinos.
 
-### Problema de domínio
+#### Comparar marcas sem apagar o contexto
 
-Tempo, distância e pontuação não podem ser comparados pela mesma regra. O sistema também precisa separar resultado oficial, marca de treino, papel do usuário e histórico auditável.
+Nos 100 metros, uma marca menor é melhor; no peso, vence a maior distância. Resultados ainda variam por unidade, gênero, competição, fase e validade. Tratar tudo como um número ordenável produziria recordes falsos e perderia a origem de cada marca.
 
-### Decisões técnicas
+#### Decisões que sustentam o produto
 
-- **Modelo esportivo:** Normalização por unidade e direção de comparação, com PBs e recordes derivados apenas de resultados elegíveis.
-- **Papéis e auditoria:** JWT e RBAC para USER, COACH e ADMIN, importação idempotente e trilha de auditoria nas ações sensíveis.
-- **API e tipos gerados:** API NestJS/Fastify versionada, PostgreSQL e Prisma; frontend React consome tipos gerados do OpenAPI.
+- **Métrica com direção e elegibilidade:** Cada modalidade define unidade canônica e direção de comparação. PBs, rankings e recordes são derivados somente de resultados elegíveis, sem alterar o histórico que os originou.
+- **Escrita idempotente e auditável:** Importações em lote evitam duplicidade; alterações sensíveis registram ator, papel, ação e metadados. Reprocessamentos recalculam derivados sem regravar o resultado original.
+- **Concorrência explícita nos treinos:** A execução offline usa Idempotency-Key, revisão de sessão e If-Match. Reenvios devolvem a mesma resposta e uma edição estrutural concorrente produz conflito em vez de sobrescrever dados silenciosamente.
+- **Contrato único entre API e interface:** A API REST é versionada e exporta OpenAPI. O frontend gera seus tipos a partir desse contrato, reduzindo divergência entre DTOs do NestJS e as telas em React.
 
-### Evidência no produto
+#### O que pode ser conferido
 
-- Rankings públicos com filtros e comparação de temporadas
-- Importação de resultados em lote sem duplicar histórico
-- Código de aplicação privado; demonstração pública disponível
+- Rankings públicos por modalidade, período e temporada, além de perfis com PBs e histórico
+- Importação idempotente, recomputação de recordes e trilha de auditoria para operações sensíveis
+- Mais de 250 testes distribuídos entre backend e frontend
+- Produto público em poliatletas.com.br; código de aplicação mantido em repositórios privados
 
-### Links
+#### Links
 
 - [Abrir sistema](https://poliatletas.com.br)
 
-## RotinaPet
+### RotinaPet
 
 URL: https://vilquer.dev/projetos/rotinapet/
-Role: Cuidado compartilhado com assistente de IA e RAG
-Period: 05.2025 · atual
-Stack: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
+Tipo: Cuidado compartilhado com assistente de IA e RAG
+Atuação de Caio: Arquitetura do backend, autorização do RAG, pipeline de indexação e integração do assistente com o frontend Angular.
+Período: 05.2025 · atual
+Estado: Produto publicado e desenvolvimento ativo
+Tecnologia: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
 
-Agenda, histórico clínico, documentos e colaboração familiar, com IA limitada por autorização e confirmação humana.
+O RotinaPet organiza agenda, histórico clínico, documentos e cuidado compartilhado. A camada de IA consulta somente fontes autorizadas da família, cita o que encontrou e entrega rascunhos que ainda passam pelas regras determinísticas do domínio.
 
-### Problema de confiança
+#### Responder sem atravessar famílias nem prescrever sozinho
 
-Uma resposta útil não pode consultar dados de outra família, inventar evidência clínica nem criar um plano de cuidado sem revisão explícita.
+Uma busca semanticamente parecida pode pertencer a outro pet ou outra família. Mesmo com a fonte correta, texto clínico insuficiente não sustenta uma resposta. E uma sugestão de cuidado não pode virar plano apenas porque o modelo devolveu JSON válido.
 
-### Decisões técnicas
+#### Limites impostos à IA
 
-- **Autorização antes do ranking:** O universo de busca é filtrado por família, pet e fonte autorizada antes de combinar FTS em português e pgvector por RRF.
-- **IA propõe, domínio confirma:** Structured Outputs gera rascunhos versionados; o caso de uso revalida papel, versão, expiração e idempotência antes de escrever.
-- **Indexação recuperável:** Outbox transacional, lotes de embeddings, retry, dead letter e troca atômica mantêm fonte e índice consistentes.
+- **Autorização define o corpus:** Família, pet e fontes com estado READY delimitam o conjunto pesquisável antes do ranking. Um documento revogado sai da elegibilidade imediatamente, mesmo que a limpeza física dos chunks ocorra depois.
+- **Busca híbrida com citação validada:** FTS em português e distância vetorial são combinados por RRF. As citações retornadas precisam apontar para trechos do conjunto autorizado; sem suporte suficiente, o assistente se abstém.
+- **Indexação recuperável:** Fonte, atividade e outbox são gravadas na mesma transação. O worker cria embeddings em lote e publica chunks e estado READY atomicamente, com retry e dead letter para falhas persistentes.
+- **Confirmação pelo domínio:** Structured Outputs produz um rascunho versionado. Antes de escrever um plano, o caso de uso revalida papel, versão, expiração, idempotência e confirmação explícita da pessoa responsável.
 
-### Quality gates versionados
+#### Critérios registrados no projeto
 
-- Recall@5 mínimo de 95%
-- Precisão de citações mínima de 98%
-- Abstenção sem evidência mínima de 95%
+- Dataset sintético versionado com Recall@5 mínimo de 95% e precisão de citações mínima de 98%
+- Abstenção sem evidência mínima de 95%, incluindo casos de prompt injection indireta
+- Estados de fonte, chunks e citações preservam o caminho entre resposta e documento autorizado
+- Backend Kotlin/Spring Boot e frontend Angular publicados separadamente, com repositórios públicos
 
-### Links
+#### Links
 
 - [Abrir sistema](https://rotinapet.vilquer.dev)
 - [Backend](https://github.com/caiovilquer/rotina-pet)
 - [Frontend](https://github.com/caiovilquer/rotina-pet-front)
 
-## Viazio
+### Viazio
 
 URL: https://vilquer.dev/projetos/viazio/
-Role: Motor explicável de recomendação de viagens
-Period: 03.2026 · 07.2026
-Stack: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
+Tipo: Motor explicável de recomendação de viagens
+Atuação de Caio: Arquitetura do motor de recomendação, integrações externas, persistência, API Spring Boot e frontend React.
+Período: 03.2026 · 07.2026
+Estado: Versão publicada
+Tecnologia: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
 
-Cruza calendário, clima, custo relativo, distância e contexto local sem esconder incerteza atrás de uma nota única.
+O Viazio compara janelas e destinos a partir de clima, custo, distância e calendário. A resposta separa nota, cobertura e confiança para continuar útil quando um provedor falha, sem fingir que dados ausentes têm a mesma qualidade dos dados observados.
 
-### Problema de decisão
+#### Ordenar destinos com dados incompletos
 
-APIs externas têm latências, coberturas e falhas diferentes. O ranking precisa continuar útil quando um critério falta e mostrar por que cada destino ficou naquela posição.
+Clima, câmbio, feriados, indicadores econômicos e conteúdo editorial têm validades e falhas diferentes. Bloquear a requisição até todos responderem deixa o ranking lento; preencher a ausência com zero pune o destino por um problema do provedor.
 
-### Decisões técnicas
+#### Como o ranking degrada
 
-- **Score decomponível:** Qualidade da janela, qualidade do destino e confiança dos dados aparecem separadas; pesos são renormalizados quando uma fonte falta.
-- **Isolamento por provedor:** Retry, circuit breaker e bulkhead independentes evitam que a Wikipédia derrube clima, câmbio ou feriados.
-- **PostgreSQL na leitura:** Leituras usam PostgreSQL, orçamento síncrono de 2 segundos e refresh em background para não prender a resposta em upstream lento.
+- **Score e cobertura separados:** Quatro estratégias calculam clima, custo, distância e festividades. Quando um critério falta, os pesos disponíveis são renormalizados e a cobertura reduz a confiança final sem inventar uma nota.
+- **Falha isolada por provedor:** Retry, circuit breaker e bulkhead têm estados independentes. Uma indisponibilidade da Wikipédia remove o conteúdo editorial, mas não abre o circuito de clima, feriados ou Banco Mundial.
+- **PostgreSQL antes da rede:** Leituras usam dados persistidos com fetched_at, stale_at e expires_at. Um miss recebe no máximo dois segundos de busca síncrona; depois disso, a resposta degrada e o refresh entra na fila.
+- **Concorrência limitada por candidato:** Candidatos são avaliados em virtual threads, enquanto a fila de atualização usa prioridade e ShedLock. A falha de um candidato não interrompe a ordenação dos demais.
 
-### Evidência no repositório
+#### Evidência executável
 
-- Mais de 250 testes backend sem dependência de rede
-- Cinco fontes externas com degradação explícita
-- Java 21 com virtual threads por candidato
+- 250 testes no backend e 17 testes unitários no frontend
+- Cinco provedores remotos com cache, proteção e comportamento de falha documentados separadamente
+- Fila de refresh persistida para dados ausentes, vencidos ou com baixa confiança
+- Aplicação pública sem cadastro, com API versionada e repositório aberto
 
-### Links
+#### Links
 
 - [Abrir sistema](https://viazio.vilquer.dev)
 - [Ver código](https://github.com/caiovilquer/viazio)
 
-## TrackShot CV
+
+## Pesquisa aplicada
+
+### TrackShot CV
 
 URL: https://vilquer.dev/projetos/trackshot/
-Role: Visão computacional aplicada ao arremesso de peso
-Period: 2026 · em desenvolvimento
-Stack: Python · MMPose · MediaPipe · OpenCV · vídeo a 240 fps · IMU planejada
+Tipo: Visão computacional aplicada ao arremesso de peso
+Atuação de Caio: Pesquisa, pipeline de pose, rastreamento do implemento, calibração e cálculo das métricas de liberação.
+Período: 2026 · atual
+Estado: Protótipo desktop em desenvolvimento
+Tecnologia: Python · MMPose · MediaPipe · OpenCV · SciPy · vídeo a 240 fps
 
-O TrackShot usa vídeo de smartphone para estimar velocidade, ângulo e altura de liberação no arremesso de peso, sem radar ou laboratório.
+O TrackShot separa pose, rastreamento e cálculo físico para medir a liberação a partir de vídeo lento de smartphone. Cada ponto informa se foi detectado, predito ou interpolado; velocidade, ângulo e altura carregam a incerteza da calibração usada.
 
-### Problema de medição
+#### Transformar pixels em uma medição defensável
 
-Vídeo de smartphone não oferece escala, profundidade ou visibilidade constantes. A estimativa precisa indicar quando a evidência ao redor da liberação é insuficiente, em vez de devolver um número preciso sem sustentação.
+O vídeo traz o tempo do contêiner, não necessariamente a taxa real da captura. O braço e o peso sofrem oclusão durante o giro, e uma escala obtida no plano do chão não vale automaticamente para o voo. Um número final só é útil se preservar essas fontes de erro.
 
-### Pipeline atual
+#### Camadas do experimento
 
-- **Pose e implemento:** Pose 2D com MMPose e MediaPipe como backend leve
-- **Série temporal:** Suavização temporal e tratamento conservador de oclusões
-- **Liberação:** Rastreamento do implemento e detecção do frame de liberação
-- **Métrica auditável:** Métricas de velocidade, ângulo e altura com incerteza explícita
+- **Tempo real da captura:** O pipeline recebe explicitamente os 240 fps da gravação slow motion. Derivadas e filtros usam esse relógio, evitando o erro de oito vezes causado pelos 30 fps gravados no contêiner do vídeo.
+- **Pose com estado por frame:** MMPose é o estimador principal e MediaPipe permanece como alternativa leve. Oclusões curtas usam predição conservadora e todo ponto mantém o estado detectado, predito, interpolado ou sem dado.
+- **Voo validado pela física:** O rastreador procura o arco que sai da mão e combina detecção visual com Kalman. Comprimento, deslocamento, velocidade e ajuste parabólico evitam aceitar um trecho curto de folhagem como trajetória do peso.
+- **Métrica separada do detector:** O módulo físico recebe trajetória, frame de liberação, fps e calibração. A escala vem de uma referência corporal no plano vertical; pontos reconstruídos e a aproximação de plano único aparecem nos relatórios.
 
-### Estado verificável
+#### Resultados e limites registrados
 
-- A captura real é tratada em 240 fps; estados detectado, predito e interpolado permanecem auditáveis nos relatórios.
-- Validar o pipeline em dataset próprio e, depois, fundir visão com IMU. O sistema recusa a métrica quando a evidência ao redor da liberação é insuficiente.
+- Sete testes sintéticos recuperam velocidade, ângulo e altura conhecidos com erro inferior a 1e-6
+- No cenário controlado, o Kalman teve RMSE de 4,15 px com ruído de 6 px e atravessou seis frames de oclusão
+- Em um vídeo real, a janela de voo teve 94% de detecção e ajuste parabólico R² de 0,98
+- Falta validar as métricas contra trena e digitalização manual em um dataset próprio antes de iniciar a fusão com IMU
 
 
 # English
@@ -131,118 +152,139 @@ I study Computer Engineering at Poli-USP. I work mainly on backend systems with 
 
 Availability: Seeking: Junior position or internship; Focus: Backend, with full-stack experience; Model: Remote or hybrid in São Paulo; Degree: Poli-USP, expected 12/2029.
 
-## Poliatletas
+## Selected case studies
+
+### Poliatletas
 
 URL: https://vilquer.dev/en/projects/poliatletas/
-Role: The athletics management system at Poli-USP
+Type: The athletics management system at Poli-USP
+Caio's contribution: Sports-domain modeling, NestJS backend, API contracts, and integration with the React frontend.
 Period: 08.2025 · present
-Stack: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
+Status: In production and under active development
+Technology: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
 
-Poliatletas brings athletes, meets, results, rankings, records, and the team's technical operations into one system.
+I built Poliatletas to bring the team's operations into a model that understands events, marks, eligibility, and history. The backend serves public athlete and ranking pages as well as coaches' workflows for results, competitions, and training.
 
-### Domain problem
+#### Comparing marks without erasing context
 
-Time, distance, and points cannot share one comparison rule. The system must also separate official results, training marks, user roles, and an auditable history.
+In the 100 metres, a lower mark is better; in shot put, the greater distance wins. Results also vary by unit, gender, competition, round, and validity. Treating each mark as a sortable number would create false records and lose its source.
 
-### Technical decisions
+#### Decisions behind the product
 
-- **Sports model:** Unit normalization and explicit comparison direction, with PBs and records derived only from eligible results.
-- **Roles and audit records:** JWT and RBAC for USER, COACH, and ADMIN, idempotent imports, and audit records for sensitive changes.
-- **API and generated types:** A versioned NestJS/Fastify API backed by PostgreSQL and Prisma; React consumes types generated from OpenAPI.
+- **Direction-aware eligible metrics:** Each event defines a canonical unit and comparison direction. PBs, rankings, and records are derived only from eligible results without modifying the history that produced them.
+- **Idempotent, auditable writes:** Batch imports prevent duplicates; sensitive changes record actor, role, action, and metadata. Reprocessing rebuilds derived data without rewriting the original result.
+- **Explicit training concurrency:** Offline execution uses an Idempotency-Key, session revisions, and If-Match. Retries return the same response, while concurrent structural edits produce a conflict instead of silently overwriting data.
+- **One contract for API and UI:** The versioned REST API exports OpenAPI. The frontend generates types from that contract, reducing drift between NestJS DTOs and React screens.
 
-### Product evidence
+#### What can be checked
 
-- Public rankings with filters and season comparison
-- Batch result import without duplicating history
-- Application code is private; the public product is available
+- Public rankings by event, period, and season, plus athlete profiles with PBs and history
+- Idempotent imports, record recomputation, and an audit trail for sensitive operations
+- More than 250 tests across the backend and frontend
+- Public product at poliatletas.com.br; application code kept in private repositories
 
-### Links
+#### Links
 
 - [Open product](https://poliatletas.com.br)
 
-## RotinaPet
+### RotinaPet
 
 URL: https://vilquer.dev/en/projects/rotinapet/
-Role: Shared pet care with an AI and RAG assistant
+Type: Shared pet care with an AI and RAG assistant
+Caio's contribution: Backend architecture, RAG authorization, indexing pipeline, and assistant integration with the Angular frontend.
 Period: 05.2025 · present
-Stack: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
+Status: Published product under active development
+Technology: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
 
-Schedules, clinical history, documents, and family collaboration, with AI constrained by authorization and human confirmation.
+RotinaPet organizes schedules, clinical history, documents, and shared care. Its AI layer searches only the family's authorized sources, cites what it found, and produces drafts that still pass through deterministic domain rules.
 
-### Trust problem
+#### Answering without crossing households or prescribing alone
 
-A useful answer cannot access another household, fabricate clinical evidence, or create a care plan without explicit review.
+A semantically similar passage may belong to another pet or household. Even the correct source may not provide enough clinical support for an answer. A care suggestion also cannot become a plan merely because the model returned valid JSON.
 
-### Technical decisions
+#### Boundaries placed around AI
 
-- **Authorization before ranking:** Family, pet, and source filters define the search universe before Portuguese FTS and pgvector are merged with RRF.
-- **AI proposes, domain confirms:** Structured Outputs creates versioned drafts; the use case revalidates role, version, expiry, and idempotency before writing.
-- **Recoverable indexing:** A transactional outbox, batched embeddings, retries, dead letters, and atomic publication keep source and index consistent.
+- **Authorization defines the corpus:** Household, pet, and sources in READY state define the searchable set before ranking. A revoked document becomes ineligible immediately, even when physical chunk cleanup runs later.
+- **Hybrid retrieval with checked citations:** Portuguese FTS and vector distance are merged through RRF. Returned citations must point to passages in the authorized set; without enough support, the assistant abstains.
+- **Recoverable indexing:** Source, activity, and outbox are written in one transaction. The worker batches embeddings and publishes chunks with READY state atomically, with retries and a dead-letter path for persistent failures.
+- **Domain confirmation:** Structured Outputs creates a versioned draft. Before writing a plan, the use case revalidates role, version, expiry, idempotency, and explicit confirmation from the responsible person.
 
-### Versioned quality gates
+#### Criteria recorded in the project
 
-- Recall@5 at or above 95%
-- Citation precision at or above 98%
-- Unsupported-answer abstention at or above 95%
+- Versioned synthetic dataset with Recall@5 at or above 95% and citation precision at or above 98%
+- Unsupported-answer abstention at or above 95%, including indirect prompt-injection cases
+- Source states, chunks, and citations preserve the path from an answer to its authorized document
+- Kotlin/Spring Boot backend and Angular frontend deployed separately with public repositories
 
-### Links
+#### Links
 
 - [Open product](https://rotinapet.vilquer.dev)
 - [Backend](https://github.com/caiovilquer/rotina-pet)
 - [Frontend](https://github.com/caiovilquer/rotina-pet-front)
 
-## Viazio
+### Viazio
 
 URL: https://vilquer.dev/en/projects/viazio/
-Role: Explainable travel recommendation engine
+Type: Explainable travel recommendation engine
+Caio's contribution: Recommendation-engine architecture, external integrations, persistence, Spring Boot API, and React frontend.
 Period: 03.2026 · 07.2026
-Stack: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
+Status: Published version
+Technology: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
 
-It combines calendars, weather, relative cost, distance, and local context without hiding uncertainty behind one opaque score.
+Viazio compares travel windows and destinations through weather, cost, distance, and calendars. Its response separates score, coverage, and confidence so it remains useful when a provider fails without presenting missing data as observed data.
 
-### Decision problem
+#### Ranking destinations with incomplete data
 
-External APIs have different latencies, coverage, and failures. The ranking must remain useful when one criterion is missing and explain why each destination landed where it did.
+Weather, exchange rates, holidays, economic indicators, and editorial content have different lifetimes and failure modes. Waiting for every source makes ranking slow; replacing missing data with zero punishes a destination for a provider failure.
 
-### Technical decisions
+#### How the ranking degrades
 
-- **Decomposable score:** Window quality, destination quality, and data confidence remain separate; weights are normalized when a source is unavailable.
-- **Provider isolation:** Independent retries, circuit breakers, and bulkheads prevent Wikipedia failures from taking down weather, currency, or holidays.
-- **PostgreSQL on the read path:** Reads use PostgreSQL, a two-second synchronous budget, and background refreshes instead of waiting on a slow upstream.
+- **Score and coverage remain separate:** Four strategies calculate weather, cost, distance, and festivities. When a criterion is missing, available weights are normalized and coverage lowers final confidence without inventing a score.
+- **Failures stay isolated by provider:** Retries, circuit breakers, and bulkheads keep independent state. A Wikipedia outage removes editorial content without opening the weather, holiday, or World Bank circuits.
+- **PostgreSQL before the network:** Reads use persisted data with fetched_at, stale_at, and expires_at. A miss gets at most two seconds of synchronous work; after that, the response degrades and a refresh enters the queue.
+- **Bounded concurrency per candidate:** Candidates are evaluated on virtual threads, while the refresh queue uses priorities and ShedLock. One candidate's failure does not stop the remaining ranking.
 
-### Repository evidence
+#### Executable evidence
 
-- More than 250 backend tests without network access
-- Five upstream sources with explicit degradation
-- Java 21 virtual threads for candidate evaluation
+- 250 backend tests and 17 frontend unit tests
+- Five remote providers with separate cache, protection, and failure behavior
+- A persisted refresh queue for missing, expired, or low-confidence data
+- A public application with no account requirement, a versioned API, and an open repository
 
-### Links
+#### Links
 
 - [Open product](https://viazio.vilquer.dev)
 - [View code](https://github.com/caiovilquer/viazio)
 
-## TrackShot CV
+
+## Applied research
+
+### TrackShot CV
 
 URL: https://vilquer.dev/en/projects/trackshot/
-Role: Computer vision applied to shot put
-Period: 2026 · in development
-Stack: Python · MMPose · MediaPipe · OpenCV · 240 fps video · planned IMU
+Type: Computer vision applied to shot put
+Caio's contribution: Research, pose pipeline, implement tracking, calibration, and release-metric computation.
+Period: 2026 · present
+Status: Desktop prototype in development
+Technology: Python · MMPose · MediaPipe · OpenCV · SciPy · 240 fps video
 
-TrackShot uses smartphone video to estimate release speed, angle, and height in shot put without radar or a laboratory.
+TrackShot separates pose, tracking, and physical computation to measure release from smartphone slow-motion video. Each point states whether it was detected, predicted, or interpolated; speed, angle, and height carry the uncertainty of the chosen calibration.
 
-### Measurement problem
+#### Turning pixels into a defensible measurement
 
-Smartphone video does not provide constant scale, depth, or visibility. The estimate must state when evidence around release is insufficient instead of returning an unsupported precise number.
+Video containers report a playback rate that may differ from the real capture rate. The arm and implement become occluded during the turn, and a scale measured on the ground plane does not automatically apply to flight. A final number is useful only when it preserves those error sources.
 
-### Current pipeline
+#### Layers of the experiment
 
-- **Pose and implement:** 2D pose with MMPose and MediaPipe as a lightweight backend
-- **Time series:** Temporal smoothing and conservative occlusion handling
-- **Release:** Implement tracking and release-frame detection
-- **Auditable metric:** Speed, angle, and height metrics with explicit uncertainty
+- **Real capture time:** The pipeline receives the recording's actual 240 fps. Derivatives and filters use that clock, avoiding the eightfold error caused by the 30 fps stored in the video container.
+- **Per-frame pose state:** MMPose is the main estimator and MediaPipe remains a lightweight alternative. Short occlusions use conservative prediction, and each point stays labeled as detected, predicted, interpolated, or missing.
+- **Flight checked against physics:** The tracker searches for the arc leaving the hand and combines visual detection with a Kalman filter. Length, displacement, speed, and parabolic fit prevent a short patch of foliage from being accepted as the shot's trajectory.
+- **Metrics kept separate from detection:** The physics module receives a trajectory, release frame, frame rate, and calibration. Scale comes from a body reference on the vertical plane; reconstructed points and the single-plane approximation remain visible in reports.
 
-### Verifiable state
+#### Recorded results and limits
 
-- Real capture time is handled at 240 fps; detected, predicted, and interpolated states remain auditable in the reports.
-- Validate the pipeline on a proprietary dataset, then fuse vision with IMU data. The system refuses a metric when release evidence is insufficient.
+- Seven synthetic tests recover known speed, angle, and height with error below 1e-6
+- In the controlled scenario, Kalman RMSE was 4.15 px with 6 px noise and crossed a six-frame occlusion
+- In one real video, the flight window reached 94% detection with a parabolic fit of R² 0.98
+- Metrics still require validation against tape measurements and manual digitization on a proprietary dataset before IMU fusion begins
 

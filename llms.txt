@@ -13,6 +13,9 @@ LinkedIn: https://www.linkedin.com/in/caio-vilquer/
 - [Poliatletas](https://vilquer.dev/projetos/poliatletas/): athletics management, NestJS, Fastify, PostgreSQL, Prisma, React, and Redis.
 - [RotinaPet](https://vilquer.dev/projetos/rotinapet/): authorized RAG for shared pet care, Kotlin, Spring Boot, Angular, PostgreSQL, pgvector, and OpenAI.
 - [Viazio](https://vilquer.dev/projetos/viazio/): explainable travel ranking with Java 21, Spring Boot, React, PostgreSQL, and Resilience4j.
+
+## Applied research
+
 - [TrackShot CV](https://vilquer.dev/projetos/trackshot/): computer vision for shot-put release metrics using smartphone video.
 
 ## Curricula
