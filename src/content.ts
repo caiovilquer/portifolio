@@ -172,7 +172,7 @@ export const content: Record<Locale, SiteContent> = {
       ],
       cvBackend: "Baixar CV backend",
       cvFullStack: "CV full stack",
-      seeWork: "Ver trabalho selecionado",
+      seeWork: "Ver trabalhos selecionados",
       portraitAlt: "Retrato de Caio Vilquer Carvalho",
       portraitCaption: "Caio Vilquer Carvalho · São Paulo, SP",
       measurementLabel: "Referência da régua visual",
@@ -185,7 +185,7 @@ export const content: Record<Locale, SiteContent> = {
     },
     work: {
       kicker: "Poliatletas · RotinaPet · Viazio",
-      heading: "Trabalho selecionado",
+      heading: "Trabalhos selecionados",
       intro:
         "O Poliatletas compara marcas esportivas, o RotinaPet isola os dados de cada família e o Viazio ranqueia destinos mesmo quando uma fonte falha. Nos três, regras de domínio, autorização e falhas de integração aparecem no código e nos testes.",
       indexLabel: "Registro dos casos",
