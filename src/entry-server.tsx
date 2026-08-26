@@ -2,7 +2,7 @@ import { renderToString } from "react-dom/server";
 import App from "./App";
 import { content } from "./content";
 import { getProjectPageData } from "./projectPages";
-import { getSeoData, SITE_ORIGIN, SITE_UPDATED } from "./seo";
+import { getSeoData, SITE_ORIGIN, SITE_UPDATED_DATE } from "./seo";
 import { projectPath, routePath, STATIC_ROUTES, type ProjectSlug, type SiteRoute } from "./routes";
 
 export { STATIC_ROUTES, getSeoData, routePath };
@@ -36,7 +36,7 @@ LinkedIn: https://www.linkedin.com/in/caio-vilquer/
 - [Full-stack CV, Portuguese](${SITE_ORIGIN}/cv/caio-vilquer-full-stack.pdf)
 - [Full-stack CV, English](${SITE_ORIGIN}/cv/caio-vilquer-full-stack-en.pdf)
 
-Last updated: ${SITE_UPDATED}
+Last updated: ${SITE_UPDATED_DATE}
 `;
 }
 
@@ -88,7 +88,7 @@ ${projects}`;
   return `# Caio Vilquer Carvalho: profile and project evidence
 
 Source: ${SITE_ORIGIN}/
-Last updated: ${SITE_UPDATED}
+Last updated: ${SITE_UPDATED_DATE}
 
 ${sections.join("\n")}`;
 }

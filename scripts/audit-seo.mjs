@@ -137,6 +137,12 @@ for (const pathname of pagePaths) {
       }
       const expectedType = pathname === "/" || pathname === "/en/" ? "ProfilePage" : "WebPage";
       if (!types.includes(expectedType)) fail(scope, `JSON-LD graph is missing ${expectedType}`);
+      const isoDateTime = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/;
+      for (const item of parsed["@graph"] ?? []) {
+        if (item.dateModified && !isoDateTime.test(item.dateModified)) {
+          fail(scope, `dateModified is not ISO 8601 DateTime: ${item.dateModified}`);
+        }
+      }
     } catch (error) {
       fail(scope, `invalid JSON-LD: ${error.message}`);
     }
