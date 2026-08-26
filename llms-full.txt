@@ -7,7 +7,7 @@ Last updated: 2026-08-26
 
 Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
 
-Availability: Busca: Estágio ou posição júnior; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
+Availability: Busca: Posição júnior ou estágio; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
 
 ## Poliatletas
 
@@ -129,7 +129,7 @@ Vídeo de smartphone não oferece escala, profundidade ou visibilidade constante
 
 I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.
 
-Availability: Seeking: Internship or junior position; Focus: Backend, with full-stack experience; Model: Remote or hybrid in São Paulo; Degree: Poli-USP, expected 12/2029.
+Availability: Seeking: Junior position or internship; Focus: Backend, with full-stack experience; Model: Remote or hybrid in São Paulo; Degree: Poli-USP, expected 12/2029.
 
 ## Poliatletas
 
