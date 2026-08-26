@@ -373,7 +373,7 @@ function App() {
             <figure className="identity-photo">
               <div className="identity-photo__frame">
                 <img
-                  src="/media/caio-original-2752.jpeg"
+                  src="/media/caio-original-2752.webp"
                   width="2752"
                   height="1536"
                   alt={copy.hero.portraitAlt}
