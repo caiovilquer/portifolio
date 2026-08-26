@@ -269,7 +269,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         <span>2,135 m</span>
       </div>
 
-      <header className="site-header">
+      <header className="site-header home-site-header">
         <div className="site-header__inner">
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
@@ -321,6 +321,36 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               {copy.language.english}
             </a>
           </nav>
+
+          <details
+            className="mobile-index"
+            onKeyDown={(event) => {
+              if (event.key !== "Escape") return;
+              event.currentTarget.removeAttribute("open");
+              event.currentTarget.querySelector("summary")?.focus();
+            }}
+          >
+            <summary>{locale === "pt" ? "Índice" : "Index"}</summary>
+            <nav
+              className="mobile-index__nav"
+              aria-label={locale === "pt" ? "Índice da página" : "Page index"}
+            >
+              <ul>
+                {copy.nav.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      onClick={(event) =>
+                        event.currentTarget.closest("details")?.removeAttribute("open")
+                      }
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </details>
         </div>
       </header>
 
@@ -329,22 +359,36 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <div className="cover-sheet__grid">
             <div className="cover-sheet__intro">
               <p className="status-line">
-                <span aria-hidden="true" />
-                {copy.hero.availability}
+                <span className="status-line__dot" aria-hidden="true" />
+                <span className="status-line__text">{copy.hero.availability}</span>
+                <span className="status-line__location">{copy.hero.mobileLocation}</span>
               </p>
-              <h1 id="hero-title">{copy.hero.heading}</h1>
-              <p className="cover-sheet__summary">{copy.hero.summary}</p>
+              <h1 id="hero-title">
+                <span className="cover-sheet__copy--desktop">{copy.hero.heading}</span>
+                <span className="cover-sheet__copy--mobile">{copy.hero.mobileHeading}</span>
+              </h1>
+              <p className="cover-sheet__summary">
+                <span className="cover-sheet__copy--desktop">{copy.hero.summary}</span>
+                <span className="cover-sheet__copy--mobile">{copy.hero.mobileSummary}</span>
+              </p>
 
               <div className="cover-sheet__actions">
                 <a className="action action--primary" href={cvFiles.backend} download>
                   <span>{copy.hero.cvBackend}</span>
                   <span aria-hidden="true">↓</span>
                 </a>
-                <a className="action action--text" href={cvFiles.fullStack} download>
+                <a
+                  className="action action--text action--fullstack"
+                  href={cvFiles.fullStack}
+                  download
+                >
                   {copy.hero.cvFullStack}
                 </a>
-                <a className="action action--text" href="#trabalho">
-                  {copy.hero.seeWork}
+                <a className="action action--text action--work" href="#trabalho">
+                  <span>{copy.hero.seeWork}</span>
+                  <span className="action__direction" aria-hidden="true">
+                    ↘
+                  </span>
                 </a>
               </div>
             </div>
@@ -365,7 +409,18 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 <span className="identity-photo__cross identity-photo__cross--a" aria-hidden="true" />
                 <span className="identity-photo__cross identity-photo__cross--b" aria-hidden="true" />
               </div>
-              <figcaption>{copy.hero.portraitCaption}</figcaption>
+              <figcaption>
+                <span className="identity-photo__caption-default">
+                  {copy.hero.portraitCaption}
+                </span>
+                <span className="identity-photo__mobile-caption">
+                  <span className="identity-photo__person">
+                    <strong>{copy.hero.identityName}</strong>
+                    <span>{copy.hero.identityRole}</span>
+                  </span>
+                  <span className="identity-photo__stack">{copy.hero.identityStack}</span>
+                </span>
+              </figcaption>
             </figure>
 
             <dl className="spec-table">

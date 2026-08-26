@@ -53,7 +53,13 @@ type SiteContent = {
   hero: {
     availability: string;
     heading: string;
+    mobileHeading: string;
     summary: string;
+    mobileSummary: string;
+    identityName: string;
+    identityRole: string;
+    identityStack: string;
+    mobileLocation: string;
     specs: Array<{ label: string; value: string }>;
     cvBackend: string;
     cvFullStack: string;
@@ -162,8 +168,15 @@ export const content: Record<Locale, SiteContent> = {
     hero: {
       availability: "Disponível agora para estágio",
       heading: "Escrevo sistemas em que as regras de negócio ficam visíveis no código e nos testes.",
+      mobileHeading: "Backend com regras de negócio visíveis no código e nos testes.",
       summary:
         "Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.",
+      mobileSummary:
+        "Java, Kotlin e TypeScript. Projetos com RAG, visão computacional e sistemas full stack.",
+      identityName: "Caio Vilquer",
+      identityRole: "Backend · Poli-USP",
+      identityStack: "Java / Kotlin / TypeScript",
+      mobileLocation: "SP",
       specs: [
         { label: "Busca", value: "Estágio ou posição júnior" },
         { label: "Foco", value: "Backend, com atuação full stack" },
@@ -470,8 +483,15 @@ export const content: Record<Locale, SiteContent> = {
     hero: {
       availability: "Available now for internships",
       heading: "I build systems where business rules stay visible in code and tests.",
+      mobileHeading: "Backend systems with business rules visible in code and tests.",
       summary:
         "I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.",
+      mobileSummary:
+        "Java, Kotlin, and TypeScript. Projects with RAG, computer vision, and full-stack systems.",
+      identityName: "Caio Vilquer",
+      identityRole: "Backend · Poli-USP",
+      identityStack: "Java / Kotlin / TypeScript",
+      mobileLocation: "SP",
       specs: [
         { label: "Seeking", value: "Internship or junior position" },
         { label: "Focus", value: "Backend, with full-stack experience" },
