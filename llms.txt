@@ -1,0 +1,25 @@
+# Caio Vilquer Carvalho
+
+> Backend developer and Computer Engineering student at Poli-USP, based in São Paulo, Brazil. Available for internships and junior roles.
+
+Canonical profile: https://vilquer.dev/
+English profile: https://vilquer.dev/en/
+Email: caio@vilquer.dev
+GitHub: https://github.com/caiovilquer
+LinkedIn: https://www.linkedin.com/in/caio-vilquer/
+
+## Selected case studies
+
+- [Poliatletas](https://vilquer.dev/projetos/poliatletas/): athletics management, NestJS, Fastify, PostgreSQL, Prisma, React, and Redis.
+- [RotinaPet](https://vilquer.dev/projetos/rotinapet/): authorized RAG for shared pet care, Kotlin, Spring Boot, Angular, PostgreSQL, pgvector, and OpenAI.
+- [Viazio](https://vilquer.dev/projetos/viazio/): explainable travel ranking with Java 21, Spring Boot, React, PostgreSQL, and Resilience4j.
+- [TrackShot CV](https://vilquer.dev/projetos/trackshot/): computer vision for shot-put release metrics using smartphone video.
+
+## Curricula
+
+- [Backend CV, Portuguese](https://vilquer.dev/cv/caio-vilquer-backend.pdf)
+- [Backend CV, English](https://vilquer.dev/cv/caio-vilquer-backend-en.pdf)
+- [Full-stack CV, Portuguese](https://vilquer.dev/cv/caio-vilquer-full-stack.pdf)
+- [Full-stack CV, English](https://vilquer.dev/cv/caio-vilquer-full-stack-en.pdf)
+
+Last updated: 2026-08-26

@@ -1,0 +1,248 @@
+# Caio Vilquer Carvalho: profile and project evidence
+
+Source: https://vilquer.dev/
+Last updated: 2026-08-26
+
+# Português
+
+Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
+
+Availability: Busca: Estágio ou posição júnior; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
+
+## Poliatletas
+
+URL: https://vilquer.dev/projetos/poliatletas/
+Role: Sistema da equipe de atletismo da Poli-USP
+Period: 08.2025 · atual
+Stack: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
+
+O Poliatletas reúne atletas, competições, resultados, rankings, recordes e a operação técnica da equipe.
+
+### Problema de domínio
+
+Tempo, distância e pontuação não podem ser comparados pela mesma regra. O sistema também precisa separar resultado oficial, marca de treino, papel do usuário e histórico auditável.
+
+### Decisões técnicas
+
+- **Modelo esportivo:** Normalização por unidade e direção de comparação, com PBs e recordes derivados apenas de resultados elegíveis.
+- **Papéis e auditoria:** JWT e RBAC para USER, COACH e ADMIN, importação idempotente e trilha de auditoria nas ações sensíveis.
+- **API e tipos gerados:** API NestJS/Fastify versionada, PostgreSQL e Prisma; frontend React consome tipos gerados do OpenAPI.
+
+### Evidência no produto
+
+- Rankings públicos com filtros e comparação de temporadas
+- Importação de resultados em lote sem duplicar histórico
+- Código de aplicação privado; demonstração pública disponível
+
+### Links
+
+- [Abrir sistema](https://poliatletas.com.br)
+
+## RotinaPet
+
+URL: https://vilquer.dev/projetos/rotinapet/
+Role: Cuidado compartilhado com assistente de IA e RAG
+Period: 05.2025 · atual
+Stack: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
+
+Agenda, histórico clínico, documentos e colaboração familiar, com IA limitada por autorização e confirmação humana.
+
+### Problema de confiança
+
+Uma resposta útil não pode consultar dados de outra família, inventar evidência clínica nem criar um plano de cuidado sem revisão explícita.
+
+### Decisões técnicas
+
+- **Autorização antes do ranking:** O universo de busca é filtrado por família, pet e fonte autorizada antes de combinar FTS em português e pgvector por RRF.
+- **IA propõe, domínio confirma:** Structured Outputs gera rascunhos versionados; o caso de uso revalida papel, versão, expiração e idempotência antes de escrever.
+- **Indexação recuperável:** Outbox transacional, lotes de embeddings, retry, dead letter e troca atômica mantêm fonte e índice consistentes.
+
+### Quality gates versionados
+
+- Recall@5 mínimo de 95%
+- Precisão de citações mínima de 98%
+- Abstenção sem evidência mínima de 95%
+
+### Links
+
+- [Abrir sistema](https://rotinapet.vilquer.dev)
+- [Backend](https://github.com/caiovilquer/rotina-pet)
+- [Frontend](https://github.com/caiovilquer/rotina-pet-front)
+
+## Viazio
+
+URL: https://vilquer.dev/projetos/viazio/
+Role: Motor explicável de recomendação de viagens
+Period: 03.2026 · 07.2026
+Stack: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
+
+Cruza calendário, clima, custo relativo, distância e contexto local sem esconder incerteza atrás de uma nota única.
+
+### Problema de decisão
+
+APIs externas têm latências, coberturas e falhas diferentes. O ranking precisa continuar útil quando um critério falta e mostrar por que cada destino ficou naquela posição.
+
+### Decisões técnicas
+
+- **Score decomponível:** Qualidade da janela, qualidade do destino e confiança dos dados aparecem separadas; pesos são renormalizados quando uma fonte falta.
+- **Isolamento por provedor:** Retry, circuit breaker e bulkhead independentes evitam que a Wikipédia derrube clima, câmbio ou feriados.
+- **PostgreSQL na leitura:** Leituras usam PostgreSQL, orçamento síncrono de 2 segundos e refresh em background para não prender a resposta em upstream lento.
+
+### Evidência no repositório
+
+- Mais de 250 testes backend sem dependência de rede
+- Cinco fontes externas com degradação explícita
+- Java 21 com virtual threads por candidato
+
+### Links
+
+- [Abrir sistema](https://viazio.vilquer.dev)
+- [Ver código](https://github.com/caiovilquer/viazio)
+
+## TrackShot CV
+
+URL: https://vilquer.dev/projetos/trackshot/
+Role: Visão computacional aplicada ao arremesso de peso
+Period: 2026 · em desenvolvimento
+Stack: Python · MMPose · MediaPipe · OpenCV · vídeo a 240 fps · IMU planejada
+
+O TrackShot usa vídeo de smartphone para estimar velocidade, ângulo e altura de liberação no arremesso de peso, sem radar ou laboratório.
+
+### Problema de medição
+
+Vídeo de smartphone não oferece escala, profundidade ou visibilidade constantes. A estimativa precisa indicar quando a evidência ao redor da liberação é insuficiente, em vez de devolver um número preciso sem sustentação.
+
+### Pipeline atual
+
+- **Pose e implemento:** Pose 2D com MMPose e MediaPipe como backend leve
+- **Série temporal:** Suavização temporal e tratamento conservador de oclusões
+- **Liberação:** Rastreamento do implemento e detecção do frame de liberação
+- **Métrica auditável:** Métricas de velocidade, ângulo e altura com incerteza explícita
+
+### Estado verificável
+
+- A captura real é tratada em 240 fps; estados detectado, predito e interpolado permanecem auditáveis nos relatórios.
+- Validar o pipeline em dataset próprio e, depois, fundir visão com IMU. O sistema recusa a métrica quando a evidência ao redor da liberação é insuficiente.
+
+
+# English
+
+I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.
+
+Availability: Seeking: Internship or junior position; Focus: Backend, with full-stack experience; Model: Remote or hybrid in São Paulo; Degree: Poli-USP, expected 12/2029.
+
+## Poliatletas
+
+URL: https://vilquer.dev/en/projects/poliatletas/
+Role: The athletics management system at Poli-USP
+Period: 08.2025 · present
+Stack: NestJS · Fastify · PostgreSQL · Prisma · React · Redis
+
+Poliatletas brings athletes, meets, results, rankings, records, and the team's technical operations into one system.
+
+### Domain problem
+
+Time, distance, and points cannot share one comparison rule. The system must also separate official results, training marks, user roles, and an auditable history.
+
+### Technical decisions
+
+- **Sports model:** Unit normalization and explicit comparison direction, with PBs and records derived only from eligible results.
+- **Roles and audit records:** JWT and RBAC for USER, COACH, and ADMIN, idempotent imports, and audit records for sensitive changes.
+- **API and generated types:** A versioned NestJS/Fastify API backed by PostgreSQL and Prisma; React consumes types generated from OpenAPI.
+
+### Product evidence
+
+- Public rankings with filters and season comparison
+- Batch result import without duplicating history
+- Application code is private; the public product is available
+
+### Links
+
+- [Open product](https://poliatletas.com.br)
+
+## RotinaPet
+
+URL: https://vilquer.dev/en/projects/rotinapet/
+Role: Shared pet care with an AI and RAG assistant
+Period: 05.2025 · present
+Stack: Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI
+
+Schedules, clinical history, documents, and family collaboration, with AI constrained by authorization and human confirmation.
+
+### Trust problem
+
+A useful answer cannot access another household, fabricate clinical evidence, or create a care plan without explicit review.
+
+### Technical decisions
+
+- **Authorization before ranking:** Family, pet, and source filters define the search universe before Portuguese FTS and pgvector are merged with RRF.
+- **AI proposes, domain confirms:** Structured Outputs creates versioned drafts; the use case revalidates role, version, expiry, and idempotency before writing.
+- **Recoverable indexing:** A transactional outbox, batched embeddings, retries, dead letters, and atomic publication keep source and index consistent.
+
+### Versioned quality gates
+
+- Recall@5 at or above 95%
+- Citation precision at or above 98%
+- Unsupported-answer abstention at or above 95%
+
+### Links
+
+- [Open product](https://rotinapet.vilquer.dev)
+- [Backend](https://github.com/caiovilquer/rotina-pet)
+- [Frontend](https://github.com/caiovilquer/rotina-pet-front)
+
+## Viazio
+
+URL: https://vilquer.dev/en/projects/viazio/
+Role: Explainable travel recommendation engine
+Period: 03.2026 · 07.2026
+Stack: Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j
+
+It combines calendars, weather, relative cost, distance, and local context without hiding uncertainty behind one opaque score.
+
+### Decision problem
+
+External APIs have different latencies, coverage, and failures. The ranking must remain useful when one criterion is missing and explain why each destination landed where it did.
+
+### Technical decisions
+
+- **Decomposable score:** Window quality, destination quality, and data confidence remain separate; weights are normalized when a source is unavailable.
+- **Provider isolation:** Independent retries, circuit breakers, and bulkheads prevent Wikipedia failures from taking down weather, currency, or holidays.
+- **PostgreSQL on the read path:** Reads use PostgreSQL, a two-second synchronous budget, and background refreshes instead of waiting on a slow upstream.
+
+### Repository evidence
+
+- More than 250 backend tests without network access
+- Five upstream sources with explicit degradation
+- Java 21 virtual threads for candidate evaluation
+
+### Links
+
+- [Open product](https://viazio.vilquer.dev)
+- [View code](https://github.com/caiovilquer/viazio)
+
+## TrackShot CV
+
+URL: https://vilquer.dev/en/projects/trackshot/
+Role: Computer vision applied to shot put
+Period: 2026 · in development
+Stack: Python · MMPose · MediaPipe · OpenCV · 240 fps video · planned IMU
+
+TrackShot uses smartphone video to estimate release speed, angle, and height in shot put without radar or a laboratory.
+
+### Measurement problem
+
+Smartphone video does not provide constant scale, depth, or visibility. The estimate must state when evidence around release is insufficient instead of returning an unsupported precise number.
+
+### Current pipeline
+
+- **Pose and implement:** 2D pose with MMPose and MediaPipe as a lightweight backend
+- **Time series:** Temporal smoothing and conservative occlusion handling
+- **Release:** Implement tracking and release-frame detection
+- **Auditable metric:** Speed, angle, and height metrics with explicit uncertainty
+
+### Verifiable state
+
+- Real capture time is handled at 240 fps; detected, predicted, and interpolated states remain auditable in the reports.
+- Validate the pipeline on a proprietary dataset, then fuse vision with IMU data. The system refuses a metric when release evidence is insufficient.
+
