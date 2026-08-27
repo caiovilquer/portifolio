@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Caio Vilquer">
+  <title>Caio Vilquer — emblema circular</title>
+  <defs><clipPath id="c"><circle cx="48" cy="48" r="48"></circle></clipPath></defs>
+  <circle cx="48" cy="48" r="48" fill="#0B3B3C"></circle>
+  <g clip-path="url(#c)">
+    <path d="M28 72 L143.3 11.9 L88.1 -43.3 Z" fill="#F2F0E6"></path>
+    <g fill="none" stroke="#0B3B3C" stroke-width="2.5">
+      <path d="M67.9 51.2A45 45 0 0 0 48.8 32.1"></path>
+      <path d="M83.0 43.3A62 62 0 0 0 56.7 17.0"></path>
+    </g>
+  </g>
+  <circle cx="28" cy="72" r="10" fill="none" stroke="#8FE3D2" stroke-width="3.5"></circle>
+  <circle cx="28" cy="72" r="4" fill="#8FE3D2"></circle>
+</svg>
