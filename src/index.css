@@ -676,6 +676,8 @@ main:focus {
   object-fit: cover;
   object-position: 48% center;
   filter: saturate(0.7) contrast(1.05);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .identity-photo__cross {

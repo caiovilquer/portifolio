@@ -628,6 +628,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                   width="2752"
                   height="1536"
                   alt={copy.hero.portraitAlt}
+                  draggable={false}
                   loading="eager"
                   decoding="async"
                   {...{ fetchpriority: "high" }}
