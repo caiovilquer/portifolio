@@ -165,10 +165,12 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       availability: "Foco · posição júnior",
-      heading: "Escrevo sistemas em que as regras de negócio ficam visíveis no código e nos testes.",
-      mobileHeading: "Backend com regras de negócio visíveis no código e nos testes.",
+      heading:
+        "Escrevo sistemas em que as regras de negócio ficam visíveis no código e nos testes.",
+      mobileHeading:
+        "Backend com regras de negócio visíveis no código e nos testes.",
       summary:
-        "Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.",
+        "Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.",
       mobileSummary:
         "Java, Kotlin e TypeScript. Projetos com RAG, visão computacional e sistemas full stack.",
       identityName: "Caio Vilquer",
@@ -318,8 +320,7 @@ export const content: Record<Locale, SiteContent> = {
             "Mais de 250 testes backend sem dependência de rede",
             "Cinco fontes externas com degradação explícita",
           ],
-          stack:
-            "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
+          stack: "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
           image: {
             ...sharedImages.viazio,
             alt: "Logotipo horizontal do Viazio em dourado e branco sobre azul-marinho quadriculado",
@@ -352,8 +353,7 @@ export const content: Record<Locale, SiteContent> = {
         "Métricas de velocidade, ângulo e altura com incerteza explícita",
       ],
       nextLabel: "Próxima validação",
-      next:
-        "Validar o pipeline em dataset próprio e, depois, fundir visão com IMU. O sistema recusa a métrica quando a evidência ao redor da liberação é insuficiente.",
+      next: "Validar o pipeline em dataset próprio e, depois, fundir visão com IMU. O sistema recusa a métrica quando a evidência ao redor da liberação é insuficiente.",
       evidence:
         "A captura real é tratada em 240 fps; estados detectado, predito e interpolado permanecem auditáveis nos relatórios.",
       imageAlt:
@@ -428,8 +428,7 @@ export const content: Record<Locale, SiteContent> = {
     contact: {
       kicker: "Júnior · estágio · São Paulo",
       heading: "Estou disponível para começar agora.",
-      text:
-        "Procuro uma posição júnior como desenvolvedor backend ou full stack. Também considero estágios. Em São Paulo, busco vagas remotas ou híbridas.",
+      text: "Procuro uma posição júnior como desenvolvedor backend ou full stack. Também considero estágios. Em São Paulo, busco vagas remotas ou híbridas.",
       email: "caio@vilquer.dev",
       copy: "Copiar e-mail",
       linkedin: "LinkedIn",
@@ -461,8 +460,10 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       availability: "Focus · junior role",
-      heading: "I build systems where business rules stay visible in code and tests.",
-      mobileHeading: "Backend systems with business rules visible in code and tests.",
+      heading:
+        "I build systems where business rules stay visible in code and tests.",
+      mobileHeading:
+        "Backend systems with business rules visible in code and tests.",
       summary:
         "I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.",
       mobileSummary:
@@ -614,8 +615,7 @@ export const content: Record<Locale, SiteContent> = {
             "More than 250 backend tests without network access",
             "Five upstream sources with explicit degradation",
           ],
-          stack:
-            "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
+          stack: "Java 21 · Spring Boot · React 19 · PostgreSQL · Resilience4j",
           image: {
             ...sharedImages.viazio,
             alt: "Horizontal Viazio logo in gold and white on a navy blue grid",
@@ -648,8 +648,7 @@ export const content: Record<Locale, SiteContent> = {
         "Speed, angle, and height metrics with explicit uncertainty",
       ],
       nextLabel: "Next validation",
-      next:
-        "Validate the pipeline on a proprietary dataset, then fuse vision with IMU data. The system refuses a metric when release evidence is insufficient.",
+      next: "Validate the pipeline on a proprietary dataset, then fuse vision with IMU data. The system refuses a metric when release evidence is insufficient.",
       evidence:
         "Real capture time is handled at 240 fps; detected, predicted, and interpolated states remain auditable in the reports.",
       imageAlt:
@@ -678,7 +677,8 @@ export const content: Record<Locale, SiteContent> = {
         },
         {
           label: "Quality and operations",
-          value: "JUnit, Jest, Vitest, Testcontainers, Docker, and GitHub Actions",
+          value:
+            "JUnit, Jest, Vitest, Testcontainers, Docker, and GitHub Actions",
           proof: "Domain, integration, and contract tests",
         },
       ],
@@ -724,8 +724,7 @@ export const content: Record<Locale, SiteContent> = {
     contact: {
       kicker: "Junior roles · internships · São Paulo",
       heading: "I am available to start now.",
-      text:
-        "I am looking for a junior backend or full-stack role. I also consider internships. I am available for remote work or a hybrid role in São Paulo.",
+      text: "I am looking for a junior backend or full-stack role. I also consider internships. I am available for remote work or a hybrid role in São Paulo.",
       email: "caio@vilquer.dev",
       copy: "Copy email",
       linkedin: "LinkedIn",
