@@ -585,6 +585,24 @@ main:focus {
   background: var(--lapis-vermelho);
 }
 
+.measurement-note__context {
+  margin-block-end: var(--espaco-3);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  color: var(--tinta-carbono);
+  font-family: var(--fonte-dados);
+  font-size: var(--tipo-rotulo);
+  font-weight: 500;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.measurement-note__context .project-record__shot-mark {
+  width: 2.5rem;
+  flex: 0 0 auto;
+}
+
 .measurement-note__diameter {
   display: block;
   font-family: var(--fonte-display);
@@ -2506,6 +2524,10 @@ main:focus {
   }
 
   .measurement-note {
+    display: block;
+  }
+
+  .measurement-note__body {
     display: grid;
     grid-template-columns: minmax(8rem, 0.45fr) 1fr;
     align-items: start;
@@ -2813,7 +2835,7 @@ main:focus {
     padding-block: var(--espaco-3);
   }
 
-  .measurement-note {
+  .measurement-note__body {
     grid-template-columns: 1fr;
   }
 

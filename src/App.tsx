@@ -443,10 +443,16 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             </dl>
 
             <aside className="measurement-note" aria-label={copy.hero.measurementLabel}>
-              <span className="measurement-note__diameter" aria-hidden="true">
-                Ø 2,135
-              </span>
-              <p>{copy.hero.measurementNote}</p>
+              <div className="measurement-note__context">
+                <ShotPutMark />
+                <span>{copy.hero.measurementContext}</span>
+              </div>
+              <div className="measurement-note__body">
+                <span className="measurement-note__diameter" aria-hidden="true">
+                  Ø 2,135
+                </span>
+                <p>{copy.hero.measurementNote}</p>
+              </div>
             </aside>
 
             <div className="cover-sheet__contact">

@@ -68,6 +68,7 @@ type SiteContent = {
     portraitAlt: string;
     portraitCaption: string;
     measurementLabel: string;
+    measurementContext: string;
     measurementNote: string;
     emailLabel: string;
     copyEmail: string;
@@ -189,9 +190,10 @@ export const content: Record<Locale, SiteContent> = {
       seeWork: "Ver trabalhos selecionados",
       portraitAlt: "Retrato de Caio Vilquer Carvalho",
       portraitCaption: "Caio Vilquer Carvalho · São Paulo, SP",
-      measurementLabel: "Referência da régua visual",
+      measurementLabel: "Arremesso de peso e referência da régua visual",
+      measurementContext: "Atleta · arremesso de peso",
       measurementNote:
-        "Ø 2,135 m: o diâmetro do círculo do arremesso de peso virou a régua visual deste portfólio.",
+        "O círculo oficial da modalidade mede 2,135 m de diâmetro. Essa medida orienta a régua e as marcações deste portfólio.",
       emailLabel: "Contato direto",
       copyEmail: "Copiar e-mail",
       copiedEmail: "E-mail copiado",
@@ -490,9 +492,10 @@ export const content: Record<Locale, SiteContent> = {
       seeWork: "View selected work",
       portraitAlt: "Portrait of Caio Vilquer Carvalho",
       portraitCaption: "Caio Vilquer Carvalho · São Paulo, Brazil",
-      measurementLabel: "Visual ruler reference",
+      measurementLabel: "Shot put and visual ruler reference",
+      measurementContext: "Athlete · shot put",
       measurementNote:
-        "Ø 2.135 m: the official shot-put circle diameter became this portfolio's visual ruler.",
+        "The official throwing circle measures 2.135 m across. That dimension guides the ruler and markings used throughout this portfolio.",
       emailLabel: "Direct contact",
       copyEmail: "Copy email",
       copiedEmail: "Email copied",
