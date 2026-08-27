@@ -310,12 +310,12 @@ main:focus {
 }
 
 .wordmark__logo--full {
-  width: 11.75rem;
+  width: 15rem;
 }
 
 .wordmark__logo--compact {
   display: none;
-  width: 2.5rem;
+  width: 2.75rem;
 }
 
 .site-nav ul {

@@ -16,33 +16,28 @@ A identidade combina ficha de inspeção, relatório técnico e régua de mediç
 
 ## Assinatura
 
-A marca é o símbolo de diâmetro desenhado como círculo de projeto: bojo, marcas de centro e a diagonal de cota. Ela sai da mesma âncora do Ø 2,135 m da régua da página.
+A identidade parte do setor de queda do arremesso de peso. O círculo marca a origem do lançamento; o recorte angular e os arcos técnicos dão direção ao símbolo sem recorrer às iniciais do nome. A paleta reúne verde profundo (`#0B3B3C`), menta (`#8FE3D2`) e papel quente (`#F2F0E6`).
 
-Sistema de três pesos de traço, um trabalho para cada, na escala do lockup (viewBox 275 × 76):
-
-| Peso | Onde | Papel |
-|---|---|---|
-| 4 | círculo e diagonal | o objeto medido |
-| 3 | letras das duas linhas | o nome |
-| 2 | marcas de centro, terminais e linha de cota | anotação |
-
-Regras de construção: as duas linhas têm altura de caixa 22; as redondas (C, O, Q) partem do raio 11; O e Q compartilham o eixo x = 171; as duas linhas terminam em x = 270, e é a linha de cota vermelha que fecha a linha curta nessa medida.
+O sistema inclui lockups horizontais, wordmarks e três versões do símbolo para situações diferentes. No site, o cabeçalho usa o lockup com descritor em telas largas e o símbolo quadrado em telas estreitas.
 
 | Arquivo | Quando usar |
 |---|---|
-| `public/media/caio-vilquer-logo.svg` | padrão, sobre papel claro |
-| `public/media/caio-vilquer-logo-dark.svg` | sobre `--azul-planta` e outras superfícies escuras |
-| `public/media/caio-vilquer-mark.svg` | marca isolada, cabeçalho compacto |
-| `public/favicon.svg` | ladrilho de aba, traço mais pesado para sobreviver a 16 px |
+| `public/logos/caio-vilquer-lockup-descritor.svg` | cabeçalho sobre papel claro |
+| `public/logos/caio-vilquer-lockup-descritor-dark.svg` | lockup com descritor para superfícies escuras |
+| `public/logos/caio-vilquer-lockup.svg` e `public/logos/caio-vilquer-lockup-dark.svg` | assinatura horizontal sem descritor |
+| `public/logos/caio-vilquer-wordmark.svg` e `public/logos/caio-vilquer-wordmark-dark.svg` | nome sem símbolo |
+| `public/logos/caio-vilquer-simbolo.svg` | marca quadrada do cabeçalho compacto |
+| `public/logos/caio-vilquer-simbolo-transparente.svg` | símbolo sem fundo |
+| `public/logos/caio-vilquer-emblema.svg` | versão circular para avatares e selos |
+| `public/logos/caio-vilquer-favicon.svg` | fonte vetorial do favicon |
 | `public/og-card.svg` | fonte da verdade do cartão social |
 
-A tinta muda entre as versões para manter contraste: sobre papel o vermelho é `#b7432b` (4,65:1) e as marcas de centro são `#7b817a` (3,40:1); sobre escuro o vermelho abre para `#d4614a` (3,89:1), porque o `#b7432b` cai para 2,67:1 ali.
-
-Depois de editar `og-card.svg` ou `favicon.svg`, regere os bitmaps:
+Depois de editar o cartão social ou o favicon, regere os bitmaps no macOS:
 
 ```bash
-python3 -c "import cairosvg; cairosvg.svg2png(url='public/og-card.svg', write_to='public/og-card.png', output_width=1200, output_height=630)"
-python3 -c "import cairosvg; cairosvg.svg2png(url='public/favicon.svg', write_to='public/favicon.png', output_width=512, output_height=512)"
+sips -s format png public/og-card.svg --out public/og-card.png
+sips -s format png public/logos/caio-vilquer-favicon.svg --out public/favicon.png
+sips -z 512 512 public/favicon.png
 ```
 
 ## Desenvolvimento

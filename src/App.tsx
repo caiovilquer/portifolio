@@ -466,16 +466,16 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <span className="wordmark__art" aria-hidden="true">
               <img
                 className="wordmark__logo wordmark__logo--full"
-                src="/media/caio-vilquer-logo.svg"
-                width="275"
-                height="76"
+                src="/logos/caio-vilquer-lockup-descritor.svg"
+                width="420"
+                height="72"
                 alt=""
               />
               <img
                 className="wordmark__logo wordmark__logo--compact"
-                src="/media/caio-vilquer-mark.svg"
-                width="76"
-                height="76"
+                src="/logos/caio-vilquer-simbolo.svg"
+                width="96"
+                height="96"
                 alt=""
               />
             </span>
@@ -1041,16 +1041,16 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
             <span className="wordmark__art" aria-hidden="true">
               <img
                 className="wordmark__logo wordmark__logo--full"
-                src="/media/caio-vilquer-logo.svg"
-                width="275"
-                height="76"
+                src="/logos/caio-vilquer-lockup-descritor.svg"
+                width="420"
+                height="72"
                 alt=""
               />
               <img
                 className="wordmark__logo wordmark__logo--compact"
-                src="/media/caio-vilquer-mark.svg"
-                width="76"
-                height="76"
+                src="/logos/caio-vilquer-simbolo.svg"
+                width="96"
+                height="96"
                 alt=""
               />
             </span>

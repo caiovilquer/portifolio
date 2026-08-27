@@ -1,38 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Caio Vilquer, backend em Java, Kotlin e TypeScript, Poli-USP">
   <!--
     Card social. Fonte da verdade do og-card.png.
-    Regerar depois de editar:
-      python3 -c "import cairosvg;cairosvg.svg2png(url='public/og-card.svg',write_to='public/og-card.png',output_width=1200,output_height=630)"
+    O comando de regeneração do PNG está documentado no README.
 
-    A marca à direita é a mesma geometria de caio-vilquer-logo.svg,
-    escalada por 1,556 (raio 27 vira 42). Nada de símbolo próprio aqui.
+    O emblema à direita repete a geometria de public/logos/caio-vilquer-emblema.svg.
   -->
-  <rect width="1200" height="630" fill="#eeede7"/>
-  <rect x="56" y="44" width="1088" height="542" fill="#f7f5ee" stroke="#172a36" stroke-width="2"/>
-  <path d="M56 122h1088M56 500h1088" fill="none" stroke="#7b817a" stroke-width="2"/>
+  <rect width="1200" height="630" fill="#F2F0E6"/>
+  <rect x="56" y="44" width="1088" height="542" fill="#fffef8" stroke="#0B3B3C" stroke-width="2"/>
+  <path d="M56 122h1088M56 500h1088" fill="none" stroke="#57544C" stroke-width="2"/>
   <!-- marcas de registro nos cantos, curtas, para não cruzarem o texto -->
-  <path d="M142 44v13M1058 44v13M142 573v13M1058 573v13" fill="none" stroke="#7b817a" stroke-width="2"/>
-  <path d="M56 108h1088" stroke="#b7432b" stroke-width="8"/>
+  <path d="M142 44v13M1058 44v13M142 573v13M1058 573v13" fill="none" stroke="#57544C" stroke-width="2"/>
+  <path d="M56 108h1088" stroke="#8FE3D2" stroke-width="8"/>
 
-  <g fill="#52616a" font-family="Fira Code, DejaVu Sans Mono, monospace" font-size="18" letter-spacing="2">
+  <g fill="#57544C" font-family="Fira Code, DejaVu Sans Mono, monospace" font-size="18" letter-spacing="2">
     <text x="78" y="84">FICHA TÉCNICA / 2026</text>
     <text x="932" y="84">Ø 2,135 M</text>
     <text x="78" y="548">POLI-USP · SÃO PAULO</text>
     <text x="935" y="548">VILQUER.DEV</text>
   </g>
 
-  <g font-family="Archivo Narrow, Arial Narrow, Liberation Sans Narrow, sans-serif" font-weight="700" fill="#172a36">
+  <g font-family="Archivo Narrow, Arial Narrow, Liberation Sans Narrow, sans-serif" font-weight="700" fill="#0B3B3C">
     <text x="78" y="235" font-size="94" letter-spacing="-2">CAIO VILQUER</text>
     <text x="78" y="327" font-size="69" letter-spacing="-1">BACKEND EM JAVA,</text>
     <text x="78" y="404" font-size="69" letter-spacing="-1">KOTLIN E TYPESCRIPT.</text>
   </g>
 
-  <path d="M78 469h730" stroke="#236653" stroke-width="7"/>
+  <path d="M78 469h730" stroke="#8FE3D2" stroke-width="7"/>
 
-  <g transform="translate(996 146) scale(1.5556)" fill="none" stroke-linecap="square">
-    <circle cx="38" cy="38" r="27" stroke="#172a36" stroke-width="4"/>
-    <path d="M53 7 23 69" stroke="#b7432b" stroke-width="4"/>
-    <path d="M38 2v8M38 66v8M2 38h8M66 38h8" stroke="#7b817a" stroke-width="2"/>
-    <path d="M49 5 57 9M19 67 27 71" stroke="#b7432b" stroke-width="2"/>
+  <g transform="translate(970 155) scale(1.65)">
+    <defs><clipPath id="brand-emblem"><circle cx="48" cy="48" r="48"/></clipPath></defs>
+    <circle cx="48" cy="48" r="48" fill="#0B3B3C"/>
+    <g clip-path="url(#brand-emblem)">
+      <path d="M28 72 L143.3 11.9 L88.1 -43.3 Z" fill="#F2F0E6"/>
+      <g fill="none" stroke="#0B3B3C" stroke-width="2.5">
+        <path d="M67.9 51.2A45 45 0 0 0 48.8 32.1"/>
+        <path d="M94.5 37.3A75 75 0 0 0 62.7 5.5"/>
+      </g>
+    </g>
+    <circle cx="28" cy="72" r="10" fill="none" stroke="#8FE3D2" stroke-width="3.5"/>
+    <circle cx="28" cy="72" r="4" fill="#8FE3D2"/>
   </g>
 </svg>
