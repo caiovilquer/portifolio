@@ -5,7 +5,7 @@ Last updated: 2026-08-26
 
 # Português
 
-Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, mas também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
+Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
 
 Disponibilidade: Busca: Posição júnior ou estágio; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
 
