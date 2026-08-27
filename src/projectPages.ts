@@ -7,6 +7,7 @@ export type ProjectPageData = {
   period: string;
   title: string;
   descriptor: string;
+  plain: string;
   contribution: string;
   status: string;
   summary: string;
@@ -304,6 +305,8 @@ const trackShot: Record<Locale, ProjectPageData> = {
     period: "2026 · atual",
     title: "TrackShot CV",
     descriptor: "Visão computacional aplicada ao arremesso de peso",
+    plain:
+      "Mede velocidade, ângulo e altura de liberação de um arremesso de peso a partir de um vídeo de celular. Hoje isso exige radar ou laboratório de biomecânica, fora do alcance de quase todo treinador e atleta.",
     contribution:
       "Pesquisa, pipeline de pose, rastreamento do implemento, calibração e cálculo das métricas de liberação.",
     status: "Protótipo desktop em desenvolvimento",
@@ -418,6 +421,8 @@ const trackShot: Record<Locale, ProjectPageData> = {
     period: "2026 · present",
     title: "TrackShot CV",
     descriptor: "Computer vision applied to shot put",
+    plain:
+      "It measures the release speed, angle, and height of a shot put from a phone video. Today that takes a radar gun or a biomechanics lab, out of reach for nearly every coach and athlete.",
     contribution:
       "Research, pose pipeline, implement tracking, calibration, and release-metric computation.",
     status: "Desktop prototype in development",

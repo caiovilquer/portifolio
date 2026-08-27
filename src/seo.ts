@@ -50,7 +50,7 @@ const KNOWS_ABOUT = [
 const PROJECT_DESCRIPTIONS: Record<Locale, Record<ProjectSlug, string>> = {
   pt: {
     poliatletas:
-      "Estudo do Poliatletas: sistema da equipe de atletismo da Poli-USP com NestJS, React, PostgreSQL, Prisma, Redis, rankings e mais de 250 testes.",
+      "Estudo do Poliatletas: sistema em produção da equipe de atletismo da Poli-USP com NestJS, React, PostgreSQL, Prisma, Redis, rankings públicos e trilha de auditoria.",
     rotinapet:
       "Estudo do RotinaPet: cuidado compartilhado de pets com Kotlin, Spring Boot, Angular, PostgreSQL, pgvector e RAG com autorização por recurso.",
     viazio:
@@ -60,7 +60,7 @@ const PROJECT_DESCRIPTIONS: Record<Locale, Record<ProjectSlug, string>> = {
   },
   en: {
     poliatletas:
-      "Poliatletas case study: Poli-USP athletics software built with NestJS, React, PostgreSQL, Prisma, Redis, public rankings, and over 250 tests.",
+      "Poliatletas case study: Poli-USP athletics software in production, built with NestJS, React, PostgreSQL, Prisma, Redis, public rankings, and an audit trail.",
     rotinapet:
       "RotinaPet case study: shared pet care built with Kotlin, Spring Boot, Angular, PostgreSQL, pgvector, and resource-authorized RAG.",
     viazio:

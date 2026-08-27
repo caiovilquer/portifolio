@@ -17,6 +17,7 @@ export type ProjectContent = {
   period: string;
   title: string;
   descriptor: string;
+  plain: string;
   summary: string;
   problemLabel: string;
   problem: string;
@@ -164,24 +165,24 @@ export const content: Record<Locale, SiteContent> = {
       english: "EN",
     },
     hero: {
-      availability: "Foco · posição júnior",
+      availability: "Poliatletas · RotinaPet · Viazio",
       heading:
-        "Escrevo sistemas em que as regras de negócio ficam visíveis no código e nos testes.",
+        "Três sistemas no ar, escritos do banco à tela.",
       mobileHeading:
-        "Backend com regras de negócio visíveis no código e nos testes.",
+        "Três sistemas no ar, do banco à tela.",
       summary:
-        "Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.",
+        "Estudo Engenharia de Computação na Poli-USP. A equipe de atletismo da Poli-USP registra competições e recordes no Poliatletas, famílias organizam o cuidado dos pets no RotinaPet e o Viazio ranqueia destinos de viagem. Escrevo backend, frontend, banco e deploy dos três, em Java, Kotlin e TypeScript, e cada regra difícil fica sustentada por teste.",
       mobileSummary:
-        "Java, Kotlin e TypeScript. Projetos com RAG, visão computacional e sistemas full stack.",
+        "Três sistemas em produção, escritos do banco à tela em Java, Kotlin e TypeScript.",
       identityName: "Caio Vilquer",
       identityRole: "Backend · Poli-USP",
       identityStack: "Java / Kotlin / TypeScript",
       mobileLocation: "SP",
       specs: [
-        { label: "Busca", value: "Posição júnior ou estágio" },
-        { label: "Foco", value: "Backend, com atuação full stack" },
-        { label: "Modelo", value: "Remoto ou híbrido em São Paulo" },
-        { label: "Formação", value: "Poli-USP, conclusão em 12/2029" },
+        { label: "Formação", value: "Poli-USP · conclusão em 12/2029" },
+        { label: "Foco", value: "Backend, do modelo de dados ao deploy" },
+        { label: "Stack", value: "Java · Kotlin · TypeScript" },
+        { label: "Base", value: "São Paulo, SP" },
       ],
       cvBackend: "Baixar CV backend",
       cvFullStack: "CV full stack",
@@ -197,10 +198,10 @@ export const content: Record<Locale, SiteContent> = {
       copyFailed: "Não foi possível copiar. Selecione o endereço ao lado.",
     },
     work: {
-      kicker: "Poliatletas · RotinaPet · Viazio",
+      kicker: "Três sistemas em produção",
       heading: "Trabalhos selecionados",
       intro:
-        "O Poliatletas compara marcas esportivas, o RotinaPet isola os dados de cada família e o Viazio ranqueia destinos mesmo quando uma fonte falha. Nos três, regras de domínio, autorização e falhas de integração aparecem no código e nos testes.",
+        "Nenhum dos três é um cadastro simples. O Poliatletas compara marcas de modalidades que medem coisas diferentes: tempo, distância e pontos. O RotinaPet impede que uma família veja os dados da outra, inclusive nas respostas da IA. O Viazio mantém o ranking de pé quando uma fonte externa cai. Escrevi backend, frontend e banco dos três sozinho, e cada uma dessas regras tem teste que a segura.",
       indexLabel: "Registro dos casos",
       projects: [
         {
@@ -209,6 +210,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "08.2025 · atual",
           title: "Poliatletas",
           descriptor: "Sistema da equipe de atletismo da Poli-USP",
+          plain:
+            "A equipe de atletismo da Poli-USP usa o sistema para registrar competições, resultados, recordes e treinos, no lugar das planilhas que se perdiam a cada temporada. São mais de cem pessoas entre atletas e comissão técnica, com histórico auditável e rankings públicos.",
           summary:
             "O Poliatletas reúne atletas, competições, resultados, rankings, recordes e a operação técnica da equipe.",
           problemLabel: "Problema de domínio",
@@ -250,6 +253,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "05.2025 · atual",
           title: "RotinaPet",
           descriptor: "Cuidado compartilhado com assistente de IA e RAG",
+          plain:
+            "A família inteira cuida do mesmo pet sem duplicar remédio nem perder vacina: cada tutor vê o que já foi feito, por quem e quando. O assistente de IA só enxerga o que aquela família tem direito de ver e nunca registra nada sem a confirmação de uma pessoa.",
           summary:
             "Agenda, histórico clínico, documentos e colaboração familiar, com IA limitada por autorização e confirmação humana.",
           problemLabel: "Problema de confiança",
@@ -299,6 +304,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "03.2026 · 07.2026",
           title: "Viazio",
           descriptor: "Motor explicável de recomendação de viagens",
+          plain:
+            "Escolhe quando e para onde viajar cruzando feriado, clima, custo e distância, e mostra por que cada destino ficou naquela posição em vez de entregar uma nota única. Quando uma fonte externa sai do ar, o ranking continua de pé e diz o que faltou.",
           summary:
             "Cruza calendário, clima, custo relativo, distância e contexto local sem esconder incerteza atrás de uma nota única.",
           problemLabel: "Problema de decisão",
@@ -426,9 +433,9 @@ export const content: Record<Locale, SiteContent> = {
       ],
     },
     contact: {
-      kicker: "Júnior · estágio · São Paulo",
-      heading: "Estou disponível para começar agora.",
-      text: "Procuro uma posição júnior como desenvolvedor backend ou full stack. Também considero estágios. Em São Paulo, busco vagas remotas ou híbridas.",
+      kicker: "Contato · São Paulo",
+      heading: "Fale comigo.",
+      text: "Respondo e-mail em até um dia útil. Os currículos abaixo trazem o histórico completo: o de backend detalha os projetos e as decisões técnicas, o full stack cobre também frontend e banco.",
       email: "caio@vilquer.dev",
       copy: "Copiar e-mail",
       linkedin: "LinkedIn",
@@ -459,24 +466,24 @@ export const content: Record<Locale, SiteContent> = {
       english: "EN",
     },
     hero: {
-      availability: "Focus · junior role",
+      availability: "Poliatletas · RotinaPet · Viazio",
       heading:
-        "I build systems where business rules stay visible in code and tests.",
+        "Three systems in production, from database to screen.",
       mobileHeading:
-        "Backend systems with business rules visible in code and tests.",
+        "Three systems live, from database to screen.",
       summary:
-        "I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.",
+        "I study Computer Engineering at Poli-USP. The Poli-USP athletics team records its meets and records in Poliatletas, families organize pet care in RotinaPet, and Viazio ranks travel destinations. I write the backend, frontend, database, and deployment for all three, in Java, Kotlin, and TypeScript, and every hard rule is held down by a test.",
       mobileSummary:
-        "Java, Kotlin, and TypeScript. Projects with RAG, computer vision, and full-stack systems.",
+        "Three systems in production, written from the database to the screen in Java, Kotlin, and TypeScript.",
       identityName: "Caio Vilquer",
       identityRole: "Backend · Poli-USP",
       identityStack: "Java / Kotlin / TypeScript",
       mobileLocation: "SP",
       specs: [
-        { label: "Seeking", value: "Junior position or internship" },
-        { label: "Focus", value: "Backend, with full-stack experience" },
-        { label: "Model", value: "Remote or hybrid in São Paulo" },
-        { label: "Degree", value: "Poli-USP, expected 12/2029" },
+        { label: "Degree", value: "Poli-USP · expected 12/2029" },
+        { label: "Focus", value: "Backend, from data model to deploy" },
+        { label: "Stack", value: "Java · Kotlin · TypeScript" },
+        { label: "Base", value: "São Paulo, Brazil" },
       ],
       cvBackend: "Download backend CV",
       cvFullStack: "Full-stack CV",
@@ -492,10 +499,10 @@ export const content: Record<Locale, SiteContent> = {
       copyFailed: "Copy failed. Select the address beside this message.",
     },
     work: {
-      kicker: "Poliatletas · RotinaPet · Viazio",
+      kicker: "Three systems in production",
       heading: "Selected work",
       intro:
-        "Poliatletas compares athletic results, RotinaPet isolates each family's data, and Viazio ranks destinations when an upstream source fails. In all three, domain rules, authorization, and integration failures appear in code and tests.",
+        "None of the three is a simple CRUD app. Poliatletas compares results from events that measure different things: time, distance, and points. RotinaPet keeps one family's data out of another's, including in the AI's answers. Viazio keeps its ranking standing when an upstream source goes down. I wrote the backend, frontend, and database for all three on my own, and every one of those rules is held down by a test.",
       indexLabel: "Case register",
       projects: [
         {
@@ -504,6 +511,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "08.2025 · present",
           title: "Poliatletas",
           descriptor: "The athletics management system at Poli-USP",
+          plain:
+            "The Poli-USP athletics team uses the system to record meets, results, records, and training, replacing the spreadsheets that went missing every season. More than a hundred people use it, athletes and coaching staff, with an auditable history and public rankings.",
           summary:
             "Poliatletas brings athletes, meets, results, rankings, records, and the team's technical operations into one system.",
           problemLabel: "Domain problem",
@@ -545,6 +554,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "05.2025 · present",
           title: "RotinaPet",
           descriptor: "Shared pet care with an AI and RAG assistant",
+          plain:
+            "A whole family cares for the same pet without double-dosing medication or missing a vaccine: every owner sees what was already done, by whom, and when. The AI assistant only ever sees what that family is allowed to see, and it never records anything without a person confirming it.",
           summary:
             "Schedules, clinical history, documents, and family collaboration, with AI constrained by authorization and human confirmation.",
           problemLabel: "Trust problem",
@@ -594,6 +605,8 @@ export const content: Record<Locale, SiteContent> = {
           period: "03.2026 · 07.2026",
           title: "Viazio",
           descriptor: "Explainable travel recommendation engine",
+          plain:
+            "It picks when and where to travel by weighing holidays, weather, cost, and distance, and shows why each destination landed in that position instead of handing over a single score. When an upstream source goes down, the ranking stays standing and says what was missing.",
           summary:
             "It combines calendars, weather, relative cost, distance, and local context without hiding uncertainty behind one opaque score.",
           problemLabel: "Decision problem",
@@ -722,9 +735,9 @@ export const content: Record<Locale, SiteContent> = {
       ],
     },
     contact: {
-      kicker: "Junior roles · internships · São Paulo",
-      heading: "I am available to start now.",
-      text: "I am looking for a junior backend or full-stack role. I also consider internships. I am available for remote work or a hybrid role in São Paulo.",
+      kicker: "Contact · São Paulo",
+      heading: "Get in touch.",
+      text: "I reply to email within one business day. The CVs below carry the full history: the backend one details the projects and the technical decisions, the full-stack one also covers frontend and database work.",
       email: "caio@vilquer.dev",
       copy: "Copy email",
       linkedin: "LinkedIn",

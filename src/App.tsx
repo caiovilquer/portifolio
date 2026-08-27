@@ -169,6 +169,7 @@ function ProjectRecord({
           <h3 id={`${project.slug}-title`}>{project.title}</h3>
           <p className="project-record__role">{project.descriptor}</p>
         </div>
+        <p className="project-record__plain">{project.plain}</p>
         <p className="project-record__summary">{project.summary}</p>
       </header>
 
@@ -750,7 +751,12 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           </a>
 
           <nav className="site-nav dossier-site-nav" aria-label={labels.nav}>
-            <a href={`${homePath(locale)}#trabalho`}>← {labels.back}</a>
+            <a href={`${homePath(locale)}#trabalho`}>
+              <span className="link-direction link-direction--back" aria-hidden="true">
+                ←
+              </span>
+              <span>{labels.back}</span>
+            </a>
           </nav>
 
           <nav className="language-switch" aria-label={copy.language.label}>
@@ -785,6 +791,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
             <div className="project-dossier__title">
               <p>{project.descriptor}</p>
               <h1>{project.title}</h1>
+              <p className="project-dossier__plain">{project.plain}</p>
               <p>{project.summary}</p>
             </div>
           </header>
