@@ -5,9 +5,9 @@ Last updated: 2026-08-26
 
 # Português
 
-Estudo Engenharia de Computação na Poli-USP. Trabalho principalmente no backend com Java, Kotlin e TypeScript, também implemento frontend e banco de dados nos meus projetos. O RotinaPet usa RAG; o TrackShot aplica visão computacional ao arremesso de peso.
+Estudo Engenharia de Computação na Poli-USP. A equipe de atletismo da Poli-USP registra competições e recordes no Poliatletas, famílias organizam o cuidado dos pets no RotinaPet e o Viazio ranqueia destinos de viagem. Escrevo backend, frontend, banco e deploy dos três, em Java, Kotlin e TypeScript, e cada regra difícil fica sustentada por teste.
 
-Disponibilidade: Busca: Posição júnior ou estágio; Foco: Backend, com atuação full stack; Modelo: Remoto ou híbrido em São Paulo; Formação: Poli-USP, conclusão em 12/2029.
+Disponibilidade: Formação: Poli-USP · conclusão em 12/2029; Foco: Backend, do modelo de dados ao deploy; Stack: Java · Kotlin · TypeScript; Base: São Paulo, SP.
 
 ## Trabalhos selecionados
 
@@ -148,9 +148,9 @@ O vídeo traz o tempo do contêiner, não necessariamente a taxa real da captura
 
 # English
 
-I study Computer Engineering at Poli-USP. I work mainly on backend systems with Java, Kotlin, and TypeScript, but I also build the frontend and database layers in my projects. RotinaPet uses RAG; TrackShot applies computer vision to shot put.
+I study Computer Engineering at Poli-USP. The Poli-USP athletics team records its meets and records in Poliatletas, families organize pet care in RotinaPet, and Viazio ranks travel destinations. I write the backend, frontend, database, and deployment for all three, in Java, Kotlin, and TypeScript, and every hard rule is held down by a test.
 
-Availability: Seeking: Junior position or internship; Focus: Backend, with full-stack experience; Model: Remote or hybrid in São Paulo; Degree: Poli-USP, expected 12/2029.
+Availability: Degree: Poli-USP · expected 12/2029; Focus: Backend, from data model to deploy; Stack: Java · Kotlin · TypeScript; Base: São Paulo, Brazil.
 
 ## Selected case studies
 
