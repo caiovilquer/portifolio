@@ -18,11 +18,11 @@ A identidade combina ficha de inspeção, relatório técnico e régua de mediç
 
 A identidade parte do setor de queda do arremesso de peso. O círculo marca a origem do lançamento; o recorte angular e os arcos técnicos dão direção ao símbolo sem recorrer às iniciais do nome. A paleta reúne verde profundo (`#0B3B3C`), menta (`#8FE3D2`) e papel quente (`#F2F0E6`).
 
-O sistema inclui lockups horizontais, wordmarks e três versões do símbolo para situações diferentes. No site, o cabeçalho usa o lockup com descritor em telas largas e o símbolo quadrado em telas estreitas.
+O sistema inclui lockups horizontais, wordmarks e três versões do símbolo para situações diferentes. No site, o cabeçalho usa o lockup sem descritor em telas largas e o símbolo quadrado em telas estreitas.
 
 | Arquivo | Quando usar |
 |---|---|
-| `public/logos/caio-vilquer-lockup-descritor.svg` | cabeçalho sobre papel claro |
+| `public/logos/caio-vilquer-lockup.svg` | cabeçalho sobre papel claro |
 | `public/logos/caio-vilquer-lockup-descritor-dark.svg` | lockup com descritor para superfícies escuras |
 | `public/logos/caio-vilquer-lockup.svg` e `public/logos/caio-vilquer-lockup-dark.svg` | assinatura horizontal sem descritor |
 | `public/logos/caio-vilquer-wordmark.svg` e `public/logos/caio-vilquer-wordmark-dark.svg` | nome sem símbolo |
@@ -31,6 +31,8 @@ O sistema inclui lockups horizontais, wordmarks e três versões do símbolo par
 | `public/logos/caio-vilquer-emblema.svg` | versão circular para avatares e selos |
 | `public/logos/caio-vilquer-favicon.svg` | fonte vetorial do favicon |
 | `public/og-card.svg` | fonte da verdade do cartão social |
+
+Archivo Black, Archivo Narrow e Source Serif 4 ficam em `public/fonts`, com suas licenças OFL. As logos usam Archivo Black no nome e incorporam a fonte no próprio SVG, para manter o desenho quando carregadas como imagem. A página usa os arquivos locais de Archivo Narrow e Source Serif 4. Nada depende do Google Fonts em tempo de execução.
 
 Depois de editar o cartão social ou o favicon, regere os bitmaps no macOS:
 
