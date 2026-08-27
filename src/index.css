@@ -85,6 +85,8 @@
   --curva-saida: cubic-bezier(0.4, 0, 1, 1);
   --curva-entrada: cubic-bezier(0, 0, 0.2, 1);
   --curva-interface: cubic-bezier(0.4, 0, 0.2, 1);
+  --deslocamento-ficha-saida: clamp(1.5rem, 2.6vw, 2.5rem);
+  --deslocamento-ficha-entrada: clamp(2rem, 3.6vw, 3.5rem);
 
   --z-base: 0;
   --z-sticky: 100;
@@ -115,20 +117,28 @@ html.reading-mode-transition body {
   overflow-anchor: none;
 }
 
+html.reading-mode-transition {
+  overflow-x: clip;
+}
+
+html.reading-mode-transition .portfolio-home {
+  overflow-x: clip;
+}
+
 html.reading-mode-to-dossier.reading-mode-sheet-out [data-reading-transition] {
-  animation: 90ms var(--curva-saida) both reading-sheet-out-left;
+  animation: 110ms var(--curva-saida) both reading-sheet-out-left;
 }
 
 html.reading-mode-to-dossier.reading-mode-sheet-in [data-reading-transition] {
-  animation: 220ms var(--curva-entrada) both reading-sheet-in-right;
+  animation: 250ms var(--curva-entrada) both reading-sheet-in-right;
 }
 
 html.reading-mode-to-summary.reading-mode-sheet-out [data-reading-transition] {
-  animation: 90ms var(--curva-saida) both reading-sheet-out-right;
+  animation: 110ms var(--curva-saida) both reading-sheet-out-right;
 }
 
 html.reading-mode-to-summary.reading-mode-sheet-in [data-reading-transition] {
-  animation: 220ms var(--curva-entrada) both reading-sheet-in-left;
+  animation: 250ms var(--curva-entrada) both reading-sheet-in-left;
 }
 
 ::view-transition-group(portfolio-wordmark),
@@ -2401,8 +2411,8 @@ main:focus {
   }
 
   to {
-    opacity: 0;
-    transform: translate3d(-0.35rem, 0, 0);
+    opacity: 0.96;
+    transform: translate3d(calc(0rem - var(--deslocamento-ficha-saida)), 0, 0);
   }
 }
 
@@ -2413,15 +2423,15 @@ main:focus {
   }
 
   to {
-    opacity: 0;
-    transform: translate3d(0.35rem, 0, 0);
+    opacity: 0.96;
+    transform: translate3d(var(--deslocamento-ficha-saida), 0, 0);
   }
 }
 
 @keyframes reading-sheet-in-right {
   from {
-    opacity: 0;
-    transform: translate3d(0.7rem, 0, 0);
+    opacity: 0.92;
+    transform: translate3d(var(--deslocamento-ficha-entrada), 0, 0);
   }
 
   to {
@@ -2432,8 +2442,8 @@ main:focus {
 
 @keyframes reading-sheet-in-left {
   from {
-    opacity: 0;
-    transform: translate3d(-0.7rem, 0, 0);
+    opacity: 0.92;
+    transform: translate3d(calc(0rem - var(--deslocamento-ficha-entrada)), 0, 0);
   }
 
   to {
