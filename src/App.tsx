@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { content, type Locale, type ProjectContent } from "./content";
 import { getProjectPageData } from "./projectPages";
 import {
@@ -714,6 +714,27 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
       };
   const ptRoute = alternateRoute(route, "pt");
   const enRoute = alternateRoute(route, "en");
+  const portfolioReturnAnchor = slug === "trackshot" ? "pesquisa" : slug;
+  const handlePortfolioReturn = (event: MouseEvent<HTMLAnchorElement>) => {
+    const portfolioPath = homePath(locale);
+    let referrer: URL | null = null;
+
+    try {
+      referrer = new URL(document.referrer);
+    } catch {
+      // A navegação pelo href continua disponível quando não há referrer válido.
+    }
+
+    const cameFromPortfolio =
+      window.history.length > 1 &&
+      referrer?.origin === window.location.origin &&
+      referrer.pathname === portfolioPath;
+
+    if (!cameFromPortfolio) return;
+
+    event.preventDefault();
+    window.history.back();
+  };
 
   return (
     <>
@@ -751,7 +772,10 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           </a>
 
           <nav className="site-nav dossier-site-nav" aria-label={labels.nav}>
-            <a href={`${homePath(locale)}#trabalho`}>
+            <a
+              href={`${homePath(locale)}#${portfolioReturnAnchor}`}
+              onClick={handlePortfolioReturn}
+            >
               <span className="link-direction link-direction--back" aria-hidden="true">
                 ←
               </span>
