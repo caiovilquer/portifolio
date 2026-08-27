@@ -1,4 +1,5 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { content, type Locale, type ProjectContent } from "./content";
 import { getProjectPageData } from "./projectPages";
 import {
@@ -23,6 +24,15 @@ const CV_FILES: Record<Locale, { backend: string; fullStack: string }> = {
 };
 
 type CopyState = "idle" | "copied" | "failed";
+type ReadingMode = "summary" | "dossier";
+
+type DocumentWithViewTransition = Document & {
+  startViewTransition?: (update: () => void) => {
+    finished: Promise<unknown>;
+  };
+};
+
+const READING_MODE_STORAGE_KEY = "portfolio-reading-mode";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   if (navigator.clipboard && window.isSecureContext) {
@@ -159,14 +169,84 @@ function PageMeasure() {
   );
 }
 
+function ReadingModeControl({
+  id,
+  mode,
+  label,
+  summaryLabel,
+  dossierLabel,
+  onChange,
+  className = "",
+}: {
+  id: string;
+  mode: ReadingMode;
+  label: string;
+  summaryLabel: string;
+  dossierLabel: string;
+  onChange: (mode: ReadingMode) => void;
+  className?: string;
+}) {
+  const options: Array<{ value: ReadingMode; label: string }> = [
+    { value: "summary", label: summaryLabel },
+    { value: "dossier", label: dossierLabel },
+  ];
+
+  return (
+    <fieldset className={`reading-mode ${className}`.trim()}>
+      <legend>{label}</legend>
+      <div className="reading-mode__rail">
+        {options.map((option) => (
+          <label key={option.value} className="reading-mode__option">
+            <input
+              className="reading-mode__input"
+              type="radio"
+              name={`reading-mode-${id}`}
+              value={option.value}
+              checked={mode === option.value}
+              onChange={() => onChange(option.value)}
+              onKeyDown={(event) => {
+                const nextMode =
+                  event.key === "ArrowRight" || event.key === "ArrowDown"
+                    ? "dossier"
+                    : event.key === "ArrowLeft" || event.key === "ArrowUp"
+                      ? "summary"
+                      : null;
+
+                if (!nextMode) return;
+
+                event.preventDefault();
+                const fieldset = event.currentTarget.closest("fieldset");
+                onChange(nextMode);
+                window.requestAnimationFrame(() => {
+                  fieldset
+                    ?.querySelector<HTMLInputElement>(`input[value="${nextMode}"]`)
+                    ?.focus();
+                });
+              }}
+            />
+            <span className="reading-mode__shot" aria-hidden="true" />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 function ProjectRecord({
   project,
   index,
   locale,
+  readingMode,
+  decisionLabel,
+  evidenceLabel,
 }: {
   project: ProjectContent;
   index: number;
   locale: Locale;
+  readingMode: ReadingMode;
+  decisionLabel: string;
+  evidenceLabel: string;
 }) {
   const detailLabel = locale === "pt" ? "Abrir estudo completo" : "Open full case study";
 
@@ -185,7 +265,9 @@ function ProjectRecord({
           <h3 id={`${project.slug}-title`}>{project.title}</h3>
           <p className="project-record__role">{project.descriptor}</p>
         </div>
-        <p className="project-record__plain">{project.plain}</p>
+        <p className="project-record__plain" hidden={readingMode === "summary"}>
+          {project.plain}
+        </p>
         <p className="project-record__summary">{project.summary}</p>
       </header>
 
@@ -205,40 +287,58 @@ function ProjectRecord({
       </figure>
 
       <div className="project-record__analysis">
-        <section className="project-record__problem" aria-labelledby={`${project.slug}-problem`}>
-          <h4 id={`${project.slug}-problem`}>{project.problemLabel}</h4>
-          <p>{project.problem}</p>
+        <section
+          className="project-record__quick-proof"
+          aria-labelledby={`${project.slug}-quick-decision`}
+          hidden={readingMode === "dossier"}
+        >
+          <div className="project-record__quick-decision">
+            <h4 id={`${project.slug}-quick-decision`}>{decisionLabel}</h4>
+            <strong>{project.decisions[0].label}</strong>
+            <p>{project.decisions[0].text}</p>
+          </div>
+          <div className="project-record__quick-evidence">
+            <h4>{evidenceLabel}</h4>
+            <p>{project.evidence[0]}</p>
+          </div>
         </section>
 
-        <section
-          className="project-record__decisions"
-          aria-labelledby={`${project.slug}-decisions`}
-        >
-          <h4 id={`${project.slug}-decisions`}>{project.decisionsLabel}</h4>
-          <ul>
-            {project.decisions.map((decision) => (
-              <li key={decision.label}>
-                <ShotPutMark />
-                <div>
-                  <strong>{decision.label}</strong>
-                  <p>{decision.text}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div className="project-record__full-analysis" hidden={readingMode === "summary"}>
+          <section className="project-record__problem" aria-labelledby={`${project.slug}-problem`}>
+            <h4 id={`${project.slug}-problem`}>{project.problemLabel}</h4>
+            <p>{project.problem}</p>
+          </section>
 
-        <section
-          className="project-record__evidence"
-          aria-labelledby={`${project.slug}-evidence`}
-        >
-          <h4 id={`${project.slug}-evidence`}>{project.evidenceLabel}</h4>
-          <ul>
-            {project.evidence.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
+          <section
+            className="project-record__decisions"
+            aria-labelledby={`${project.slug}-decisions`}
+          >
+            <h4 id={`${project.slug}-decisions`}>{project.decisionsLabel}</h4>
+            <ul>
+              {project.decisions.map((decision) => (
+                <li key={decision.label}>
+                  <ShotPutMark />
+                  <div>
+                    <strong>{decision.label}</strong>
+                    <p>{decision.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section
+            className="project-record__evidence"
+            aria-labelledby={`${project.slug}-evidence`}
+          >
+            <h4 id={`${project.slug}-evidence`}>{project.evidenceLabel}</h4>
+            <ul>
+              {project.evidence.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
 
         <footer className="project-record__links">
           <a
@@ -250,7 +350,9 @@ function ProjectRecord({
               →
             </span>
           </a>
-          {project.links.map((link) => (
+          {project.links
+            .filter((link) => readingMode === "dossier" || link.kind === "primary")
+            .map((link) => (
             <ExternalLink
               key={link.href}
               href={link.href}
@@ -263,7 +365,7 @@ function ProjectRecord({
               {link.label}
             </ExternalLink>
           ))}
-          {project.privateCode ? (
+          {project.privateCode && readingMode === "dossier" ? (
             <span className="project-record__private">{project.privateCode}</span>
           ) : null}
         </footer>
@@ -275,9 +377,83 @@ function ProjectRecord({
 function PortfolioHome({ locale }: { locale: Locale }) {
   const copy = content[locale];
   const cvFiles = CV_FILES[locale];
+  const [readingMode, setReadingMode] = useState<ReadingMode>("summary");
+  const [readingAnnouncement, setReadingAnnouncement] = useState("");
+
+  useEffect(() => {
+    try {
+      const savedMode = window.sessionStorage.getItem(READING_MODE_STORAGE_KEY);
+      if (savedMode === "summary" || savedMode === "dossier") {
+        setReadingMode(savedMode);
+      }
+    } catch {
+      // The default summary remains available when storage is blocked.
+    }
+  }, []);
+
+  const changeReadingMode = (nextMode: ReadingMode) => {
+    if (nextMode === readingMode) return;
+
+    const headerHeight =
+      document.querySelector<HTMLElement>(".home-site-header")?.offsetHeight ?? 0;
+    const probeY = Math.min(window.innerHeight - 1, headerHeight + 32);
+    const anchor = document
+      .elementFromPoint(window.innerWidth / 2, probeY)
+      ?.closest<HTMLElement>("[data-reading-anchor]");
+    const anchorTop = anchor?.getBoundingClientRect().top;
+
+    const restoreReadingPosition = () => {
+      if (!anchor || anchorTop === undefined) return;
+
+      const displacement = anchor.getBoundingClientRect().top - anchorTop;
+      if (Math.abs(displacement) <= 0.5) return;
+
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollBy(0, displacement);
+      root.style.scrollBehavior = previousScrollBehavior;
+    };
+
+    const update = () => {
+      flushSync(() => {
+        setReadingMode(nextMode);
+        setReadingAnnouncement(
+          nextMode === "summary"
+            ? copy.reading.summaryStatus
+            : copy.reading.dossierStatus,
+        );
+      });
+
+      try {
+        window.sessionStorage.setItem(READING_MODE_STORAGE_KEY, nextMode);
+      } catch {
+        // Reading mode still works for the current page when storage is blocked.
+      }
+
+      restoreReadingPosition();
+    };
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const transitionDocument = document as DocumentWithViewTransition;
+
+    if (!reduceMotion && transitionDocument.startViewTransition) {
+      document.documentElement.classList.add("reading-mode-transition");
+      const transition = transitionDocument.startViewTransition(update);
+      const finishTransition = () => {
+        document.documentElement.classList.remove("reading-mode-transition");
+        window.requestAnimationFrame(restoreReadingPosition);
+      };
+      void transition.finished.then(finishTransition, finishTransition);
+      return;
+    }
+
+    update();
+    window.requestAnimationFrame(restoreReadingPosition);
+  };
 
   return (
-    <>
+    <div className="portfolio-home" data-reading-mode={readingMode}>
       <a className="skip-link" href="#conteudo">
         {copy.skip}
       </a>
@@ -317,6 +493,16 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               ))}
             </ul>
           </nav>
+
+          <ReadingModeControl
+            id="header"
+            className="reading-mode--header"
+            mode={readingMode}
+            label={copy.reading.label}
+            summaryLabel={copy.reading.summary}
+            dossierLabel={copy.reading.dossier}
+            onChange={changeReadingMode}
+          />
 
           <nav className="language-switch" aria-label={copy.language.label}>
             <a
@@ -369,8 +555,29 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         </div>
       </header>
 
+      <div className="reading-mode-mobile-shell">
+        <ReadingModeControl
+          id="hero"
+          className="reading-mode--hero"
+          mode={readingMode}
+          label={copy.reading.label}
+          summaryLabel={copy.reading.summary}
+          dossierLabel={copy.reading.dossier}
+          onChange={changeReadingMode}
+        />
+      </div>
+
+      <p className="reading-mode__announcement" aria-live="polite" role="status">
+        {readingAnnouncement}
+      </p>
+
       <main id="conteudo" tabIndex={-1}>
-        <section className="cover-sheet" id="inicio" aria-labelledby="hero-title">
+        <section
+          className="cover-sheet"
+          id="inicio"
+          aria-labelledby="hero-title"
+          data-reading-anchor
+        >
           <div className="cover-sheet__grid">
             <div className="cover-sheet__intro">
               <p className="status-line">
@@ -383,12 +590,20 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 <span className="cover-sheet__copy--mobile">{copy.hero.mobileHeading}</span>
               </h1>
               <p className="cover-sheet__summary">
-                <span className="cover-sheet__copy--desktop">{copy.hero.summary}</span>
-                <span className="cover-sheet__copy--mobile">{copy.hero.mobileSummary}</span>
+                {readingMode === "summary" ? copy.hero.mobileSummary : copy.hero.summary}
               </p>
 
               <div className="cover-sheet__actions">
-                <a className="action action--primary" href={cvFiles.backend} download>
+                <a className="action action--primary action--work" href="#trabalho">
+                  <span>{copy.hero.seeWork}</span>
+                  <span
+                    className="action__direction link-direction link-direction--down-right"
+                    aria-hidden="true"
+                  >
+                    ↘
+                  </span>
+                </a>
+                <a className="action action--secondary" href={cvFiles.backend} download>
                   <span>{copy.hero.cvBackend}</span>
                   <span className="link-direction link-direction--download" aria-hidden="true">
                     ↓
@@ -400,15 +615,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                   download
                 >
                   {copy.hero.cvFullStack}
-                </a>
-                <a className="action action--text action--work" href="#trabalho">
-                  <span>{copy.hero.seeWork}</span>
-                  <span
-                    className="action__direction link-direction link-direction--down-right"
-                    aria-hidden="true"
-                  >
-                    ↘
-                  </span>
                 </a>
               </div>
             </div>
@@ -461,11 +667,11 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 <span className="measurement-note__diameter" aria-hidden="true">
                   Ø 2,135
                 </span>
-                <p>{copy.hero.measurementNote}</p>
+                <p hidden={readingMode === "summary"}>{copy.hero.measurementNote}</p>
               </div>
             </aside>
 
-            <div className="cover-sheet__contact">
+            <div className="cover-sheet__contact" hidden={readingMode === "summary"}>
               <p>{copy.hero.emailLabel}</p>
               <EmailCopy
                 copyLabel={copy.hero.copyEmail}
@@ -476,16 +682,27 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section className="work-register" id="trabalho" aria-labelledby="work-title">
+        <section
+          className="work-register"
+          id="trabalho"
+          aria-labelledby="work-title"
+          data-reading-anchor
+        >
           <header className="section-heading section-heading--wide">
             <p className="section-kicker">{copy.work.kicker}</p>
             <div>
               <h2 id="work-title">{copy.work.heading}</h2>
-              <p>{copy.work.intro}</p>
+              <p>
+                {readingMode === "summary" ? copy.work.summaryIntro : copy.work.intro}
+              </p>
             </div>
           </header>
 
-          <nav className="project-index" aria-labelledby="project-index-title">
+          <nav
+            className="project-index"
+            aria-labelledby="project-index-title"
+            hidden={readingMode === "summary"}
+          >
             <h3 id="project-index-title">{copy.work.indexLabel}</h3>
             <ul>
               {copy.work.projects.map((project) => (
@@ -514,12 +731,20 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 project={project}
                 index={index}
                 locale={locale}
+                readingMode={readingMode}
+                decisionLabel={copy.reading.decisionLabel}
+                evidenceLabel={copy.reading.evidenceLabel}
               />
             ))}
           </div>
         </section>
 
-        <section className="research-sheet" id="pesquisa" aria-labelledby="research-title">
+        <section
+          className="research-sheet"
+          id="pesquisa"
+          aria-labelledby="research-title"
+          data-reading-anchor
+        >
           <div className="research-sheet__header">
             <div>
               <p className="section-kicker">{copy.research.kicker}</p>
@@ -532,7 +757,10 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <div className="research-sheet__copy">
               <p className="research-sheet__lead">{copy.research.summary}</p>
 
-              <section aria-labelledby="research-current">
+              <section
+                aria-labelledby="research-current"
+                hidden={readingMode === "summary"}
+              >
                 <h3 id="research-current">{copy.research.currentLabel}</h3>
                 <ul>
                   {copy.research.current.map((item) => (
@@ -541,12 +769,18 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 </ul>
               </section>
 
-              <section aria-labelledby="research-next">
+              <section
+                aria-labelledby="research-next"
+                hidden={readingMode === "summary"}
+              >
                 <h3 id="research-next">{copy.research.nextLabel}</h3>
                 <p>{copy.research.next}</p>
               </section>
 
-              <span className="private-note private-note--dark">
+              <span
+                className="private-note private-note--dark"
+                hidden={readingMode === "summary"}
+              >
                 {copy.research.repository}
               </span>
               <a
@@ -571,12 +805,19 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 loading="lazy"
                 decoding="async"
               />
-              <figcaption>{copy.research.evidence}</figcaption>
+              {readingMode === "dossier" ? (
+                <figcaption>{copy.research.evidence}</figcaption>
+              ) : null}
             </figure>
           </div>
         </section>
 
-        <section className="profile-sheet" id="perfil" aria-labelledby="profile-title">
+        <section
+          className="profile-sheet"
+          id="perfil"
+          aria-labelledby="profile-title"
+          data-reading-anchor
+        >
           <header className="section-heading">
             <p className="section-kicker">{copy.profile.kicker}</p>
             <div>
@@ -600,7 +841,11 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               </dl>
             </section>
 
-            <section className="working-method" aria-labelledby="method-title">
+            <section
+              className="working-method"
+              aria-labelledby="method-title"
+              hidden={readingMode === "summary"}
+            >
               <h3 id="method-title">{copy.profile.methodLabel}</h3>
               <ol>
                 {copy.profile.method.map((item) => (
@@ -616,7 +861,11 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             </section>
           </div>
 
-          <section className="other-work" aria-labelledby="other-work-title">
+          <section
+            className="other-work"
+            aria-labelledby="other-work-title"
+            hidden={readingMode === "summary"}
+          >
             <div className="other-work__heading">
               <h3 id="other-work-title">{copy.profile.otherLabel}</h3>
             </div>
@@ -642,10 +891,36 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               ))}
             </div>
           </section>
+
+          <aside className="reading-mode-finish">
+            <div>
+              <ShotPutMark />
+              <p>
+                {readingMode === "summary"
+                  ? copy.reading.summaryEnd
+                  : copy.reading.dossierEnd}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                changeReadingMode(readingMode === "summary" ? "dossier" : "summary")
+              }
+            >
+              <span>
+                {readingMode === "summary"
+                  ? copy.reading.openDossier
+                  : copy.reading.backToSummary}
+              </span>
+              <span className="link-direction link-direction--forward" aria-hidden="true">
+                →
+              </span>
+            </button>
+          </aside>
         </section>
       </main>
 
-      <footer className="contact-sheet" id="contato">
+      <footer className="contact-sheet" id="contato" data-reading-anchor>
         <div className="contact-sheet__top">
           <p className="section-kicker">{copy.contact.kicker}</p>
           <h2>{copy.contact.heading}</h2>
@@ -690,7 +965,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           </p>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
@@ -710,7 +985,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         sources: "Produto e código",
         related: "Outros estudos",
         contact: "Contato",
-        contactHeading: "Posso começar agora.",
+        contactHeading: "Contato direto.",
         nav: "Navegação do projeto",
         sectionMarks: ["CÍRCULO", "SETOR", "MARCA", "SÚMULA"],
       }
@@ -724,7 +999,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         sources: "Product and code",
         related: "Other case studies",
         contact: "Contact",
-        contactHeading: "I can start now.",
+        contactHeading: "Direct contact.",
         nav: "Project navigation",
         sectionMarks: ["RING", "SECTOR", "MARK", "SHEET"],
       };

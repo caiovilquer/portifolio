@@ -51,6 +51,19 @@ type SiteContent = {
     portuguese: string;
     english: string;
   };
+  reading: {
+    label: string;
+    summary: string;
+    dossier: string;
+    summaryStatus: string;
+    dossierStatus: string;
+    decisionLabel: string;
+    evidenceLabel: string;
+    summaryEnd: string;
+    dossierEnd: string;
+    openDossier: string;
+    backToSummary: string;
+  };
   hero: {
     availability: string;
     heading: string;
@@ -79,6 +92,7 @@ type SiteContent = {
     kicker: string;
     heading: string;
     intro: string;
+    summaryIntro: string;
     indexLabel: string;
     projects: ProjectContent[];
   };
@@ -165,6 +179,19 @@ export const content: Record<Locale, SiteContent> = {
       portuguese: "PT",
       english: "EN",
     },
+    reading: {
+      label: "Leitura",
+      summary: "Resumo",
+      dossier: "Dossiê técnico",
+      summaryStatus: "Resumo exibido.",
+      dossierStatus: "Dossiê técnico exibido.",
+      decisionLabel: "Decisão-chave",
+      evidenceLabel: "Evidência",
+      summaryEnd: "Fim do resumo. As decisões, testes e limites de cada projeto estão no dossiê técnico.",
+      dossierEnd: "Fim do dossiê técnico.",
+      openDossier: "Abrir dossiê técnico",
+      backToSummary: "Voltar ao resumo",
+    },
     hero: {
       availability: "Poliatletas · RotinaPet · Viazio",
       heading:
@@ -204,6 +231,8 @@ export const content: Record<Locale, SiteContent> = {
       heading: "Trabalhos selecionados",
       intro:
         "Nenhum dos três é um cadastro simples. O Poliatletas compara marcas de modalidades que medem coisas diferentes: tempo, distância e pontos. O RotinaPet impede que uma família veja os dados da outra, inclusive nas respostas da IA. O Viazio mantém o ranking de pé quando uma fonte externa cai. Escrevi backend, frontend e banco dos três sozinho, e cada uma dessas regras tem teste que a segura.",
+      summaryIntro:
+        "Poliatletas normaliza resultados de tempo, distância e pontos. RotinaPet filtra família e pet antes de qualquer busca da IA. Viazio recalcula o ranking quando uma fonte externa falha.",
       indexLabel: "Registro dos casos",
       projects: [
         {
@@ -467,6 +496,19 @@ export const content: Record<Locale, SiteContent> = {
       portuguese: "PT",
       english: "EN",
     },
+    reading: {
+      label: "Reading",
+      summary: "Summary",
+      dossier: "Technical dossier",
+      summaryStatus: "Summary displayed.",
+      dossierStatus: "Technical dossier displayed.",
+      decisionLabel: "Key decision",
+      evidenceLabel: "Evidence",
+      summaryEnd: "End of summary. The technical dossier contains each project's decisions, tests, and limits.",
+      dossierEnd: "End of technical dossier.",
+      openDossier: "Open technical dossier",
+      backToSummary: "Back to summary",
+    },
     hero: {
       availability: "Poliatletas · RotinaPet · Viazio",
       heading:
@@ -506,6 +548,8 @@ export const content: Record<Locale, SiteContent> = {
       heading: "Selected work",
       intro:
         "None of the three is a simple CRUD app. Poliatletas compares results from events that measure different things: time, distance, and points. RotinaPet keeps one family's data out of another's, including in the AI's answers. Viazio keeps its ranking standing when an upstream source goes down. I wrote the backend, frontend, and database for all three on my own, and every one of those rules is held down by a test.",
+      summaryIntro:
+        "Poliatletas normalizes results measured in time, distance, and points. RotinaPet filters family and pet before any AI retrieval. Viazio recalculates its ranking when an upstream source fails.",
       indexLabel: "Case register",
       projects: [
         {

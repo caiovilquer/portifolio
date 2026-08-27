@@ -1,5 +1,5 @@
 import React from "react";
-import { hydrateRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { resolveRoute } from "./routes";
@@ -28,7 +28,7 @@ function enableSmoothScrollAfterReveal() {
     (event) => {
       const transition = (event as PageRevealWithTransition).viewTransition;
       if (transition) {
-        void transition.finished.finally(enable);
+        void transition.finished.then(enable, enable);
         return;
       }
 
@@ -47,9 +47,15 @@ if (window.location.pathname === "/" && legacyLanguage === "en") {
 
 const route = resolveRoute(window.location.pathname);
 
-hydrateRoot(
-  document.getElementById("root") as HTMLElement,
+const rootElement = document.getElementById("root") as HTMLElement;
+const application = (
   <React.StrictMode>
     <App route={route} />
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+if (rootElement.hasChildNodes()) {
+  hydrateRoot(rootElement, application);
+} else {
+  createRoot(rootElement).render(application);
+}
