@@ -118,6 +118,11 @@ html.reading-mode-transition::view-transition-new(root) {
   animation-duration: 120ms;
 }
 
+html.reading-mode-transition,
+html.reading-mode-transition body {
+  overflow-anchor: none;
+}
+
 html.reading-mode-transition::view-transition-group(poliatletas-media),
 html.reading-mode-transition::view-transition-group(rotinapet-media),
 html.reading-mode-transition::view-transition-group(viazio-media),
@@ -437,15 +442,21 @@ main:focus {
   position: relative;
   z-index: 1;
   min-height: var(--alvo-toque);
+  margin: 0;
   padding-inline: var(--espaco-3);
   display: grid;
   grid-template-columns: 0.7rem max-content;
   align-items: center;
   gap: var(--espaco-2);
+  border: 0;
   border-inline-end: 1px solid var(--tinta-carbono);
+  appearance: none;
   background: var(--papel-elevado);
+  color: inherit;
   cursor: pointer;
+  font: inherit;
   font-size: var(--tipo-metadado);
+  text-align: start;
   touch-action: manipulation;
   transition:
     background-color var(--duracao-micro) var(--curva-interface),
@@ -468,17 +479,6 @@ main:focus {
   transition: transform var(--duracao-interface) var(--curva-entrada);
 }
 
-.reading-mode__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .reading-mode__shot {
   width: 0.7rem;
   aspect-ratio: 1;
@@ -492,21 +492,21 @@ main:focus {
     transform var(--duracao-interface) var(--curva-entrada);
 }
 
-.reading-mode__input:checked + .reading-mode__shot {
+.reading-mode__option[aria-checked="true"] .reading-mode__shot {
   background: var(--tinta-carbono);
   box-shadow: 0 0 0 2px var(--papel-elevado), 0 0 0 3px var(--lapis-vermelho);
   transform: scale(1);
 }
 
-.reading-mode__option:has(.reading-mode__input:checked) {
+.reading-mode__option[aria-checked="true"] {
   font-weight: 600;
 }
 
-.reading-mode__option:has(.reading-mode__input:checked)::after {
+.reading-mode__option[aria-checked="true"]::after {
   transform: scaleX(1);
 }
 
-.reading-mode__option:has(.reading-mode__input:focus-visible) {
+.reading-mode__option:focus-visible {
   outline: 3px solid var(--foco-teclado);
   outline-offset: 3px;
 }
@@ -2242,7 +2242,7 @@ main:focus {
   }
 
   .action--secondary:hover,
-  .reading-mode__option:hover:not(:has(.reading-mode__input:checked)) {
+  .reading-mode__option:hover:not([aria-checked="true"]) {
     background: var(--papel-marcado);
   }
 
@@ -2397,49 +2397,49 @@ main:focus {
   }
 }
 
-/* Varredura de regua na troca de modo de leitura: os blocos revelados sao
-   descobertos de cima para baixo por um fio vermelho que desce sobre eles.
-   So roda durante a troca (classe posta pelo App) e nunca no carregamento. */
-.project-record__full-analysis,
-.project-record__quick-proof,
-.project-index {
+/* A regua marca apenas o conteudo que mudou de leitura. O estado final e o
+   padrao; o atributo temporario existe somente quando o JavaScript esta ativo. */
+[data-reading-reveal] {
   position: relative;
 }
 
-[data-reveal="on"] {
-  animation: ruler-reveal 520ms linear both;
+[data-reading-reveal][data-reveal="on"] {
+  animation: ruler-reveal var(--duracao-tela) var(--curva-entrada) both;
 }
 
-[data-reveal="on"]::after {
+[data-reading-reveal][data-reveal="on"]::after {
   content: "";
   position: absolute;
-  inset-inline: 0;
-  block-size: 3px;
-  background: var(--lapis-vermelho);
-  transform-origin: left center;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    transparent calc(100% - 3px),
+    var(--lapis-vermelho) calc(100% - 3px)
+  );
+  transform: scaleY(0);
+  transform-origin: center top;
   pointer-events: none;
-  animation: ruler-edge 520ms linear both;
+  animation: ruler-edge var(--duracao-tela) linear both;
 }
 
 @keyframes ruler-reveal {
   from {
-    clip-path: inset(0 0 100% 0);
+    opacity: 0.24;
   }
 
   to {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
 @keyframes ruler-edge {
   from {
-    inset-block-start: 0%;
-    transform: scaleX(0.06);
+    transform: scaleY(0);
     opacity: 0;
   }
 
   10% {
-    transform: scaleX(1);
     opacity: 1;
   }
 
@@ -2448,8 +2448,7 @@ main:focus {
   }
 
   to {
-    inset-block-start: 100%;
-    transform: scaleX(1);
+    transform: scaleY(1);
     opacity: 0;
   }
 }

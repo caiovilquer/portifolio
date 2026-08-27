@@ -33,10 +33,8 @@ type DocumentWithViewTransition = Document & {
 };
 
 const READING_MODE_STORAGE_KEY = "portfolio-reading-mode";
-// Duracao de ruler-reveal, com folga para limpar o atributo depois do fim.
-const READING_REVEAL_MS = 620;
-const READING_REVEAL_SELECTOR =
-  ".project-index, .project-record__full-analysis, .project-record__quick-proof";
+const READING_REVEAL_CLEANUP_MS = 520;
+const READING_REVEAL_SELECTOR = "[data-reading-reveal]";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   if (navigator.clipboard && window.isSecureContext) {
@@ -196,41 +194,54 @@ function ReadingModeControl({
   ];
 
   return (
-    <fieldset className={`reading-mode ${className}`.trim()}>
-      <legend>{label}</legend>
+    <fieldset
+      className={`reading-mode ${className}`.trim()}
+      role="radiogroup"
+      aria-labelledby={`${id}-reading-label`}
+    >
+      <legend id={`${id}-reading-label`}>{label}</legend>
       <div className="reading-mode__rail">
         {options.map((option) => (
-          <label key={option.value} className="reading-mode__option">
-            <input
-              className="reading-mode__input"
-              type="radio"
-              name={`reading-mode-${id}`}
-              value={option.value}
-              checked={mode === option.value}
-              onChange={() => onChange(option.value)}
-              onKeyDown={(event) => {
-                const nextMode =
-                  event.key === "ArrowRight" || event.key === "ArrowDown"
-                    ? "dossier"
-                    : event.key === "ArrowLeft" || event.key === "ArrowUp"
-                      ? "summary"
-                      : null;
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={mode === option.value}
+            tabIndex={mode === option.value ? 0 : -1}
+            className="reading-mode__option"
+            data-reading-mode-value={option.value}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              event.currentTarget.focus({ preventScroll: true });
+            }}
+            onClick={() => onChange(option.value)}
+            onKeyDown={(event) => {
+              const nextMode =
+                event.key === "ArrowRight" || event.key === "ArrowDown" || event.key === "End"
+                  ? "dossier"
+                  : event.key === "ArrowLeft" ||
+                      event.key === "ArrowUp" ||
+                      event.key === "Home"
+                    ? "summary"
+                    : null;
 
-                if (!nextMode) return;
+              if (!nextMode) return;
 
-                event.preventDefault();
-                const fieldset = event.currentTarget.closest("fieldset");
-                onChange(nextMode);
-                window.requestAnimationFrame(() => {
-                  fieldset
-                    ?.querySelector<HTMLInputElement>(`input[value="${nextMode}"]`)
-                    ?.focus();
-                });
-              }}
-            />
+              event.preventDefault();
+              const fieldset = event.currentTarget.closest("fieldset");
+              onChange(nextMode);
+              window.requestAnimationFrame(() => {
+                fieldset
+                  ?.querySelector<HTMLButtonElement>(
+                    `button[data-reading-mode-value="${nextMode}"]`,
+                  )
+                  ?.focus({ preventScroll: true });
+              });
+            }}
+          >
             <span className="reading-mode__shot" aria-hidden="true" />
             <span>{option.label}</span>
-          </label>
+          </button>
         ))}
       </div>
     </fieldset>
@@ -259,6 +270,7 @@ function ProjectRecord({
       id={project.slug}
       className={`project-record project-record--${project.slug} project-record--${index % 2 === 0 ? "forward" : "reverse"}`}
       aria-labelledby={`${project.slug}-title`}
+      data-reading-anchor
     >
       <header className="project-record__header">
         <div className="project-record__register" aria-hidden="true">
@@ -270,7 +282,11 @@ function ProjectRecord({
           <p className="project-record__role">{project.descriptor}</p>
         </div>
         <p className="project-record__plain">{project.plain}</p>
-        <p className="project-record__summary" hidden={readingMode === "summary"}>
+        <p
+          className="project-record__summary"
+          data-reading-reveal
+          hidden={readingMode === "summary"}
+        >
           {project.summary}
         </p>
       </header>
@@ -294,6 +310,7 @@ function ProjectRecord({
         <section
           className="project-record__quick-proof"
           aria-labelledby={`${project.slug}-quick-decision`}
+          data-reading-reveal
           hidden={readingMode === "dossier"}
         >
           <div className="project-record__quick-decision">
@@ -306,7 +323,11 @@ function ProjectRecord({
           </div>
         </section>
 
-        <div className="project-record__full-analysis" hidden={readingMode === "summary"}>
+        <div
+          className="project-record__full-analysis"
+          data-reading-reveal
+          hidden={readingMode === "summary"}
+        >
           <section className="project-record__problem" aria-labelledby={`${project.slug}-problem`}>
             <h4 id={`${project.slug}-problem`}>{project.problemLabel}</h4>
             <p>{project.problem}</p>
@@ -384,11 +405,14 @@ function PortfolioHome({ locale }: { locale: Locale }) {
   const [readingAnnouncement, setReadingAnnouncement] = useState("");
   const revealObserver = useRef<IntersectionObserver | null>(null);
   const revealTimers = useRef<number[]>([]);
+  const readingChangeSequence = useRef(0);
 
   useEffect(
     () => () => {
+      readingChangeSequence.current += 1;
       revealObserver.current?.disconnect();
       revealTimers.current.forEach((id) => window.clearTimeout(id));
+      document.documentElement.classList.remove("reading-mode-transition");
     },
     [],
   );
@@ -406,6 +430,16 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
   const changeReadingMode = (nextMode: ReadingMode) => {
     if (nextMode === readingMode) return;
+
+    const changeSequence = ++readingChangeSequence.current;
+
+    revealObserver.current?.disconnect();
+    revealObserver.current = null;
+    revealTimers.current.forEach((id) => window.clearTimeout(id));
+    revealTimers.current = [];
+    document
+      .querySelectorAll<HTMLElement>('[data-reveal="on"]')
+      .forEach((target) => target.removeAttribute("data-reveal"));
 
     const headerHeight =
       document.querySelector<HTMLElement>(".home-site-header")?.offsetHeight ?? 0;
@@ -428,6 +462,68 @@ function PortfolioHome({ locale }: { locale: Locale }) {
       root.style.scrollBehavior = previousScrollBehavior;
     };
 
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const startReveal = () => {
+      if (reduceMotion || changeSequence !== readingChangeSequence.current) return;
+
+      const sweep = (target: HTMLElement) => {
+        target.setAttribute("data-reveal", "on");
+        revealTimers.current.push(
+          window.setTimeout(
+            () => target.removeAttribute("data-reveal"),
+            READING_REVEAL_CLEANUP_MS,
+          ),
+        );
+      };
+
+      const visibleTargets: HTMLElement[] = [];
+      const deferredTargets: HTMLElement[] = [];
+
+      for (const target of document.querySelectorAll<HTMLElement>(READING_REVEAL_SELECTOR)) {
+        if (target.hidden || target.getClientRects().length === 0) continue;
+
+        const box = target.getBoundingClientRect();
+        if (box.top < window.innerHeight && box.bottom > 0) {
+          visibleTargets.push(target);
+        } else {
+          deferredTargets.push(target);
+        }
+      }
+
+      visibleTargets.forEach(sweep);
+      if (deferredTargets.length === 0 || !("IntersectionObserver" in window)) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            observer.unobserve(entry.target);
+            sweep(entry.target as HTMLElement);
+          }
+        },
+        { rootMargin: "0px 0px -12% 0px" },
+      );
+
+      deferredTargets.forEach((target) => observer.observe(target));
+      revealObserver.current = observer;
+    };
+
+    const finishModeChange = () => {
+      if (changeSequence !== readingChangeSequence.current) return;
+
+      window.requestAnimationFrame(() => {
+        if (changeSequence !== readingChangeSequence.current) return;
+        restoreReadingPosition();
+        document.documentElement.classList.remove("reading-mode-transition");
+        window.requestAnimationFrame(() => {
+          if (changeSequence !== readingChangeSequence.current) return;
+          restoreReadingPosition();
+          startReveal();
+        });
+      });
+    };
+
     const update = () => {
       flushSync(() => {
         setReadingMode(nextMode);
@@ -443,71 +539,19 @@ function PortfolioHome({ locale }: { locale: Locale }) {
       } catch {
         // Reading mode still works for the current page when storage is blocked.
       }
-
-      startReveal();
-      restoreReadingPosition();
     };
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Os blocos revelados ficam muito abaixo do controle: varrer todos no clique
-    // rodaria a animacao fora da tela. Cada bloco e varrido quando esta em vista,
-    // ou na primeira vez que entrar nela depois da troca.
-    const startReveal = () => {
-      if (reduceMotion) return;
-
-      revealObserver.current?.disconnect();
-      revealTimers.current.forEach((id) => window.clearTimeout(id));
-      revealTimers.current = [];
-
-      const sweep = (target: HTMLElement) => {
-        target.removeAttribute("data-reveal");
-        void target.offsetWidth;
-        target.setAttribute("data-reveal", "on");
-        revealTimers.current.push(
-          window.setTimeout(() => target.removeAttribute("data-reveal"), READING_REVEAL_MS),
-        );
-      };
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            observer.unobserve(entry.target);
-            sweep(entry.target as HTMLElement);
-          }
-        },
-        { rootMargin: "0px 0px -12% 0px" },
-      );
-
-      for (const target of document.querySelectorAll<HTMLElement>(READING_REVEAL_SELECTOR)) {
-        if (target.offsetParent === null) continue;
-
-        const box = target.getBoundingClientRect();
-        if (box.top < window.innerHeight && box.bottom > 0) {
-          sweep(target);
-        } else {
-          observer.observe(target);
-        }
-      }
-
-      revealObserver.current = observer;
-    };
     const transitionDocument = document as DocumentWithViewTransition;
+    document.documentElement.classList.add("reading-mode-transition");
 
     if (!reduceMotion && transitionDocument.startViewTransition) {
-      document.documentElement.classList.add("reading-mode-transition");
       const transition = transitionDocument.startViewTransition(update);
-      const finishTransition = () => {
-        document.documentElement.classList.remove("reading-mode-transition");
-        window.requestAnimationFrame(restoreReadingPosition);
-      };
-      void transition.finished.then(finishTransition, finishTransition);
+      void transition.finished.then(finishModeChange, finishModeChange);
       return;
     }
 
     update();
-    window.requestAnimationFrame(restoreReadingPosition);
+    finishModeChange();
   };
 
   return (
@@ -647,7 +691,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 <span className="cover-sheet__copy--desktop">{copy.hero.heading}</span>
                 <span className="cover-sheet__copy--mobile">{copy.hero.mobileHeading}</span>
               </h1>
-              <p className="cover-sheet__summary">
+              <p className="cover-sheet__summary" data-reading-reveal>
                 {readingMode === "summary" ? copy.hero.mobileSummary : copy.hero.summary}
               </p>
 
@@ -730,7 +774,11 @@ function PortfolioHome({ locale }: { locale: Locale }) {
               </div>
             </aside>
 
-            <div className="cover-sheet__contact" hidden={readingMode === "summary"}>
+            <div
+              className="cover-sheet__contact"
+              data-reading-reveal
+              hidden={readingMode === "summary"}
+            >
               <p>{copy.hero.emailLabel}</p>
               <EmailCopy
                 copyLabel={copy.hero.copyEmail}
@@ -751,7 +799,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <p className="section-kicker">{copy.work.kicker}</p>
             <div>
               <h2 id="work-title">{copy.work.heading}</h2>
-              <p>
+              <p data-reading-reveal>
                 {readingMode === "summary" ? copy.work.summaryIntro : copy.work.intro}
               </p>
             </div>
@@ -760,6 +808,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <nav
             className="project-index"
             aria-labelledby="project-index-title"
+            data-reading-reveal
             hidden={readingMode === "summary"}
           >
             <h3 id="project-index-title">{copy.work.indexLabel}</h3>
@@ -812,12 +861,13 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <p className="research-sheet__status">{copy.research.status}</p>
           </div>
 
-          <div className="research-sheet__body">
+          <div className="research-sheet__body" data-reading-anchor>
             <div className="research-sheet__copy">
               <p className="research-sheet__lead">{copy.research.summary}</p>
 
               <section
                 aria-labelledby="research-current"
+                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 <h3 id="research-current">{copy.research.currentLabel}</h3>
@@ -830,6 +880,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
               <section
                 aria-labelledby="research-next"
+                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 <h3 id="research-next">{copy.research.nextLabel}</h3>
@@ -838,6 +889,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
               <span
                 className="private-note private-note--dark"
+                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 {copy.research.repository}
@@ -865,7 +917,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 decoding="async"
               />
               {readingMode === "dossier" ? (
-                <figcaption>{copy.research.evidence}</figcaption>
+                <figcaption data-reading-reveal>{copy.research.evidence}</figcaption>
               ) : null}
             </figure>
           </div>
@@ -885,7 +937,11 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           </header>
 
           <div className="profile-sheet__body">
-            <section className="experience-map" aria-labelledby="experience-title">
+            <section
+              className="experience-map"
+              aria-labelledby="experience-title"
+              data-reading-anchor
+            >
               <h3 id="experience-title">{copy.profile.stackLabel}</h3>
               <dl>
                 {copy.profile.stack.map((item) => (
@@ -903,6 +959,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <section
               className="working-method"
               aria-labelledby="method-title"
+              data-reading-reveal
               hidden={readingMode === "summary"}
             >
               <h3 id="method-title">{copy.profile.methodLabel}</h3>
@@ -923,6 +980,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <section
             className="other-work"
             aria-labelledby="other-work-title"
+            data-reading-reveal
             hidden={readingMode === "summary"}
           >
             <div className="other-work__heading">
@@ -951,10 +1009,10 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             </div>
           </section>
 
-          <aside className="reading-mode-finish">
+          <aside className="reading-mode-finish" data-reading-anchor>
             <div>
               <ShotPutMark />
-              <p>
+              <p data-reading-reveal>
                 {readingMode === "summary"
                   ? copy.reading.summaryEnd
                   : copy.reading.dossierEnd}
