@@ -25,4 +25,4 @@ LinkedIn: https://www.linkedin.com/in/caio-vilquer/
 - [Full-stack CV, Portuguese](https://vilquer.dev/cv/caio-vilquer-full-stack.pdf)
 - [Full-stack CV, English](https://vilquer.dev/cv/caio-vilquer-full-stack-en.pdf)
 
-Last updated: 2026-08-27
+Last updated: 2026-08-26
