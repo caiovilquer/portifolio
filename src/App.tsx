@@ -163,6 +163,105 @@ function PageMeasure() {
   );
 }
 
+function ReturnToCircle({ label, shortLabel }: { label: string; shortLabel: string }) {
+  const [visible, setVisible] = useState(false);
+  const [launching, setLaunching] = useState(false);
+  const launchingRef = useRef(false);
+  const launchTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (visible) return;
+
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && active.classList.contains("return-circle")) {
+      active.blur();
+    }
+  }, [visible]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const syncVisibility = () => {
+      frame = 0;
+      const travel = window.scrollY;
+      const pageRuns =
+        document.documentElement.scrollHeight > window.innerHeight + 96;
+
+      setVisible((current) => {
+        if (!pageRuns) return false;
+        if (launchingRef.current && travel > 8) return true;
+        if (current) return travel > 140;
+        return travel > 380;
+      });
+    };
+
+    const onScrollOrResize = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(syncVisibility);
+    };
+
+    syncVisibility();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      if (launchTimer.current) window.clearTimeout(launchTimer.current);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, []);
+
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById("conteudo")?.focus({ preventScroll: true });
+
+    if (!reduceMotion) {
+      launchingRef.current = true;
+      setLaunching(true);
+      if (launchTimer.current) window.clearTimeout(launchTimer.current);
+      launchTimer.current = window.setTimeout(() => {
+        launchingRef.current = false;
+        setLaunching(false);
+      }, 560);
+    }
+
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  const exposed = visible || launching;
+
+  return (
+    <a
+      className="return-circle"
+      href="#topo"
+      aria-label={label}
+      data-visible={visible ? "true" : "false"}
+      data-launching={launching ? "true" : "false"}
+      tabIndex={exposed ? 0 : -1}
+      aria-hidden={exposed ? undefined : true}
+      onClick={handleClick}
+    >
+      <span className="return-circle__instrument" aria-hidden="true">
+        <svg className="return-circle__field" viewBox="0 0 40 56" focusable="false">
+          <circle className="return-circle__ring" cx="20" cy="36" r="12" />
+          <path className="return-circle__path" d="M20 24 V4" />
+          <path className="return-circle__ticks" d="M20 1 V3.5 M17.5 4.5 H22.5" />
+        </svg>
+        <span className="return-circle__shot-wrap">
+          <span className="return-circle__shot" />
+        </span>
+      </span>
+      <span className="return-circle__copy">
+        <span className="return-circle__word">{shortLabel}</span>
+        <span className="link-direction link-direction--up">↑</span>
+      </span>
+    </a>
+  );
+}
+
 function ReadingModeControl({
   id,
   mode,
@@ -574,7 +673,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
       <PageMeasure />
 
-      <header className="site-header home-site-header">
+      <header className="site-header home-site-header" id="topo">
         <div className="site-header__inner">
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
@@ -1087,6 +1186,8 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           </p>
         </div>
       </footer>
+
+      <ReturnToCircle label={copy.backToTop} shortLabel={copy.backToTopShort} />
     </div>
   );
 }
@@ -1157,7 +1258,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
 
       <PageMeasure />
 
-      <header className="site-header dossier-site-header">
+      <header className="site-header dossier-site-header" id="topo">
         <div className="site-header__inner">
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
@@ -1450,6 +1551,8 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           <p>© {new Date().getFullYear()} · {copy.contact.legal}</p>
         </div>
       </footer>
+
+      <ReturnToCircle label={copy.backToTop} shortLabel={copy.backToTopShort} />
     </>
   );
 }

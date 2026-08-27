@@ -44,6 +44,8 @@ type SiteContent = {
     description: string;
   };
   skip: string;
+  backToTop: string;
+  backToTopShort: string;
   brandLabel: string;
   nav: Array<{ label: string; href: string }>;
   language: {
@@ -167,6 +169,8 @@ export const content: Record<Locale, SiteContent> = {
         "Três sistemas em produção: Poliatletas, RotinaPet e Viazio, escritos do banco à tela em Java, Kotlin e TypeScript. Engenharia de Computação na Poli-USP.",
     },
     skip: "Pular para o conteúdo",
+    backToTop: "Voltar ao topo",
+    backToTopShort: "Topo",
     brandLabel: "Caio Vilquer, início",
     nav: [
       { label: "Trabalho", href: "#trabalho" },
@@ -484,6 +488,8 @@ export const content: Record<Locale, SiteContent> = {
         "Three systems in production: Poliatletas, RotinaPet and Viazio, built from database to screen in Java, Kotlin and TypeScript. Computer Engineering, Poli-USP.",
     },
     skip: "Skip to content",
+    backToTop: "Back to top",
+    backToTopShort: "Top",
     brandLabel: "Caio Vilquer, home",
     nav: [
       { label: "Work", href: "#trabalho" },

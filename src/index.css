@@ -88,6 +88,7 @@
 
   --z-base: 0;
   --z-sticky: 100;
+  --z-overlay: 150;
   --z-salto: 200;
   --alvo-toque: 2.75rem;
 
@@ -296,6 +297,138 @@ main:focus {
 
 .skip-link:focus {
   transform: translateY(0);
+}
+
+.return-circle {
+  position: fixed;
+  inset-block-end: max(1rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem));
+  inset-inline-end: max(1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
+  z-index: var(--z-overlay);
+  min-height: var(--alvo-toque);
+  max-width: calc(100vw - 2rem);
+  padding: 0.35rem 0.7rem 0.35rem 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--tinta-carbono);
+  background: var(--papel-elevado);
+  color: var(--tinta-carbono);
+  text-decoration: none;
+  overflow: visible;
+  user-select: none;
+  touch-action: manipulation;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0.7rem, 0);
+  transition:
+    opacity var(--duracao-interface) var(--curva-entrada),
+    transform var(--duracao-interface) var(--curva-entrada),
+    visibility var(--duracao-interface) var(--curva-entrada),
+    background-color var(--duracao-micro) var(--curva-interface),
+    border-color var(--duracao-micro) var(--curva-interface),
+    color var(--duracao-micro) var(--curva-interface);
+}
+
+.return-circle[data-visible="true"],
+.return-circle[data-launching="true"] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.return-circle[data-launching="true"] {
+  pointer-events: none;
+}
+
+.return-circle:focus-visible {
+  outline: 3px solid var(--foco-teclado);
+  outline-offset: 4px;
+}
+
+.return-circle:active:not([data-launching="true"]) {
+  transform: translate3d(0, 0, 0) scale(0.98);
+}
+
+.return-circle__instrument {
+  position: relative;
+  width: 1.85rem;
+  height: 2.6rem;
+  flex: 0 0 auto;
+  overflow: visible;
+  color: var(--tinta-carbono);
+}
+
+.return-circle__field {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.return-circle__ring,
+.return-circle__path,
+.return-circle__ticks {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.return-circle__path,
+.return-circle__ticks {
+  color: var(--lapis-vermelho);
+  stroke-width: 1.25;
+}
+
+.return-circle__path {
+  stroke-dasharray: 2.5 2.5;
+  opacity: 0.58;
+  transition: opacity var(--duracao-micro) var(--curva-interface);
+}
+
+.return-circle__shot-wrap {
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 64%;
+  width: 0.72rem;
+  height: 0.72rem;
+  margin-inline-start: -0.36rem;
+  margin-block-start: -0.36rem;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
+  transition: transform var(--duracao-micro) var(--curva-entrada);
+}
+
+.return-circle__shot {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 2px solid var(--papel-elevado);
+  border-radius: 50%;
+  outline: 1px solid var(--lapis-vermelho);
+  background: var(--tinta-carbono);
+}
+
+.return-circle__copy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--fonte-dados);
+  font-size: var(--tipo-acao);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.return-circle__copy .link-direction {
+  font-family: var(--fonte-dados);
+  font-size: 0.95em;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 .page-measure {
@@ -2306,6 +2439,10 @@ main:focus {
   .mobile-index__nav a:hover {
     background: var(--papel-marcado);
   }
+
+  .return-circle:hover {
+    background: var(--papel-marcado);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2366,6 +2503,27 @@ main:focus {
   a:focus-visible .link-direction--down-right {
     transform: translate3d(0.18rem, 0.18rem, 0);
   }
+
+  a:focus-visible .link-direction--up {
+    transform: translate3d(0, -0.2rem, 0);
+  }
+
+  .return-circle:focus-visible .return-circle__path {
+    opacity: 1;
+  }
+
+  .return-circle:focus-visible:not([data-launching="true"]) .return-circle__shot-wrap {
+    transform: translate3d(0, 0.16rem, 0);
+  }
+
+  .return-circle[data-launching="true"] .return-circle__shot-wrap {
+    animation: 480ms var(--curva-saida) both return-shot-launch;
+    will-change: transform, opacity;
+  }
+
+  .return-circle[data-launching="true"] .return-circle__path {
+    opacity: 1;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -2395,6 +2553,18 @@ main:focus {
 
   a:hover .link-direction--down-right {
     transform: translate3d(0.18rem, 0.18rem, 0);
+  }
+
+  a:hover .link-direction--up {
+    transform: translate3d(0, -0.2rem, 0);
+  }
+
+  .return-circle:hover:not([data-launching="true"]) .return-circle__shot-wrap {
+    transform: translate3d(0, 0.16rem, 0);
+  }
+
+  .return-circle:hover:not([data-launching="true"]) .return-circle__path {
+    opacity: 1;
   }
 }
 
@@ -2518,6 +2688,23 @@ main:focus {
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes return-shot-launch {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0.18rem, 0) scale(1) rotate(0deg);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translate3d(0.04rem, 0.28rem, 0) scale(0.92) rotate(-18deg);
+  }
+
+  100% {
+    opacity: 0.2;
+    transform: translate3d(0.2rem, -4.4rem, 0) scale(0.55) rotate(165deg);
   }
 }
 
@@ -3159,6 +3346,18 @@ main:focus {
     scroll-padding-top: 4.75rem;
   }
 
+  .return-circle {
+    inset-block-end: max(0.75rem, calc(env(safe-area-inset-bottom, 0px) + 0.5rem));
+    inset-inline-end: max(0.75rem, calc(env(safe-area-inset-right, 0px) + 0.5rem));
+    padding: 0.3rem 0.6rem 0.3rem 0.28rem;
+    gap: 0.3rem;
+  }
+
+  .return-circle__instrument {
+    width: 1.75rem;
+    height: 2.4rem;
+  }
+
   .site-header__inner,
   .cover-sheet__grid,
   .work-register,
@@ -3579,6 +3778,7 @@ main:focus {
 @media print {
   .site-header,
   .skip-link,
+  .return-circle,
   .page-measure,
   .cover-sheet__actions,
   .email-copy__button,
