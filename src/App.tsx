@@ -26,15 +26,7 @@ const CV_FILES: Record<Locale, { backend: string; fullStack: string }> = {
 type CopyState = "idle" | "copied" | "failed";
 type ReadingMode = "summary" | "dossier";
 
-type DocumentWithViewTransition = Document & {
-  startViewTransition?: (update: () => void) => {
-    finished: Promise<unknown>;
-  };
-};
-
 const READING_MODE_STORAGE_KEY = "portfolio-reading-mode";
-const READING_REVEAL_CLEANUP_MS = 520;
-const READING_REVEAL_SELECTOR = "[data-reading-reveal]";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   if (navigator.clipboard && window.isSecureContext) {
@@ -282,11 +274,7 @@ function ProjectRecord({
           <p className="project-record__role">{project.descriptor}</p>
         </div>
         <p className="project-record__plain">{project.plain}</p>
-        <p
-          className="project-record__summary"
-          data-reading-reveal
-          hidden={readingMode === "summary"}
-        >
+        <p className="project-record__summary" hidden={readingMode === "summary"}>
           {project.summary}
         </p>
       </header>
@@ -310,7 +298,6 @@ function ProjectRecord({
         <section
           className="project-record__quick-proof"
           aria-labelledby={`${project.slug}-quick-decision`}
-          data-reading-reveal
           hidden={readingMode === "dossier"}
         >
           <div className="project-record__quick-decision">
@@ -323,11 +310,7 @@ function ProjectRecord({
           </div>
         </section>
 
-        <div
-          className="project-record__full-analysis"
-          data-reading-reveal
-          hidden={readingMode === "summary"}
-        >
+        <div className="project-record__full-analysis" hidden={readingMode === "summary"}>
           <section className="project-record__problem" aria-labelledby={`${project.slug}-problem`}>
             <h4 id={`${project.slug}-problem`}>{project.problemLabel}</h4>
             <p>{project.problem}</p>
@@ -403,16 +386,24 @@ function PortfolioHome({ locale }: { locale: Locale }) {
   const cvFiles = CV_FILES[locale];
   const [readingMode, setReadingMode] = useState<ReadingMode>("summary");
   const [readingAnnouncement, setReadingAnnouncement] = useState("");
-  const revealObserver = useRef<IntersectionObserver | null>(null);
-  const revealTimers = useRef<number[]>([]);
   const readingChangeSequence = useRef(0);
+  const readingModeCleanup = useRef<(() => void) | null>(null);
 
   useEffect(
     () => () => {
       readingChangeSequence.current += 1;
-      revealObserver.current?.disconnect();
-      revealTimers.current.forEach((id) => window.clearTimeout(id));
-      document.documentElement.classList.remove("reading-mode-transition");
+      readingModeCleanup.current?.();
+      readingModeCleanup.current = null;
+      document.documentElement.classList.remove(
+        "reading-mode-transition",
+        "reading-mode-to-summary",
+        "reading-mode-to-dossier",
+        "reading-mode-sheet-out",
+        "reading-mode-sheet-in",
+      );
+      document
+        .querySelector<HTMLElement>("[data-reading-transition]")
+        ?.removeAttribute("data-reading-transition");
     },
     [],
   );
@@ -432,22 +423,35 @@ function PortfolioHome({ locale }: { locale: Locale }) {
     if (nextMode === readingMode) return;
 
     const changeSequence = ++readingChangeSequence.current;
-
-    revealObserver.current?.disconnect();
-    revealObserver.current = null;
-    revealTimers.current.forEach((id) => window.clearTimeout(id));
-    revealTimers.current = [];
+    readingModeCleanup.current?.();
+    readingModeCleanup.current = null;
+    document.documentElement.classList.remove(
+      "reading-mode-transition",
+      "reading-mode-to-summary",
+      "reading-mode-to-dossier",
+      "reading-mode-sheet-out",
+      "reading-mode-sheet-in",
+    );
     document
-      .querySelectorAll<HTMLElement>('[data-reveal="on"]')
-      .forEach((target) => target.removeAttribute("data-reveal"));
+      .querySelector<HTMLElement>("[data-reading-transition]")
+      ?.removeAttribute("data-reading-transition");
 
     const headerHeight =
       document.querySelector<HTMLElement>(".home-site-header")?.offsetHeight ?? 0;
     const probeY = Math.min(window.innerHeight - 1, headerHeight + 32);
-    const anchor = document
+    const anchorAtProbe = document
       .elementFromPoint(window.innerWidth / 2, probeY)
       ?.closest<HTMLElement>("[data-reading-anchor]");
+    const anchor =
+      anchorAtProbe ??
+      Array.from(document.querySelectorAll<HTMLElement>("[data-reading-anchor]")).find(
+        (candidate) => {
+          const box = candidate.getBoundingClientRect();
+          return box.bottom > probeY && box.top < window.innerHeight;
+        },
+      );
     const anchorTop = anchor?.getBoundingClientRect().top;
+    anchor?.setAttribute("data-reading-transition", "");
 
     const restoreReadingPosition = () => {
       if (!anchor || anchorTop === undefined) return;
@@ -464,62 +468,25 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const startReveal = () => {
-      if (reduceMotion || changeSequence !== readingChangeSequence.current) return;
-
-      const sweep = (target: HTMLElement) => {
-        target.setAttribute("data-reveal", "on");
-        revealTimers.current.push(
-          window.setTimeout(
-            () => target.removeAttribute("data-reveal"),
-            READING_REVEAL_CLEANUP_MS,
-          ),
-        );
-      };
-
-      const visibleTargets: HTMLElement[] = [];
-      const deferredTargets: HTMLElement[] = [];
-
-      for (const target of document.querySelectorAll<HTMLElement>(READING_REVEAL_SELECTOR)) {
-        if (target.hidden || target.getClientRects().length === 0) continue;
-
-        const box = target.getBoundingClientRect();
-        if (box.top < window.innerHeight && box.bottom > 0) {
-          visibleTargets.push(target);
-        } else {
-          deferredTargets.push(target);
-        }
-      }
-
-      visibleTargets.forEach(sweep);
-      if (deferredTargets.length === 0 || !("IntersectionObserver" in window)) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            observer.unobserve(entry.target);
-            sweep(entry.target as HTMLElement);
-          }
-        },
-        { rootMargin: "0px 0px -12% 0px" },
-      );
-
-      deferredTargets.forEach((target) => observer.observe(target));
-      revealObserver.current = observer;
-    };
-
     const finishModeChange = () => {
       if (changeSequence !== readingChangeSequence.current) return;
 
       window.requestAnimationFrame(() => {
         if (changeSequence !== readingChangeSequence.current) return;
+        readingModeCleanup.current?.();
+        readingModeCleanup.current = null;
         restoreReadingPosition();
-        document.documentElement.classList.remove("reading-mode-transition");
+        document.documentElement.classList.remove(
+          "reading-mode-transition",
+          "reading-mode-to-summary",
+          "reading-mode-to-dossier",
+          "reading-mode-sheet-out",
+          "reading-mode-sheet-in",
+        );
+        anchor?.removeAttribute("data-reading-transition");
         window.requestAnimationFrame(() => {
           if (changeSequence !== readingChangeSequence.current) return;
           restoreReadingPosition();
-          startReveal();
         });
       });
     };
@@ -541,12 +508,57 @@ function PortfolioHome({ locale }: { locale: Locale }) {
       }
     };
 
-    const transitionDocument = document as DocumentWithViewTransition;
-    document.documentElement.classList.add("reading-mode-transition");
+    const root = document.documentElement;
+    root.classList.add(
+      "reading-mode-transition",
+      nextMode === "dossier" ? "reading-mode-to-dossier" : "reading-mode-to-summary",
+    );
 
-    if (!reduceMotion && transitionDocument.startViewTransition) {
-      const transition = transitionDocument.startViewTransition(update);
-      void transition.finished.then(finishModeChange, finishModeChange);
+    if (!reduceMotion && anchor) {
+      let phase: "out" | "in" | "done" = "out";
+      let phaseTimer = 0;
+
+      const clearPhaseTimer = () => {
+        if (phaseTimer) window.clearTimeout(phaseTimer);
+        phaseTimer = 0;
+      };
+
+      const onIncomingEnd = (event: AnimationEvent) => {
+        if (event.target !== anchor || phase !== "in") return;
+        phase = "done";
+        clearPhaseTimer();
+        finishModeChange();
+      };
+
+      const startIncoming = () => {
+        if (phase !== "out" || changeSequence !== readingChangeSequence.current) return;
+        phase = "in";
+        clearPhaseTimer();
+        anchor.removeEventListener("animationend", onOutgoingEnd);
+        root.classList.remove("reading-mode-sheet-out");
+        update();
+        restoreReadingPosition();
+        void anchor.offsetWidth;
+        anchor.addEventListener("animationend", onIncomingEnd);
+        root.classList.add("reading-mode-sheet-in");
+        phaseTimer = window.setTimeout(finishModeChange, 280);
+      };
+
+      const onOutgoingEnd = (event: AnimationEvent) => {
+        if (event.target !== anchor || phase !== "out") return;
+        startIncoming();
+      };
+
+      readingModeCleanup.current = () => {
+        phase = "done";
+        clearPhaseTimer();
+        anchor.removeEventListener("animationend", onOutgoingEnd);
+        anchor.removeEventListener("animationend", onIncomingEnd);
+      };
+
+      anchor.addEventListener("animationend", onOutgoingEnd);
+      root.classList.add("reading-mode-sheet-out");
+      phaseTimer = window.setTimeout(startIncoming, 130);
       return;
     }
 
@@ -691,7 +703,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 <span className="cover-sheet__copy--desktop">{copy.hero.heading}</span>
                 <span className="cover-sheet__copy--mobile">{copy.hero.mobileHeading}</span>
               </h1>
-              <p className="cover-sheet__summary" data-reading-reveal>
+              <p className="cover-sheet__summary">
                 {readingMode === "summary" ? copy.hero.mobileSummary : copy.hero.summary}
               </p>
 
@@ -776,7 +788,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
             <div
               className="cover-sheet__contact"
-              data-reading-reveal
               hidden={readingMode === "summary"}
             >
               <p>{copy.hero.emailLabel}</p>
@@ -799,7 +810,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <p className="section-kicker">{copy.work.kicker}</p>
             <div>
               <h2 id="work-title">{copy.work.heading}</h2>
-              <p data-reading-reveal>
+              <p>
                 {readingMode === "summary" ? copy.work.summaryIntro : copy.work.intro}
               </p>
             </div>
@@ -808,7 +819,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <nav
             className="project-index"
             aria-labelledby="project-index-title"
-            data-reading-reveal
             hidden={readingMode === "summary"}
           >
             <h3 id="project-index-title">{copy.work.indexLabel}</h3>
@@ -867,7 +877,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
               <section
                 aria-labelledby="research-current"
-                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 <h3 id="research-current">{copy.research.currentLabel}</h3>
@@ -880,7 +889,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
               <section
                 aria-labelledby="research-next"
-                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 <h3 id="research-next">{copy.research.nextLabel}</h3>
@@ -889,7 +897,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
               <span
                 className="private-note private-note--dark"
-                data-reading-reveal
                 hidden={readingMode === "summary"}
               >
                 {copy.research.repository}
@@ -917,7 +924,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                 decoding="async"
               />
               {readingMode === "dossier" ? (
-                <figcaption data-reading-reveal>{copy.research.evidence}</figcaption>
+                <figcaption>{copy.research.evidence}</figcaption>
               ) : null}
             </figure>
           </div>
@@ -959,7 +966,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <section
               className="working-method"
               aria-labelledby="method-title"
-              data-reading-reveal
               hidden={readingMode === "summary"}
             >
               <h3 id="method-title">{copy.profile.methodLabel}</h3>
@@ -980,7 +986,6 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <section
             className="other-work"
             aria-labelledby="other-work-title"
-            data-reading-reveal
             hidden={readingMode === "summary"}
           >
             <div className="other-work__heading">
@@ -1012,7 +1017,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <aside className="reading-mode-finish" data-reading-anchor>
             <div>
               <ShotPutMark />
-              <p data-reading-reveal>
+              <p>
                 {readingMode === "summary"
                   ? copy.reading.summaryEnd
                   : copy.reading.dossierEnd}

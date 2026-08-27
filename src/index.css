@@ -110,28 +110,25 @@
   animation: var(--duracao-tela) var(--curva-entrada) both page-enter;
 }
 
-html.reading-mode-transition::view-transition-old(root) {
-  animation-duration: 140ms;
-}
-
-html.reading-mode-transition::view-transition-new(root) {
-  animation-duration: 120ms;
-}
-
 html.reading-mode-transition,
 html.reading-mode-transition body {
   overflow-anchor: none;
 }
 
-html.reading-mode-transition::view-transition-group(poliatletas-media),
-html.reading-mode-transition::view-transition-group(rotinapet-media),
-html.reading-mode-transition::view-transition-group(viazio-media),
-html.reading-mode-transition::view-transition-group(trackshot-media),
-html.reading-mode-transition::view-transition-group(poliatletas-title),
-html.reading-mode-transition::view-transition-group(rotinapet-title),
-html.reading-mode-transition::view-transition-group(viazio-title),
-html.reading-mode-transition::view-transition-group(trackshot-title) {
-  animation-duration: var(--duracao-interface);
+html.reading-mode-to-dossier.reading-mode-sheet-out [data-reading-transition] {
+  animation: 90ms var(--curva-saida) both reading-sheet-out-left;
+}
+
+html.reading-mode-to-dossier.reading-mode-sheet-in [data-reading-transition] {
+  animation: 220ms var(--curva-entrada) both reading-sheet-in-right;
+}
+
+html.reading-mode-to-summary.reading-mode-sheet-out [data-reading-transition] {
+  animation: 90ms var(--curva-saida) both reading-sheet-out-right;
+}
+
+html.reading-mode-to-summary.reading-mode-sheet-in [data-reading-transition] {
+  animation: 220ms var(--curva-entrada) both reading-sheet-in-left;
 }
 
 ::view-transition-group(portfolio-wordmark),
@@ -2397,59 +2394,51 @@ main:focus {
   }
 }
 
-/* A regua marca apenas o conteudo que mudou de leitura. O estado final e o
-   padrao; o atributo temporario existe somente quando o JavaScript esta ativo. */
-[data-reading-reveal] {
-  position: relative;
-}
-
-[data-reading-reveal][data-reveal="on"] {
-  animation: ruler-reveal var(--duracao-tela) var(--curva-entrada) both;
-}
-
-[data-reading-reveal][data-reveal="on"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    to bottom,
-    transparent calc(100% - 3px),
-    var(--lapis-vermelho) calc(100% - 3px)
-  );
-  transform: scaleY(0);
-  transform-origin: center top;
-  pointer-events: none;
-  animation: ruler-edge var(--duracao-tela) linear both;
-}
-
-@keyframes ruler-reveal {
+@keyframes reading-sheet-out-left {
   from {
-    opacity: 0.24;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(-0.35rem, 0, 0);
+  }
+}
+
+@keyframes reading-sheet-out-right {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0.35rem, 0, 0);
+  }
+}
+
+@keyframes reading-sheet-in-right {
+  from {
+    opacity: 0;
+    transform: translate3d(0.7rem, 0, 0);
   }
 
   to {
     opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes ruler-edge {
+@keyframes reading-sheet-in-left {
   from {
-    transform: scaleY(0);
     opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
-  }
-
-  88% {
-    opacity: 1;
+    transform: translate3d(-0.7rem, 0, 0);
   }
 
   to {
-    transform: scaleY(1);
-    opacity: 0;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
