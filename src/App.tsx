@@ -143,6 +143,22 @@ function ShotPutMark() {
   );
 }
 
+function PageMeasure() {
+  return (
+    <div className="page-measure" aria-hidden="true">
+      <span className="page-measure__fill" />
+      <span className="page-measure__index">
+        <span className="page-measure__shot" />
+      </span>
+      <span className="page-measure__tick">0,000</span>
+      <span className="page-measure__tick">0,534</span>
+      <span className="page-measure__tick">1,068</span>
+      <span className="page-measure__tick">1,601</span>
+      <span className="page-measure__tick">2,135 m</span>
+    </div>
+  );
+}
+
 function ProjectRecord({
   project,
   index,
@@ -266,13 +282,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         {copy.skip}
       </a>
 
-      <div className="page-measure" aria-hidden="true">
-        <span>0,000</span>
-        <span>0,534</span>
-        <span>1,068</span>
-        <span>1,601</span>
-        <span>2,135 m</span>
-      </div>
+      <PageMeasure />
 
       <header className="site-header home-site-header">
         <div className="site-header__inner">
@@ -748,13 +758,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         {copy.skip}
       </a>
 
-      <div className="page-measure" aria-hidden="true">
-        <span>0,000</span>
-        <span>0,534</span>
-        <span>1,068</span>
-        <span>1,601</span>
-        <span>2,135 m</span>
-      </div>
+      <PageMeasure />
 
       <header className="site-header dossier-site-header">
         <div className="site-header__inner">

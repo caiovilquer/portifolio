@@ -241,6 +241,11 @@ main:focus {
   display: none;
 }
 
+.page-measure__fill,
+.page-measure__index {
+  display: none;
+}
+
 .site-header {
   position: sticky;
   inset-block-start: 0;
@@ -2072,6 +2077,26 @@ main:focus {
   }
 }
 
+@keyframes ruler-fill {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes ruler-index {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, calc(100svh - 9.75rem), 0);
+  }
+}
+
 @keyframes status-register {
   from {
     opacity: 0.35;
@@ -2194,7 +2219,7 @@ main:focus {
     pointer-events: none;
   }
 
-  .page-measure span {
+  .page-measure__tick {
     position: relative;
     padding-inline-start: 0.45rem;
     color: var(--lapis-vermelho);
@@ -2203,7 +2228,7 @@ main:focus {
     writing-mode: vertical-rl;
   }
 
-  .page-measure span::before {
+  .page-measure__tick::before {
     content: "";
     position: absolute;
     inset-block-start: 0;
@@ -2211,6 +2236,56 @@ main:focus {
     width: 0.45rem;
     height: 1px;
     background: var(--lapis-vermelho);
+  }
+}
+
+@media (min-width: 90rem) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .page-measure__fill {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: -1px;
+      width: 2px;
+      display: block;
+      background: var(--tinta-carbono);
+      transform: scaleY(0);
+      transform-origin: center top;
+      animation: ruler-fill linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    .page-measure__index {
+      position: absolute;
+      inset-block-start: -0.35rem;
+      inset-inline-start: -0.38rem;
+      z-index: 1;
+      width: 0.75rem;
+      aspect-ratio: 1;
+      display: block;
+      transform: translate3d(0, 0, 0);
+      animation: ruler-index linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    .page-measure__index::after {
+      content: "";
+      position: absolute;
+      inset-block-start: calc(50% - 0.5px);
+      inset-inline-start: 100%;
+      width: 0.65rem;
+      height: 1px;
+      background: var(--tinta-carbono);
+    }
+
+    .page-measure__shot {
+      width: 100%;
+      aspect-ratio: 1;
+      display: block;
+      border: 2px solid var(--papel-inspecao);
+      border-radius: 50%;
+      outline: 1px solid var(--lapis-vermelho);
+      background: var(--tinta-carbono);
+    }
   }
 }
 
