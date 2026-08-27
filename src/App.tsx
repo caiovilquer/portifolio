@@ -466,8 +466,8 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <span className="wordmark__art" aria-hidden="true">
               <img
                 className="wordmark__logo wordmark__logo--full"
-                src="/logos/caio-vilquer-lockup.svg"
-                width="210"
+                src="/logos/caio-vilquer-lockup-descritor.svg"
+                width="420"
                 height="72"
                 alt=""
               />
@@ -1041,8 +1041,8 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
             <span className="wordmark__art" aria-hidden="true">
               <img
                 className="wordmark__logo wordmark__logo--full"
-                src="/logos/caio-vilquer-lockup.svg"
-                width="210"
+                src="/logos/caio-vilquer-lockup-descritor.svg"
+                width="420"
                 height="72"
                 alt=""
               />
