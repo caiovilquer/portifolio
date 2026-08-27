@@ -164,7 +164,7 @@ export const content: Record<Locale, SiteContent> = {
     meta: {
       title: "Caio Vilquer · Backend em Java, Kotlin e TypeScript · Poli-USP",
       description:
-        "Estudante de Engenharia de Computação na Poli-USP. Projetos em Java, Kotlin, Spring Boot, NestJS, PostgreSQL, RAG, React e Angular.",
+        "Três sistemas em produção: Poliatletas, RotinaPet e Viazio, escritos do banco à tela em Java, Kotlin e TypeScript. Engenharia de Computação na Poli-USP.",
     },
     skip: "Pular para o conteúdo",
     brandLabel: "Caio Vilquer, início",
@@ -481,7 +481,7 @@ export const content: Record<Locale, SiteContent> = {
     meta: {
       title: "Caio Vilquer · Backend in Java, Kotlin and TypeScript · Poli-USP",
       description:
-        "Computer Engineering student at Poli-USP. Projects in Java, Kotlin, Spring Boot, NestJS, PostgreSQL, RAG, React, and Angular.",
+        "Three systems in production: Poliatletas, RotinaPet and Viazio, built from database to screen in Java, Kotlin and TypeScript. Computer Engineering, Poli-USP.",
     },
     skip: "Skip to content",
     brandLabel: "Caio Vilquer, home",

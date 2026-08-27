@@ -9,6 +9,8 @@ const distributionRoot = path.join(projectRoot, "dist");
 const serverBundle = path.join(projectRoot, ".ssr", "entry-server.js");
 const server = await import(serverBundle);
 const template = await readFile(path.join(distributionRoot, "index.html"), "utf8");
+// Fonte unica da data: src/seo.ts, via o bundle SSR.
+const lastModified = server.SITE_UPDATED_DATE;
 
 function escapeHtml(value) {
   return String(value)
@@ -87,7 +89,7 @@ function sitemapUrl(route) {
   const seo = server.getSeoData(route);
   return `  <url>
     <loc>${escapeHtml(seo.canonical)}</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>${lastModified}</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="${escapeHtml(seo.alternatePt)}" />
     <xhtml:link rel="alternate" hreflang="en" href="${escapeHtml(seo.alternateEn)}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(seo.alternatePt)}" />
@@ -101,13 +103,13 @@ const curriculumPairs = [
 const curriculumUrls = curriculumPairs.flatMap(([pt, en]) => [
   `  <url>
     <loc>${SITE_ORIGIN}${pt}</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>${lastModified}</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="${SITE_ORIGIN}${pt}" />
     <xhtml:link rel="alternate" hreflang="en" href="${SITE_ORIGIN}${en}" />
   </url>`,
   `  <url>
     <loc>${SITE_ORIGIN}${en}</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>${lastModified}</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="${SITE_ORIGIN}${pt}" />
     <xhtml:link rel="alternate" hreflang="en" href="${SITE_ORIGIN}${en}" />
   </url>`,

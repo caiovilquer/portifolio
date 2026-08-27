@@ -9,7 +9,7 @@ import {
 } from "./routes";
 
 export const SITE_ORIGIN = "https://vilquer.dev";
-export const SITE_UPDATED_DATE = "2026-08-26";
+export const SITE_UPDATED_DATE = "2026-08-27";
 export const SITE_UPDATED = `${SITE_UPDATED_DATE}T12:00:00-03:00`;
 export const PERSON_ID = `${SITE_ORIGIN}/#caio-vilquer`;
 export const WEBSITE_ID = `${SITE_ORIGIN}/#website`;

@@ -5,7 +5,7 @@ import { getProjectPageData } from "./projectPages";
 import { getSeoData, SITE_ORIGIN, SITE_UPDATED_DATE } from "./seo";
 import { projectPath, routePath, STATIC_ROUTES, type ProjectSlug, type SiteRoute } from "./routes";
 
-export { STATIC_ROUTES, getSeoData, routePath };
+export { STATIC_ROUTES, SITE_UPDATED_DATE, getSeoData, routePath };
 
 export function renderRoute(route: SiteRoute): string {
   return renderToString(<App route={route} />);

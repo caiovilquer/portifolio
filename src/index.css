@@ -167,6 +167,34 @@ body {
   line-height: 1.55;
 }
 
+.cover-sheet__summary,
+.section-heading > div > p,
+.measurement-note p,
+.project-record__plain,
+.project-record__summary,
+.project-record__problem p,
+.project-record__decisions p,
+.project-dossier__plain,
+.project-dossier__title > p:last-child,
+.project-dossier__margin p,
+.project-dossier__analysis h2 + p,
+.project-dossier__decisions p,
+.project-dossier__frame figcaption > p:last-child,
+.research-sheet__lead,
+.research-sheet__copy p,
+.research-sheet__copy li,
+.research-sheet__figure figcaption,
+.working-method p,
+.other-work article > p:not(.other-work__stack),
+.reading-mode-finish p,
+.contact-sheet__top > p:last-child {
+  text-align: justify;
+  text-align-last: start;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 6 3 2;
+}
+
 .no-script {
   max-width: 54rem;
   margin: 10vh auto;
@@ -814,10 +842,14 @@ main:focus {
 .cover-sheet__contact > p {
   margin-block-end: var(--espaco-2);
   font-family: var(--fonte-dados);
-  font-size: var(--tipo-rotulo);
+  font-size: var(--tipo-metadado);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--tinta-suave);
+}
+
+.cover-sheet__contact .email-copy__address {
+  font-size: clamp(1.5rem, 1.32rem + 0.85vw, 2rem);
 }
 
 .email-copy {
