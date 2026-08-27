@@ -33,6 +33,10 @@ type DocumentWithViewTransition = Document & {
 };
 
 const READING_MODE_STORAGE_KEY = "portfolio-reading-mode";
+// Duracao de ruler-reveal, com folga para limpar o atributo depois do fim.
+const READING_REVEAL_MS = 620;
+const READING_REVEAL_SELECTOR =
+  ".project-index, .project-record__full-analysis, .project-record__quick-proof";
 
 async function copyToClipboard(value: string): Promise<boolean> {
   if (navigator.clipboard && window.isSecureContext) {
@@ -265,10 +269,10 @@ function ProjectRecord({
           <h3 id={`${project.slug}-title`}>{project.title}</h3>
           <p className="project-record__role">{project.descriptor}</p>
         </div>
-        <p className="project-record__plain" hidden={readingMode === "summary"}>
-          {project.plain}
+        <p className="project-record__plain">{project.plain}</p>
+        <p className="project-record__summary" hidden={readingMode === "summary"}>
+          {project.summary}
         </p>
-        <p className="project-record__summary">{project.summary}</p>
       </header>
 
       <figure className="project-record__media">
@@ -295,7 +299,6 @@ function ProjectRecord({
           <div className="project-record__quick-decision">
             <h4 id={`${project.slug}-quick-decision`}>{decisionLabel}</h4>
             <strong>{project.decisions[0].label}</strong>
-            <p>{project.decisions[0].text}</p>
           </div>
           <div className="project-record__quick-evidence">
             <h4>{evidenceLabel}</h4>
@@ -379,6 +382,16 @@ function PortfolioHome({ locale }: { locale: Locale }) {
   const cvFiles = CV_FILES[locale];
   const [readingMode, setReadingMode] = useState<ReadingMode>("summary");
   const [readingAnnouncement, setReadingAnnouncement] = useState("");
+  const revealObserver = useRef<IntersectionObserver | null>(null);
+  const revealTimers = useRef<number[]>([]);
+
+  useEffect(
+    () => () => {
+      revealObserver.current?.disconnect();
+      revealTimers.current.forEach((id) => window.clearTimeout(id));
+    },
+    [],
+  );
 
   useEffect(() => {
     try {
@@ -431,10 +444,55 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         // Reading mode still works for the current page when storage is blocked.
       }
 
+      startReveal();
       restoreReadingPosition();
     };
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Os blocos revelados ficam muito abaixo do controle: varrer todos no clique
+    // rodaria a animacao fora da tela. Cada bloco e varrido quando esta em vista,
+    // ou na primeira vez que entrar nela depois da troca.
+    const startReveal = () => {
+      if (reduceMotion) return;
+
+      revealObserver.current?.disconnect();
+      revealTimers.current.forEach((id) => window.clearTimeout(id));
+      revealTimers.current = [];
+
+      const sweep = (target: HTMLElement) => {
+        target.removeAttribute("data-reveal");
+        void target.offsetWidth;
+        target.setAttribute("data-reveal", "on");
+        revealTimers.current.push(
+          window.setTimeout(() => target.removeAttribute("data-reveal"), READING_REVEAL_MS),
+        );
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            observer.unobserve(entry.target);
+            sweep(entry.target as HTMLElement);
+          }
+        },
+        { rootMargin: "0px 0px -12% 0px" },
+      );
+
+      for (const target of document.querySelectorAll<HTMLElement>(READING_REVEAL_SELECTOR)) {
+        if (target.offsetParent === null) continue;
+
+        const box = target.getBoundingClientRect();
+        if (box.top < window.innerHeight && box.bottom > 0) {
+          sweep(target);
+        } else {
+          observer.observe(target);
+        }
+      }
+
+      revealObserver.current = observer;
+    };
     const transitionDocument = document as DocumentWithViewTransition;
 
     if (!reduceMotion && transitionDocument.startViewTransition) {

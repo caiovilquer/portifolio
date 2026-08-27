@@ -115,7 +115,7 @@ html.reading-mode-transition::view-transition-old(root) {
 }
 
 html.reading-mode-transition::view-transition-new(root) {
-  animation-duration: var(--duracao-interface);
+  animation-duration: 120ms;
 }
 
 html.reading-mode-transition::view-transition-group(poliatletas-media),
@@ -2394,6 +2394,63 @@ main:focus {
 @media (max-width: 52rem) and (prefers-reduced-motion: no-preference) {
   .identity-photo__frame::after {
     animation: 420ms var(--curva-entrada) 80ms both measure-sweep;
+  }
+}
+
+/* Varredura de regua na troca de modo de leitura: os blocos revelados sao
+   descobertos de cima para baixo por um fio vermelho que desce sobre eles.
+   So roda durante a troca (classe posta pelo App) e nunca no carregamento. */
+.project-record__full-analysis,
+.project-record__quick-proof,
+.project-index {
+  position: relative;
+}
+
+[data-reveal="on"] {
+  animation: ruler-reveal 520ms linear both;
+}
+
+[data-reveal="on"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--lapis-vermelho);
+  transform-origin: left center;
+  pointer-events: none;
+  animation: ruler-edge 520ms linear both;
+}
+
+@keyframes ruler-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes ruler-edge {
+  from {
+    inset-block-start: 0%;
+    transform: scaleX(0.06);
+    opacity: 0;
+  }
+
+  10% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  to {
+    inset-block-start: 100%;
+    transform: scaleX(1);
+    opacity: 0;
   }
 }
 
