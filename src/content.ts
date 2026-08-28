@@ -306,10 +306,11 @@ export const content: Record<Locale, SiteContent> = {
               text: "Structured Outputs gera rascunhos versionados; o caso de uso revalida papel, versão, expiração e idempotência antes de escrever.",
             },
           ],
-          evidenceLabel: "Quality gates versionados",
+          evidenceLabel: "Verificação no código e no CI",
           evidence: [
-            "Recall@5 mínimo de 95% e precisão de citações mínima de 98%",
-            "Abstenção sem evidência mínima de 95%",
+            "Filtro de família e pet aplicado antes do ranking híbrido",
+            "Dataset de avaliação versionado, com casos respondíveis e não respondíveis",
+            "Casos de prompt injection e testes de integração com Testcontainers e pgvector",
           ],
           stack:
             "Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI",
@@ -625,10 +626,11 @@ export const content: Record<Locale, SiteContent> = {
               text: "Structured Outputs creates versioned drafts; the use case revalidates role, version, expiry, and idempotency before writing.",
             },
           ],
-          evidenceLabel: "Versioned quality gates",
+          evidenceLabel: "Verification in code and CI",
           evidence: [
-            "Recall@5 at or above 95% and citation precision at or above 98%",
-            "Unsupported-answer abstention at or above 95%",
+            "Household and pet filter applied before hybrid ranking",
+            "Versioned evaluation dataset with answerable and unanswerable cases",
+            "Prompt-injection cases and integration tests with Testcontainers and pgvector",
           ],
           stack:
             "Kotlin · Spring Boot · Angular · PostgreSQL/pgvector · OpenAI",

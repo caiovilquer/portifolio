@@ -125,8 +125,8 @@ const selectedProjectPages: Record<
       ],
       evidenceLabel: "Critérios registrados no projeto",
       evidence: [
-        "Dataset sintético versionado com Recall@5 mínimo de 95% e precisão de citações mínima de 98%",
-        "Abstenção sem evidência mínima de 95%, incluindo casos de prompt injection indireta",
+        "Dataset de avaliação versionado, com casos respondíveis e não respondíveis, cobrindo recuperação, citação e abstenção",
+        "Casos de prompt injection e testes de integração com Testcontainers e pgvector",
         "Estados de fonte, chunks e citações preservam o caminho entre resposta e documento autorizado",
         "Backend Kotlin/Spring Boot e frontend Angular publicados separadamente, com repositórios públicos",
       ],
@@ -247,8 +247,8 @@ const selectedProjectPages: Record<
       ],
       evidenceLabel: "Criteria recorded in the project",
       evidence: [
-        "Versioned synthetic dataset with Recall@5 at or above 95% and citation precision at or above 98%",
-        "Unsupported-answer abstention at or above 95%, including indirect prompt-injection cases",
+        "Versioned evaluation dataset with answerable and unanswerable cases, covering retrieval, citation, and abstention",
+        "Prompt-injection cases and integration tests with Testcontainers and pgvector",
         "Source states, chunks, and citations preserve the path from an answer to its authorized document",
         "Kotlin/Spring Boot backend and Angular frontend deployed separately with public repositories",
       ],
