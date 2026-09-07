@@ -18,13 +18,13 @@ A identidade combina ficha de inspeção, relatório técnico e régua de mediç
 
 A identidade parte do setor de queda do arremesso de peso. O círculo marca a origem do lançamento; o recorte angular e os arcos técnicos dão direção ao símbolo sem recorrer às iniciais do nome. A paleta reúne verde profundo (`#0B3B3C`), menta (`#8FE3D2`) e papel quente (`#F2F0E6`).
 
-O sistema inclui lockups horizontais, wordmarks e três versões do símbolo para situações diferentes. No site, o cabeçalho usa o lockup com o descritor “Eng. Computação” em telas largas e o símbolo quadrado em telas estreitas.
+O sistema inclui lockups horizontais, wordmarks e três versões do símbolo para situações diferentes. No site, o cabeçalho usa o lockup sem descritor em telas largas, com variantes para os dois temas, e o símbolo quadrado em telas estreitas.
 
 | Arquivo | Quando usar |
 |---|---|
-| `public/logos/caio-vilquer-lockup-descritor.svg` | cabeçalho sobre papel claro |
-| `public/logos/caio-vilquer-lockup-descritor-dark.svg` | lockup com descritor para superfícies escuras |
-| `public/logos/caio-vilquer-lockup.svg` e `public/logos/caio-vilquer-lockup-dark.svg` | assinatura horizontal sem descritor |
+| `public/logos/caio-vilquer-lockup-descritor.svg` | assinatura com descritor sobre papel claro |
+| `public/logos/caio-vilquer-lockup-descritor-dark.svg` | assinatura com descritor para superfícies escuras |
+| `public/logos/caio-vilquer-lockup.svg` e `public/logos/caio-vilquer-lockup-dark.svg` | cabeçalho e assinatura horizontal sem descritor |
 | `public/logos/caio-vilquer-wordmark.svg` e `public/logos/caio-vilquer-wordmark-dark.svg` | nome sem símbolo |
 | `public/logos/caio-vilquer-simbolo.svg` | marca quadrada do cabeçalho compacto |
 | `public/logos/caio-vilquer-simbolo-transparente.svg` | símbolo sem fundo |
@@ -43,6 +43,28 @@ sips -z 512 512 public/favicon.png
 ```
 
 ## Desenvolvimento
+
+### Aparência
+
+O seletor oferece Sistema (padrão), Claro e Escuro e persiste a preferência em `localStorage`, na chave `portfolio-theme`. Mudanças do sistema são aplicadas apenas em Sistema; outras abas e páginas restauradas do histórico também sincronizam a escolha. Se o armazenamento estiver bloqueado, a seleção funciona durante a leitura atual.
+
+O Vite incorpora `src/theme-bootstrap.js` no HTML, antes dos estilos e da hidratação. Esse é o único controlador da preferência; `src/theme.ts` conecta o estado ao React com uma leitura estável durante a hidratação. Os tokens de cor usam `light-dark()` com `color-scheme`, inclusive para seguir o sistema sem JavaScript. A impressão força o esquema claro.
+
+A paleta escura combina grafite azulado, marfim, cobre e menta. Ações, rodapé e estados de confirmação têm tokens próprios. As marcas dos projetos e as fotos mantêm suas cores originais.
+
+A troca manual usa uma transição de opacidade de 240 ms quando disponível. Preferências automáticas, movimento reduzido e navegadores sem View Transitions aplicam o estado imediatamente. A troca Resumo/Dossiê mantém seu fade de 100/180 ms e encerra a transição de aparência antes de medir a posição de leitura.
+
+`npm run test:theme` cobre resolução, persistência, armazenamento bloqueado, sincronização, histórico e cancelamento de transições. Os testes fazem parte de `npm run check`.
+
+### Movimento e orientação
+
+O marcador de arremesso percorre a mesma parábola desenhada no SVG: o eixo horizontal mantém velocidade constante e o vertical desacelera até o ápice e acelera na descida. Separar os eixos evita a pausa intermediária da antiga curva de entrada. As marcas de medição aparecem ao final do voo de 420 ms.
+
+A navegação da home indica a seção em leitura com `aria-current="location"` e uma marca de régua, inclusive no índice mobile. A medição acompanha rolagem, redimensionamento e mudanças entre Resumo/Dossiê. O índice de projetos traça uma régua ao receber hover, foco ou pressionamento; a seta de abertura dos estudos recebe cantos de registro. Os efeitos usam transformações e opacidade, sem dependências adicionais, e os estados ficam imediatos com movimento reduzido. A rolagem e as âncoras continuam nativas.
+
+Ao seguir um link durante o fade de leitura, a escolha de Resumo/Dossiê é concluída antes da navegação. Isso impede que a restauração pendente da posição de leitura desfaça o salto para a seção escolhida.
+
+### Comandos
 
 ```bash
 npm install

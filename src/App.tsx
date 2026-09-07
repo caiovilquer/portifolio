@@ -1,5 +1,7 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { ThemeControl } from "./ThemeControl";
+import { useReadingSection } from "./useReadingSection";
 import { content, type Locale, type ProjectContent } from "./content";
 import { getProjectPageData } from "./projectPages";
 import {
@@ -100,10 +102,14 @@ function EmailCopy({
         onClick={handleCopy}
         data-state={state}
       >
-        {buttonLabel}
+        <span className="email-copy__button-label">
+          <span>{buttonLabel}</span>
+          <span aria-hidden="true" className="email-copy__button-reserve">{copyLabel}</span>
+          <span aria-hidden="true" className="email-copy__button-reserve">{copiedLabel}</span>
+        </span>
       </button>
       <span className="email-copy__feedback" aria-live="polite" role="status">
-        {state === "failed" ? failedLabel : ""}
+        {state === "failed" ? failedLabel : <span className="visually-hidden">{state === "copied" ? copiedLabel : ""}</span>}
       </span>
     </div>
   );
@@ -139,8 +145,10 @@ function ShotPutMark() {
       <svg viewBox="0 0 64 44" focusable="false">
         <circle className="project-record__shot-circle" cx="17" cy="27" r="11.5" />
         <path className="project-record__toe-board" d="M24.5 18.5 Q31 27 24.5 35.5" />
-        <path className="project-record__shot-path" d="M25 21.5 Q36 11.5 50 7.5" />
-        <circle className="project-record__shot" cx="53" cy="7" r="4" />
+        <path className="project-record__shot-path" d="M25 21.5 Q39 -9.5 53 7" />
+        <g className="project-record__shot-travel">
+          <circle className="project-record__shot" cx="53" cy="7" r="4" />
+        </g>
         <path className="project-record__impact-ticks" d="M53 0.5V2.5M60 7H62" />
       </svg>
     </span>
@@ -482,17 +490,20 @@ function ProjectRecord({
 
 function PortfolioHome({ locale }: { locale: Locale }) {
   const copy = content[locale];
+  const currentSection = useReadingSection(copy.nav);
   const cvFiles = CV_FILES[locale];
   const [readingMode, setReadingMode] = useState<ReadingMode>("summary");
   const [readingAnnouncement, setReadingAnnouncement] = useState("");
   const readingChangeSequence = useRef(0);
   const readingModeCleanup = useRef<(() => void) | null>(null);
+  const settleReadingForNavigation = useRef<(() => void) | null>(null);
 
   useEffect(
     () => () => {
       readingChangeSequence.current += 1;
       readingModeCleanup.current?.();
       readingModeCleanup.current = null;
+      settleReadingForNavigation.current = null;
       document.documentElement.classList.remove(
         "reading-mode-transition",
         "reading-mode-to-summary",
@@ -520,10 +531,12 @@ function PortfolioHome({ locale }: { locale: Locale }) {
 
   const changeReadingMode = (nextMode: ReadingMode) => {
     if (nextMode === readingMode) return;
+    window.portfolioTheme.finishTransition();
 
     const changeSequence = ++readingChangeSequence.current;
     readingModeCleanup.current?.();
     readingModeCleanup.current = null;
+    settleReadingForNavigation.current = null;
     document.documentElement.classList.remove(
       "reading-mode-transition",
       "reading-mode-to-summary",
@@ -574,6 +587,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         if (changeSequence !== readingChangeSequence.current) return;
         readingModeCleanup.current?.();
         readingModeCleanup.current = null;
+        settleReadingForNavigation.current = null;
         restoreReadingPosition();
         document.documentElement.classList.remove(
           "reading-mode-transition",
@@ -655,6 +669,24 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         anchor.removeEventListener("animationend", onIncomingEnd);
       };
 
+      // An explicit navigation wins over the fade's pending scroll restoration.
+      // Commit the chosen mode before the browser resolves the native anchor.
+      settleReadingForNavigation.current = () => {
+        readingChangeSequence.current += 1;
+        if (phase === "out") update();
+        readingModeCleanup.current?.();
+        readingModeCleanup.current = null;
+        settleReadingForNavigation.current = null;
+        root.classList.remove(
+          "reading-mode-transition",
+          "reading-mode-to-summary",
+          "reading-mode-to-dossier",
+          "reading-mode-sheet-out",
+          "reading-mode-sheet-in",
+        );
+        anchor.removeAttribute("data-reading-transition");
+      };
+
       anchor.addEventListener("animationend", onOutgoingEnd);
       root.classList.add("reading-mode-sheet-out");
       phaseTimer = window.setTimeout(startIncoming, 130);
@@ -666,7 +698,15 @@ function PortfolioHome({ locale }: { locale: Locale }) {
   };
 
   return (
-    <div className="portfolio-home" data-reading-mode={readingMode}>
+    <div
+      className="portfolio-home"
+      data-reading-mode={readingMode}
+      onClickCapture={(event) => {
+        if (event.target instanceof Element && event.target.closest("a[href]")) {
+          settleReadingForNavigation.current?.();
+        }
+      }}
+    >
       <a className="skip-link" href="#conteudo">
         {copy.skip}
       </a>
@@ -677,13 +717,10 @@ function PortfolioHome({ locale }: { locale: Locale }) {
         <div className="site-header__inner">
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
-              <img
-                className="wordmark__logo wordmark__logo--full"
-                src="/logos/caio-vilquer-lockup-descritor.svg"
-                width="420"
-                height="72"
-                alt=""
-              />
+              <span className="wordmark__logo wordmark__logo--full">
+                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="210" height="72" alt="" />
+                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="210" height="72" alt="" />
+              </span>
               <img
                 className="wordmark__logo wordmark__logo--compact"
                 src="/logos/caio-vilquer-simbolo.svg"
@@ -701,7 +738,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             <ul>
               {copy.nav.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={item.href} aria-current={currentSection === item.href ? "location" : undefined}>{item.label}</a>
                 </li>
               ))}
             </ul>
@@ -736,6 +773,8 @@ function PortfolioHome({ locale }: { locale: Locale }) {
             </a>
           </nav>
 
+          <ThemeControl locale={locale} />
+
           <details
             className="mobile-index"
             onKeyDown={(event) => {
@@ -754,6 +793,7 @@ function PortfolioHome({ locale }: { locale: Locale }) {
                   <li key={item.href}>
                     <a
                       href={item.href}
+                      aria-current={currentSection === item.href ? "location" : undefined}
                       onClick={(event) =>
                         event.currentTarget.closest("details")?.removeAttribute("open")
                       }
@@ -1262,13 +1302,10 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
         <div className="site-header__inner">
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
-              <img
-                className="wordmark__logo wordmark__logo--full"
-                src="/logos/caio-vilquer-lockup-descritor.svg"
-                width="420"
-                height="72"
-                alt=""
-              />
+              <span className="wordmark__logo wordmark__logo--full">
+                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="210" height="72" alt="" />
+                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="210" height="72" alt="" />
+              </span>
               <img
                 className="wordmark__logo wordmark__logo--compact"
                 src="/logos/caio-vilquer-simbolo.svg"
@@ -1309,6 +1346,7 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
               EN
             </a>
           </nav>
+          <ThemeControl locale={locale} />
         </div>
       </header>
 
