@@ -56,6 +56,8 @@ A troca manual usa uma transição de opacidade de 240 ms quando disponível. Pr
 
 `npm run test:theme` cobre resolução, persistência, armazenamento bloqueado, sincronização, histórico e cancelamento de transições. Os testes fazem parte de `npm run check`.
 
+`npm run test:theme-control` testa o componente com o controlador real, incluindo a perda de foco sem destino antes da ativação por toque, seleção pelo texto e marcador, gestos cancelados, Escape e foco externo. O painel fecha por interação ou foco confirmado fora dele; uma perda temporária de foco no iOS mantém a opção disponível até o clique nativo. Essa suíte também faz parte de `test:theme`.
+
 ### Movimento e orientação
 
 O marcador de arremesso percorre a mesma parábola desenhada no SVG: o eixo horizontal mantém velocidade constante e o vertical desacelera até o ápice e acelera na descida. Separar os eixos evita a pausa intermediária da antiga curva de entrada. As marcas de medição aparecem ao final do voo de 420 ms.

@@ -28,8 +28,20 @@ export function ThemeControl({ locale }: { locale: Locale }) {
         if (panel.current?.contains(document.activeElement)) trigger.current?.focus({ preventScroll: true });
       }
     };
-    document.addEventListener("pointerdown", onOutside);
-    return () => document.removeEventListener("pointerdown", onOutside);
+    const onFocusOutside = (event: FocusEvent) => {
+      if (event.target instanceof Node && !control.current?.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    // On iOS, tapping a radio/label can blur the current input with no next
+    // focus target before its click/change fires. Close only on a confirmed
+    // outside interaction, never on that intermediate blur.
+    document.addEventListener("pointerdown", onOutside, true);
+    document.addEventListener("focusin", onFocusOutside, true);
+    return () => {
+      document.removeEventListener("pointerdown", onOutside, true);
+      document.removeEventListener("focusin", onFocusOutside, true);
+    };
   }, [open]);
 
   return (
@@ -41,9 +53,6 @@ export function ThemeControl({ locale }: { locale: Locale }) {
         event.preventDefault();
         setOpen(false);
         trigger.current?.focus({ preventScroll: true });
-      }}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}
     >
       <button

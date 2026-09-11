@@ -14,7 +14,8 @@
     "build:ssr": "vite build --ssr src/entry-server.tsx --outDir .ssr",
     "prerender": "node scripts/prerender.mjs",
     "check": "npm run test:theme && npm run build && npm run seo:audit && tsc --noEmit",
-    "test:theme": "node --test scripts/theme.test.mjs",
+    "test:theme": "node --test scripts/theme.test.mjs && npm run test:theme-control",
+    "test:theme-control": "vitest run scripts/theme-control.test.tsx --environment jsdom",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
@@ -31,7 +32,9 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^6.1.0",
     "gh-pages": "^6.3.0",
+    "jsdom": "^26.1.0",
     "typescript": "^5.1.6",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
