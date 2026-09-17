@@ -718,8 +718,8 @@ function PortfolioHome({ locale }: { locale: Locale }) {
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
               <span className="wordmark__logo wordmark__logo--full">
-                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="210" height="72" alt="" />
-                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="210" height="72" alt="" />
+                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="220" height="72" alt="" />
+                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="220" height="72" alt="" />
               </span>
               <img
                 className="wordmark__logo wordmark__logo--compact"
@@ -1303,8 +1303,8 @@ function ProjectPage({ route }: { route: Extract<SiteRoute, { kind: "project" }>
           <a className="wordmark" href={homePath(locale)} aria-label={copy.brandLabel}>
             <span className="wordmark__art" aria-hidden="true">
               <span className="wordmark__logo wordmark__logo--full">
-                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="210" height="72" alt="" />
-                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="210" height="72" alt="" />
+                <img className="wordmark__light" src="/logos/caio-vilquer-lockup.svg" width="220" height="72" alt="" />
+                <img className="wordmark__dark" src="/logos/caio-vilquer-lockup-dark.svg" width="220" height="72" alt="" />
               </span>
               <img
                 className="wordmark__logo wordmark__logo--compact"
